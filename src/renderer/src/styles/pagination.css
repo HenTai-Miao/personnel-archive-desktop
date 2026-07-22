@@ -1,0 +1,28 @@
+/* 数据列表统一分页栏：固定展示每页数量，并在单页数据时保留明确反馈。 */
+.fixed-list-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 18px 22px;
+  border-top: 1px solid var(--line);
+  background: #faf8f2;
+}
+
+.fixed-list-pagination > span {
+  color: var(--muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.fixed-list-pagination .el-pagination {
+  padding: 0;
+  border: 0;
+}
+
+@media (max-width: 720px) {
+  .fixed-list-pagination {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

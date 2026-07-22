@@ -1,0 +1,141 @@
+/* 已导入人员档案列表、筛选器和分页样式。 */
+.archive-list-ledger {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  margin-bottom: 24px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(31, 37, 53, 0.06);
+}
+
+.ledger-count {
+  display: grid;
+  align-content: center;
+  min-height: 150px;
+  padding: 24px;
+  color: #fff;
+  background: var(--indigo-900);
+  border-left: 6px solid var(--vermilion);
+}
+
+.ledger-count span,
+.ledger-count small {
+  color: #aeb7d2;
+  font-size: 12px;
+  letter-spacing: 0.08em;
+}
+
+.ledger-count strong {
+  margin: 5px 0 2px;
+  font:
+    700 38px "STSong",
+    serif;
+}
+
+.person-filter-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr)) auto;
+  gap: 16px;
+  align-items: end;
+  padding: 26px 28px;
+}
+
+.person-filter-form label > span {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.filter-actions {
+  display: flex;
+  white-space: nowrap;
+}
+
+.list-alert {
+  margin-bottom: 18px;
+}
+
+.list-loading {
+  padding: 30px;
+}
+
+.person-list-card {
+  overflow: hidden;
+}
+
+.person-list-card .table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 19px 22px;
+  border-bottom: 1px solid var(--line);
+}
+
+.person-list-card .table-heading strong,
+.person-list-card .table-heading span {
+  display: block;
+}
+
+.batch-export-strip {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-height: 40px;
+  padding-left: 18px;
+  border-left: 3px solid var(--vermilion);
+}
+
+.person-list-card .table-heading .batch-export-strip > span {
+  margin: 0;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.person-list-card .table-heading strong {
+  font-family: "STSong", "SimSun", serif;
+  font-size: 18px;
+}
+
+.person-list-card .table-heading span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.person-list-card .el-pagination {
+  justify-content: flex-end;
+  padding: 20px 22px;
+  border-top: 1px solid var(--line);
+}
+
+.person-name {
+  color: var(--indigo-900);
+}
+
+.person-list-empty .el-button {
+  margin-top: 18px;
+}
+
+@media (max-width: 1280px) {
+  .archive-list-ledger {
+    grid-template-columns: 130px minmax(0, 1fr);
+  }
+
+  .person-filter-form {
+    grid-template-columns: repeat(3, minmax(130px, 1fr));
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+
+  .person-list-card .table-heading {
+    align-items: flex-start;
+  }
+}

@@ -1,0 +1,96 @@
+/* 登录与会话恢复页面布局。 */
+.login-page {
+  display: grid;
+  grid-template-columns: minmax(420px, 1.1fr) minmax(460px, 0.9fr);
+  min-height: 100%;
+  background: var(--paper);
+}
+.login-identity {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 10vw;
+  overflow: hidden;
+  color: #fff;
+  background: var(--indigo-950);
+}
+.login-identity h1 {
+  margin: 22px 0;
+  font-size: clamp(48px, 6vw, 78px);
+  line-height: 1.12;
+}
+.login-identity p {
+  max-width: 390px;
+  color: #b5bed5;
+  font-size: 17px;
+  line-height: 1.8;
+}
+.login-system-code {
+  color: #da655c;
+  font:
+    700 12px / 1 "Consolas",
+    monospace;
+  letter-spacing: 0.3em;
+}
+.cabinet-lines {
+  position: absolute;
+  right: -50px;
+  bottom: 8%;
+  width: 46%;
+}
+.cabinet-lines i {
+  display: block;
+  height: 62px;
+  margin-top: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-right: 0;
+}
+.cabinet-lines i::before {
+  display: block;
+  width: 48px;
+  margin: 28px auto;
+  content: "";
+  border-top: 2px solid rgba(255, 255, 255, 0.19);
+}
+.login-panel {
+  display: grid;
+  place-items: center;
+  padding: 60px;
+}
+.login-form-wrap {
+  position: relative;
+  width: min(390px, 100%);
+}
+.login-form-wrap h2 {
+  margin: 8px 0;
+  font-size: 30px;
+}
+.login-form-wrap .el-form {
+  margin-top: 34px;
+}
+.login-form-wrap .el-alert {
+  margin: 0 0 8px;
+}
+.red-stamp {
+  position: absolute;
+  top: -12px;
+  right: 0;
+  width: 58px;
+  height: 58px;
+  font-size: 14px;
+}
+.security-note {
+  display: block;
+  margin-top: 22px;
+  color: #9296a0;
+  text-align: center;
+}
+@media (max-width: 1050px) {
+  .login-page {
+    grid-template-columns: 43% 57%;
+  }
+  .login-identity {
+    padding: 55px;
+  }
+}

@@ -1,0 +1,10 @@
+blockExoticSubdeps: false
+packages:
+  - .
+allowBuilds:
+  electron: true
+  electron-winstaller: true
+  esbuild: true
+  vue-demi: true
+minimumReleaseAgeExclude:
+  - electron@43.2.0

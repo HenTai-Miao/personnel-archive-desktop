@@ -1,0 +1,110 @@
+/* 文件夹设置页：以一条可读的“待上传到归档”路径表达本机文件生命周期。 */
+.folder-settings-page {
+  width: min(980px, 100%);
+}
+.folder-route {
+  display: grid;
+  grid-template-columns: 190px minmax(180px, 1fr) 190px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.route-node {
+  padding: 17px 20px;
+  color: #fff;
+  background: var(--indigo-900);
+  border-left: 4px solid #d85a50;
+}
+.route-node.is-archive {
+  color: var(--ink);
+  background: #dad5c8;
+  border-left-color: var(--success);
+}
+.route-node span,
+.route-node strong {
+  display: block;
+}
+.route-node span {
+  margin-bottom: 4px;
+  color: #aeb7d2;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+}
+.route-node.is-archive span {
+  color: var(--muted);
+}
+.route-line {
+  position: relative;
+  height: 1px;
+  background: #aaa494;
+}
+.route-line::after {
+  position: absolute;
+  right: -1px;
+  top: -4px;
+  width: 8px;
+  height: 8px;
+  content: "";
+  border-top: 1px solid #77705f;
+  border-right: 1px solid #77705f;
+  transform: rotate(45deg);
+}
+.route-line span {
+  position: absolute;
+  left: 50%;
+  bottom: 9px;
+  color: var(--muted);
+  font-size: 11px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.folder-settings-card {
+  padding: 0 28px;
+}
+.folder-setting-row {
+  display: grid;
+  grid-template-columns: 48px minmax(0, 1fr) auto;
+  gap: 18px;
+  align-items: center;
+  padding: 26px 0;
+}
+.folder-setting-row + .folder-setting-row {
+  border-top: 1px solid var(--line);
+}
+.folder-setting-icon {
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  color: #fff;
+  background: var(--indigo-800);
+  font-size: 21px;
+}
+.folder-setting-icon.archive {
+  background: var(--success);
+}
+.folder-setting-copy strong {
+  font-family: "STSong", "SimSun", serif;
+  font-size: 19px;
+}
+.folder-setting-copy p {
+  margin: 5px 0 13px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.folder-rule-note {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 16px;
+  margin-top: 18px;
+  padding: 15px 18px;
+  color: var(--muted);
+  background: rgba(255, 254, 250, 0.62);
+  border: 1px dashed #bbb4a4;
+  font-size: 12px;
+}
+.folder-rule-note strong {
+  color: var(--vermilion);
+}
+.folder-rule-note.ready strong {
+  color: var(--success);
+}

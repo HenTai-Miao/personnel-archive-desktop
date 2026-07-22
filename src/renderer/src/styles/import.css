@@ -1,0 +1,101 @@
+/* 批量导入文件选择、状态表格和重复决定样式。 */
+.import-picker {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 20px;
+  align-items: center;
+  padding: 25px 28px;
+  border-left: 4px solid var(--indigo-800);
+}
+.import-picker p {
+  margin: 7px 0 0;
+  color: var(--muted);
+}
+.picker-actions {
+  display: flex;
+  gap: 9px;
+}
+.file-chips {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-top: 17px;
+  border-top: 1px solid #e4e0d6;
+}
+.import-picker > .fixed-list-pagination {
+  grid-column: 1 / -1;
+}
+.queued-file-chip {
+  display: inline-flex;
+  gap: 7px;
+  align-items: center;
+  padding: 5px 9px 5px 5px;
+  color: var(--ink);
+  background: #f7f4ec;
+  border: 1px solid #ddd7ca;
+  font-size: 12px;
+}
+.archive-error {
+  color: var(--vermilion);
+}
+.page-stack > .el-alert {
+  margin: 18px 0;
+}
+.result-card {
+  margin-top: 22px;
+  overflow: hidden;
+}
+.table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--line);
+}
+.table-heading strong,
+.table-heading span {
+  display: block;
+}
+.table-heading strong {
+  font-family: "STSong", serif;
+  font-size: 20px;
+}
+.table-heading span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.result-card .el-pagination {
+  justify-content: flex-end;
+  padding: 20px;
+}
+.duplicate-sheet dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 20px;
+  border-top: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+.duplicate-sheet div {
+  padding: 12px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.duplicate-sheet dt {
+  color: var(--muted);
+  font-size: 12px;
+}
+.duplicate-sheet dd {
+  margin: 5px 0 0;
+  font-weight: 700;
+}
+.decision-options {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+.decision-options .el-radio {
+  width: 100%;
+  margin: 0;
+}

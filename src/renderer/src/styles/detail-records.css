@@ -1,0 +1,179 @@
+/* 档案后续分区：学历卡、原文表格、家庭成员和申报落款。 */
+.education-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-bottom: 30px;
+}
+.education-card {
+  border: 1px solid var(--line);
+  border-top: 4px solid var(--indigo-800);
+}
+.education-card > header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  padding: 14px 17px;
+  background: #f4f1e8;
+  border-bottom: 1px solid var(--line);
+}
+.education-card > header span {
+  font-family: "STSong", "SimSun", serif;
+  font-size: 17px;
+  font-weight: 700;
+}
+.education-card > header small {
+  color: var(--muted);
+  font:
+    10px "Consolas",
+    monospace;
+  letter-spacing: 0.08em;
+}
+.in-service-card {
+  border-top-color: var(--vermilion);
+}
+.education-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+.education-card dl > div {
+  min-height: 72px;
+  padding: 12px 15px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.education-card dl > div:nth-child(even) {
+  border-right: 0;
+}
+.education-card dl > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+.dossier-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--line);
+}
+.dossier-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+.dossier-table th,
+.dossier-table td {
+  padding: 12px 14px;
+  border-right: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+.dossier-table th:last-child,
+.dossier-table td:last-child {
+  border-right: 0;
+}
+.dossier-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+.dossier-table th {
+  color: #5e6372;
+  background: #efebe1;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.dossier-table td {
+  color: #3d4250;
+  font-size: 13px;
+  line-height: 1.6;
+}
+.dossier-table .row-number-column {
+  width: 56px;
+}
+.dossier-table .period-column {
+  width: 210px;
+}
+.dossier-table .row-number {
+  color: var(--vermilion);
+  font:
+    700 11px "Consolas",
+    monospace;
+}
+.dossier-table .primary-cell {
+  color: var(--ink);
+  font-weight: 700;
+}
+.dossier-empty-row {
+  display: grid;
+  min-height: 86px;
+  place-items: center;
+  color: #898577;
+  background: #faf8f2;
+  border: 1px dashed #c8c1b3;
+  font-size: 12px;
+}
+.family-table {
+  min-width: 900px;
+}
+.family-table th:nth-child(1) {
+  width: 100px;
+}
+.family-table th:nth-child(2) {
+  width: 110px;
+}
+.family-table th:nth-child(3) {
+  width: 125px;
+}
+.family-table th:nth-child(4) {
+  width: 78px;
+}
+.family-table th:nth-child(5) {
+  width: 125px;
+}
+.declaration-panel {
+  display: grid;
+  grid-template-columns: 180px minmax(0, 1fr);
+  border: 1px solid var(--line);
+  border-left: 4px solid var(--vermilion);
+}
+.declaration-panel > div:first-child {
+  display: grid;
+  align-content: center;
+  padding: 18px;
+  color: #fff;
+  background: var(--indigo-900);
+}
+.declaration-panel > div span {
+  font-family: "STSong", "SimSun", serif;
+  font-size: 18px;
+  font-weight: 700;
+}
+.declaration-panel > div small {
+  margin-top: 4px;
+  color: #919bb8;
+  font:
+    9px "Consolas",
+    monospace;
+  letter-spacing: 0.12em;
+}
+.declaration-panel dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+.declaration-panel dl > div {
+  padding: 17px 20px;
+  border-right: 1px solid var(--line);
+}
+.snapshot-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px 20px;
+  margin-top: 20px;
+  color: var(--muted);
+  font:
+    10px "Consolas",
+    monospace;
+}
+.snapshot-note span:first-child {
+  color: var(--success);
+  font-weight: 700;
+}

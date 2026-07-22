@@ -1,0 +1,58 @@
+/* 家庭成员查询条件、结果卡片和空状态样式。 */
+.search-ledger {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 12px;
+  padding: 20px;
+  background: var(--indigo-900);
+  border-left: 6px solid var(--vermilion);
+}
+.search-ledger .el-button {
+  color: var(--indigo-950);
+  background: #f3efe3;
+  border-color: #f3efe3;
+}
+.matched-name {
+  display: block;
+  color: var(--vermilion-dark);
+}
+.relationship {
+  display: block;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 12px;
+}
+.index-drawer {
+  display: grid;
+  grid-template-columns: 72px 1fr;
+  min-height: 230px;
+  margin-top: 30px;
+  background: #d8d4c9;
+  border: 1px solid #c4bfb2;
+  box-shadow: inset 0 0 0 8px #e1ddd3;
+}
+.drawer-tab {
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: var(--indigo-800);
+  font-family: "STSong", serif;
+  writing-mode: vertical-rl;
+  letter-spacing: 0.35em;
+}
+.index-drawer > div:last-child {
+  display: grid;
+  align-content: center;
+  padding: 40px;
+}
+.index-drawer strong {
+  font:
+    700 24px "STSong",
+    serif;
+}
+.index-drawer p {
+  max-width: 550px;
+  margin: 12px 0 0;
+  color: var(--muted);
+  line-height: 1.7;
+}

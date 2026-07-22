@@ -1,0 +1,12 @@
+/* Renderer 全局样式入口：先加载设计变量，再按页面模块组合样式。 */
+@import "./styles/theme.css";
+@import "./styles/shell.css";
+@import "./styles/auth.css";
+@import "./styles/import.css";
+@import "./styles/folder-settings.css";
+@import "./styles/search.css";
+@import "./styles/person-list.css";
+@import "./styles/detail.css";
+@import "./styles/detail-identity.css";
+@import "./styles/detail-records.css";
+@import "./styles/pagination.css";

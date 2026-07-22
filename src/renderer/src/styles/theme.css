@@ -1,0 +1,133 @@
+/* 全局设计令牌：颜色、字体、阴影和基础页面规则的单一来源。 */
+:root {
+  --ink: #17203a;
+  --indigo-950: #111936;
+  --indigo-900: #18234b;
+  --indigo-800: #253460;
+  --paper: #fffefa;
+  --paper-muted: #f3f0e7;
+  --desk: #e8e5dc;
+  --line: #d7d1c4;
+  --muted: #717686;
+  --vermilion: #b8322a;
+  --vermilion-dark: #8f211d;
+  --success: #3d6a50;
+  color: var(--ink);
+  background: var(--desk);
+  font-family: "Microsoft YaHei UI", "PingFang SC", sans-serif;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 960px;
+  height: 100%;
+  margin: 0;
+}
+body {
+  overflow: hidden;
+}
+button,
+input {
+  font: inherit;
+}
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+h1 {
+  margin-bottom: 10px;
+  font-family: "STSong", "SimSun", serif;
+  font-size: clamp(30px, 2.5vw, 44px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+h2 {
+  font-family: "STSong", "SimSun", serif;
+}
+.muted {
+  color: var(--muted);
+}
+.section-kicker {
+  display: block;
+  margin-bottom: 9px;
+  color: var(--vermilion);
+  font:
+    700 12px / 1.2 "Microsoft YaHei UI",
+    sans-serif;
+  letter-spacing: 0.18em;
+}
+.primary-action.el-button {
+  width: 100%;
+  margin-top: 14px;
+  background: var(--indigo-900);
+  border-color: var(--indigo-900);
+}
+.primary-action.el-button:hover {
+  background: var(--indigo-800);
+  border-color: var(--indigo-800);
+}
+.el-button--primary {
+  --el-button-bg-color: var(--indigo-900);
+  --el-button-border-color: var(--indigo-900);
+  --el-button-hover-bg-color: var(--indigo-800);
+  --el-button-hover-border-color: var(--indigo-800);
+}
+.el-button--danger {
+  --el-button-bg-color: var(--vermilion);
+  --el-button-border-color: var(--vermilion);
+}
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--indigo-800) inset;
+}
+.el-table {
+  --el-table-header-bg-color: #f1eee5;
+  --el-table-row-hover-bg-color: #f7f4ec;
+  --el-table-border-color: #dfdbd1;
+}
+.el-dialog {
+  border-top: 4px solid var(--vermilion);
+}
+.paper-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: 0 8px 24px rgba(31, 37, 53, 0.07);
+}
+.empty-sheet {
+  min-height: 260px;
+  display: grid;
+  place-content: center;
+  text-align: center;
+  color: var(--muted);
+  border: 1px dashed #c9c3b6;
+  background: rgba(255, 254, 250, 0.55);
+}
+.empty-sheet span {
+  color: var(--ink);
+  font:
+    700 21px "STSong",
+    "SimSun",
+    serif;
+}
+.empty-sheet p {
+  margin: 10px 0 0;
+}
+:focus-visible {
+  outline: 3px solid rgba(184, 50, 42, 0.35);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}

@@ -1,0 +1,83 @@
+{
+  "name": "personnel-archive-desktop",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "人员档案助手 Windows 客户端",
+  "main": "out/main/index.js",
+  "author": "Personnel Archive Team",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "typecheck": "vue-tsc --noEmit -p tsconfig.web.json && tsc --noEmit -p tsconfig.node.json",
+    "test": "vitest run",
+    "test:e2e": "pnpm build && playwright test",
+    "build": "pnpm typecheck && electron-vite build",
+    "build:win": "pnpm build && electron-builder --win nsis"
+  },
+  "dependencies": {
+    "@element-plus/icons-vue": "2.3.2",
+    "element-plus": "2.11.5",
+    "ky": "1.10.0",
+    "pinia": "3.0.3",
+    "vue": "3.5.22",
+    "vue-router": "4.6.3",
+    "zod": "4.1.12"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.2.4",
+    "@playwright/test": "1.55.1",
+    "@types/node": "24.10.0",
+    "@vitejs/plugin-vue": "6.0.1",
+    "@vue/test-utils": "2.4.6",
+    "electron": "43.2.0",
+    "electron-builder": "26.0.12",
+    "electron-vite": "5.0.0",
+    "happy-dom": "20.0.5",
+    "typescript": "5.9.3",
+    "vite": "7.1.9",
+    "vitest": "3.2.4",
+    "vue-tsc": "3.1.1"
+  },
+  "packageManager": "pnpm@10.18.3",
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "build": {
+    "appId": "cn.internal.personnelarchive",
+    "productName": "人员档案助手",
+    "executableName": "PersonnelArchive",
+    "asar": true,
+    "files": [
+      "out/**"
+    ],
+    "extraResources": [
+      {
+        "from": "build/icon.png",
+        "to": "icon.png"
+      }
+    ],
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico",
+      "artifactName": "PersonnelArchive-Setup.${ext}"
+    },
+    "mac": {
+      "icon": "build/icon.icns"
+    },
+    "linux": {
+      "icon": "build/icon.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "shortcutName": "人员档案助手"
+    }
+  }
+}
