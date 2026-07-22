@@ -4,9 +4,10 @@ Inherits all product, data, security, and API rules from `../AGENTS.md`. This di
 
 ## CURRENT CLIENT STATUS
 
-- Implemented routes are login, active archive list with selected batch ZIP export, family-member search, optional-field manual/automatic-folder batch import with the same duplicate-decision flow, folder settings, and complete archive detail/single-export-open.
-- Every business list uses the shared fixed pagination policy of 20 visible rows: personnel and family-member queries request server pages, while upload queues and current import results are sliced locally without discarding entries.
-- Archive detail displays every imported section in workbook order, including personal/employment fields, education, ordered history/reward rows, full family-member fields, declaration data, snapshot metadata, and the authenticated stored photo. Identity cards stay masked; photo Object URLs are revoked on replacement/unmount.
+- Implemented routes are login, active archive list with selected batch ZIP export, family-member search, optional-field manual/automatic-folder batch import with the same duplicate-decision flow and persistent import-history panel, folder settings, and complete archive detail/single-export-open.
+- The active interface is the Windows management-console variant of the archive-workbench theme over Element Plus and Avue: it uses a full-width system bar, light tree navigation, square controls, and dense bordered data grids. Avue renders the existing personnel directory columns/actions while feature stores remain authoritative for filtering, pagination, selection, and exports.
+- Every business list uses the shared fixed pagination policy of 20 visible rows: personnel, family-member, and import-history queries request server pages, while upload queues and current import results are sliced locally without discarding entries.
+- Archive detail displays every imported section in workbook order, including personal/employment fields, education, ordered history/reward rows, full family-member fields, declaration data, snapshot metadata, and the authenticated stored photo. Identity-card and phone values default to front-four/back-three masks; a user can explicitly reveal or hide one complete value, and revealed values plus photo Object URLs are cleared on replacement/unmount.
 - Batch export keeps identifiers as strings, downloads one server-generated ZIP, and exposes only a native save-dialog capability; the renderer never supplies an arbitrary target path.
 - Electron Playwright tests fail before process creation when they detect Codex's macOS Seatbelt sandbox, which otherwise aborts in AppKit and opens a misleading generic Electron crash dialog; run those tests from a normal terminal or Windows CI.
 - The client persists pending-upload/completed-archive folder settings under Electron `userData`, scans while an authorized session is active, and queues direct valid `.xlsx` children. Only automatically scanned files are moved after `IMPORTED`/`OVERWRITTEN`; manual, pending, skipped, failed, changed, or move-failed sources stay in place.
@@ -18,12 +19,12 @@ Inherits all product, data, security, and API rules from `../AGENTS.md`. This di
 
 - Electron with a security-patched stable release; Node.js LTS for tooling.
 - Vue 3, TypeScript strict mode, Vite/electron-vite.
-- Element Plus, Pinia, Vue Router, `ky`, Zod, Biome, and electron-builder.
+- Element Plus, `@smallwei/avue`, Pinia, Vue Router, `ky`, Zod, Biome, and electron-builder.
 - Use `pnpm` and commit the lockfile. Pin tool/runtime versions; never depend on `latest` tags.
 
 ## TARGET STRUCTURE
 
-Use `src/main`, `src/preload`, and `src/renderer`; reserve `src/shared` for contracts safe in every process. Under the renderer, use `app`, `features/{auth,archive-import,family-search,archive-view}`, and `shared/{api,components,types}`.
+Use `src/main`, `src/preload`, and `src/renderer`; reserve `src/shared` for contracts safe in every process. Under the renderer, use `app`, `features/{auth,archive-import,archive-view,family-search,folder-settings,person-list}`, and `shared/{api,components,types}`.
 
 Organize renderer code by business feature. Vue pages compose features; they do not own HTTP, import-state, or file-system logic.
 
@@ -42,6 +43,7 @@ Production loads packaged local UI only. Block arbitrary navigation, new windows
 
 - Login and session-expired handling.
 - Single/batch `.xlsx` selection, upload/precheck, duplicate-decision review, progress, and per-file result table.
+- Server-backed import-history browsing with processing time, batch, workbook name, operator, final/current status, and result message; refreshing or restarting the client must not erase it.
 - Pending/archive folder selection, authenticated-session background scanning into the upload queue, and automatic archive status/retry feedback.
 - Family-member fuzzy search with all matching personnel/member rows preserved.
 - Archive action that downloads the server-generated workbook and opens it with the associated desktop application.
@@ -61,7 +63,9 @@ The client may validate extension and size for immediate feedback, but template,
 - Components never call HTTP clients directly. Keep calls in each feature's API layer and parse API responses with Zod.
 - Keep access credentials in memory. Protect any persisted refresh credential with Electron `safeStorage`; never use `localStorage`.
 - Do not persist archive records, query results, photos, or source/generated Excel in IndexedDB or ordinary application storage.
+- Import history is queried from the authenticated service and kept only in page component memory; the client does not create a second local record store.
 - Never log full API payloads or sensitive fields. UI masking is required where a full value is unnecessary.
+- Base detail responses must never contain full identity-card or phone values. Fetch one full value only after the matching “显示” action, keep it in component memory, and clear it on “隐藏”, record replacement, route change, or unmount; the service remains authoritative for authorization and audit.
 - Revoke temporary image Object URLs and clean temporary workbooks on startup/retention expiry.
 - Client route/element permissions improve UX only; do not treat them as authorization.
 
@@ -70,9 +74,11 @@ The client may validate extension and size for immediate feedback, but template,
 - Chinese is the primary interface language.
 - Every data screen handles loading, empty, network failure, validation failure, no-permission, and expired-session states.
 - Every business-data list keeps the pagination footer visible when it contains data, states “每页 20 条”, and resets/clamps local page state when its backing collection shrinks.
+- Import history requests exactly 20 records per server page, sorts according to the service response, and can be refreshed without disturbing the current upload queue.
 - Batch import distinguishes pending decision, newly imported, overwritten, skipped, failed, and partially successful outcomes.
 - Dates display as `yyyy-MM-dd`; age shown in results is transient and never written back as source data.
 - The detail page follows the workbook's information hierarchy and provides a sticky in-page index; empty sections remain visible as explicit “未填写” states instead of disappearing.
+- Identity-card and phone rows place a compact “显示/隐藏” control directly after the value; blank masked values have no reveal action, loading is field-specific, and a failed reveal leaves the masked value visible.
 - Map behavior from stable backend error codes, never by parsing error-message text.
 
 ## BRANDING AND PACKAGING

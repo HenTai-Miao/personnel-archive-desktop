@@ -1,26 +1,26 @@
 <!-- 档案首卷：展示照片、个人基本情况和当前任职字段。 -->
 <script setup lang="ts">
-import type { PersonDetail } from "./schemas"
+import type { PersonDetail, SensitiveField } from "./schemas"
 
 defineProps<{
   readonly person: PersonDetail
   readonly photoUrl: string
   readonly photoLoading: boolean
   readonly photoError: string
+  readonly sensitiveValues: Readonly<Record<SensitiveField, string>>
+  readonly sensitiveLoading: SensitiveField | null
+  readonly sensitiveError: string
 }>()
 
-const emit = defineEmits<{ retryPhoto: [] }>()
+const emit = defineEmits<{
+  retryPhoto: []
+  toggleSensitive: [field: SensitiveField]
+}>()
 </script>
 
 <template>
   <article id="identity" class="paper-card dossier-section identity-sheet">
-    <header class="dossier-section-heading">
-      <span class="section-index">01</span>
-      <div>
-        <small>基本情况表 · 第一部分</small>
-        <h2>基本情况与任职信息</h2>
-      </div>
-    </header>
+    <header class="dossier-section-heading"><h2>基本情况与任职信息</h2></header>
 
     <div class="identity-layout">
       <figure class="archive-photo">
@@ -41,11 +41,24 @@ const emit = defineEmits<{ retryPhoto: [] }>()
 
       <div class="identity-records">
         <section class="dossier-subsection">
-          <header class="subsection-heading"><h3>个人基本信息</h3><span>证件号已安全脱敏</span></header>
+          <header class="subsection-heading"><h3>个人基本信息</h3><span>敏感信息默认脱敏，查看操作将被记录</span></header>
           <dl class="dossier-field-grid">
             <div><dt>姓名</dt><dd>{{ person.name || '—' }}</dd></div>
             <div><dt>人员编号</dt><dd>{{ person.employeeNo || '—' }}</dd></div>
-            <div class="wide-field"><dt>身份证号码</dt><dd class="masked-value">{{ person.identityCardMasked || '—' }}</dd></div>
+            <div class="wide-field">
+              <dt>身份证号码</dt>
+              <dd class="sensitive-value-row">
+                <span class="masked-value">{{ sensitiveValues.IDENTITY_CARD || person.identityCardMasked || '—' }}</span>
+                <button
+                  v-if="person.identityCardMasked"
+                  class="sensitive-toggle"
+                  type="button"
+                  :disabled="sensitiveLoading !== null"
+                  :aria-label="sensitiveValues.IDENTITY_CARD ? '隐藏完整身份证号码' : '显示完整身份证号码'"
+                  @click="emit('toggleSensitive', 'IDENTITY_CARD')"
+                >{{ sensitiveLoading === 'IDENTITY_CARD' ? '读取中' : sensitiveValues.IDENTITY_CARD ? '隐藏' : '显示' }}</button>
+              </dd>
+            </div>
             <div><dt>性别</dt><dd>{{ person.personal.gender || '—' }}</dd></div>
             <div><dt>出生年月</dt><dd>{{ person.personal.birthDate || '—' }}</dd></div>
             <div><dt>民族</dt><dd>{{ person.personal.nation || '—' }}</dd></div>
@@ -57,8 +70,22 @@ const emit = defineEmits<{ retryPhoto: [] }>()
             <div><dt>健康状况</dt><dd>{{ person.personal.healthStatus || '—' }}</dd></div>
             <div class="wide-field"><dt>通信地址</dt><dd>{{ person.personal.mailingAddress || '—' }}</dd></div>
             <div><dt>邮政编码</dt><dd>{{ person.personal.postalCode || '—' }}</dd></div>
-            <div><dt>联系电话</dt><dd>{{ person.personal.phoneNumber || '—' }}</dd></div>
+            <div>
+              <dt>联系电话</dt>
+              <dd class="sensitive-value-row">
+                <span class="masked-value">{{ sensitiveValues.PHONE_NUMBER || person.personal.phoneNumberMasked || '—' }}</span>
+                <button
+                  v-if="person.personal.phoneNumberMasked"
+                  class="sensitive-toggle"
+                  type="button"
+                  :disabled="sensitiveLoading !== null"
+                  :aria-label="sensitiveValues.PHONE_NUMBER ? '隐藏完整手机号码' : '显示完整手机号码'"
+                  @click="emit('toggleSensitive', 'PHONE_NUMBER')"
+                >{{ sensitiveLoading === 'PHONE_NUMBER' ? '读取中' : sensitiveValues.PHONE_NUMBER ? '隐藏' : '显示' }}</button>
+              </dd>
+            </div>
           </dl>
+          <p v-if="sensitiveError" class="sensitive-field-error">{{ sensitiveError }}</p>
         </section>
 
         <section class="dossier-subsection employment-block">

@@ -12,14 +12,11 @@ defineProps<{
 
 <template>
   <article id="education" class="paper-card dossier-section">
-    <header class="dossier-section-heading">
-      <span class="section-index">02</span>
-      <div><small>基本情况表 · 第二部分</small><h2>学历与教育经历</h2></div>
-    </header>
+    <header class="dossier-section-heading"><h2>学历与教育经历</h2></header>
 
     <div class="education-summary-grid">
       <section class="education-card">
-        <header><span>全日制教育</span><small>FULL-TIME</small></header>
+        <header><span>全日制教育</span></header>
         <dl>
           <div><dt>学历</dt><dd>{{ fullTime.educationLevel || '—' }}</dd></div>
           <div><dt>毕业院校</dt><dd>{{ fullTime.institutionName || '—' }}</dd></div>
@@ -28,7 +25,7 @@ defineProps<{
         </dl>
       </section>
       <section class="education-card in-service-card">
-        <header><span>在职教育</span><small>IN-SERVICE</small></header>
+        <header><span>在职教育</span></header>
         <dl>
           <div><dt>学历</dt><dd>{{ inService.educationLevel || '—' }}</dd></div>
           <div><dt>毕业院校</dt><dd>{{ inService.institutionName || '—' }}</dd></div>

@@ -32,17 +32,13 @@ async function submit(): Promise<void> {
 <template>
   <div class="login-page">
     <section class="login-identity">
-      <div class="login-system-code">PA · 01</div>
-      <h1>人员档案<br />妥善归柜</h1>
-      <p>导入、检索与查看人员信息档案，在一处完成。</p>
-      <div class="cabinet-lines" aria-hidden="true"><i /><i /><i /><i /></div>
+      <h1>人员信息档案管理系统</h1>
+      <p>内部业务系统</p>
     </section>
     <section class="login-panel">
       <div class="login-form-wrap">
-        <div class="red-stamp">内部<br />系统</div>
-        <span class="section-kicker">人员信息档案管理系统</span>
-        <h2>登录人员档案助手</h2>
-        <p class="muted">请使用单位分配的账号进入系统</p>
+        <h2>用户登录</h2>
+        <p class="muted">请输入用户名和密码</p>
         <el-form label-position="top" size="large" @submit.prevent="submit">
           <el-form-item label="用户名">
             <el-input v-model="form.username" autocomplete="username" placeholder="请输入用户名" />
@@ -51,9 +47,8 @@ async function submit(): Promise<void> {
             <el-input v-model="form.password" type="password" autocomplete="current-password" show-password placeholder="请输入密码" @keyup.enter="submit" />
           </el-form-item>
           <el-alert v-if="message" :title="message" type="error" :closable="false" show-icon />
-          <el-button class="primary-action" type="primary" :loading="loading" @click="submit">进入档案柜</el-button>
+          <el-button class="primary-action" type="primary" :loading="loading" @click="submit">登录</el-button>
         </el-form>
-        <small class="security-note">密码不会保存在本机；仅加密保存会话续期凭据</small>
       </div>
     </section>
   </div>

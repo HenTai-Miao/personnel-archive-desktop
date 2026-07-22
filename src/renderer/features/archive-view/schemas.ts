@@ -15,7 +15,7 @@ const personalInfoSchema = z
     healthStatus: z.string(),
     mailingAddress: z.string(),
     postalCode: z.string(),
-    phoneNumber: z.string(),
+    phoneNumberMasked: z.string(),
   })
   .strict()
 
@@ -96,6 +96,10 @@ export const personDetailSchema = z
   })
   .strict()
 
+export const sensitiveFieldSchema = z.enum(["IDENTITY_CARD", "PHONE_NUMBER"])
+export const sensitiveValueSchema = z.object({ value: z.string() }).strict()
+
 export type PersonDetail = z.infer<typeof personDetailSchema>
+export type SensitiveField = z.infer<typeof sensitiveFieldSchema>
 export type OrderedText = z.infer<typeof orderedTextSchema>
 export type EducationSummary = z.infer<typeof educationSummarySchema>

@@ -16,7 +16,7 @@ test("opens the secure login shell", async () => {
     try {
       const page = await application.firstWindow()
       await expect(page).toHaveTitle("人员档案助手")
-      await expect(page.getByRole("heading", { name: "登录人员档案助手" })).toBeVisible()
+      await expect(page.getByRole("heading", { name: "用户登录" })).toBeVisible()
     } finally {
       await application.close()
     }

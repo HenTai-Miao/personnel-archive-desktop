@@ -11,10 +11,7 @@ defineProps<{
 
 <template>
   <article id="career" class="paper-card dossier-section">
-    <header class="dossier-section-heading">
-      <span class="section-index">03</span>
-      <div><small>基本情况表 · 第三部分</small><h2>工作经历与奖惩情况</h2></div>
-    </header>
+    <header class="dossier-section-heading"><h2>工作经历与奖惩情况</h2></header>
     <ArchiveRowTable
       title="工作经历"
       :rows="workExperiences"

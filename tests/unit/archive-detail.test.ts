@@ -8,6 +8,7 @@ import ArchiveDetailPage from "@/features/archive-view/ArchiveDetailPage.vue"
 const apiMocks = vi.hoisted(() => ({
   getPerson: vi.fn(),
   downloadPersonPhoto: vi.fn(),
+  revealSensitiveValue: vi.fn(),
 }))
 
 vi.mock("@/features/archive-view/api", () => apiMocks)
@@ -27,7 +28,7 @@ describe("ArchiveDetailPage", () => {
       id: "7",
       employeeNo: "E-001",
       name: "测试甲",
-      identityCardMasked: "**************0012",
+      identityCardMasked: "1234***********012",
       personal: {
         gender: "女",
         birthDate: "2000-01-01",
@@ -40,7 +41,7 @@ describe("ArchiveDetailPage", () => {
         healthStatus: "健康",
         mailingAddress: "测试地址",
         postalCode: "410000",
-        phoneNumber: "00000002",
+        phoneNumberMasked: "0000*002",
       },
       employment: {
         organization: "测试单位",
@@ -97,6 +98,8 @@ describe("ArchiveDetailPage", () => {
     )
     const createObjectUrl = vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:person-photo")
     const revokeObjectUrl = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined)
+    const scrollIntoView = vi.fn()
+    HTMLElement.prototype.scrollIntoView = scrollIntoView
     const router = createRouter({
       history: createMemoryHistory(),
       routes: [
@@ -104,11 +107,17 @@ describe("ArchiveDetailPage", () => {
         { path: "/persons/:personId", name: "person-detail", component: ArchiveDetailPage },
       ],
     })
-    await router.push("/persons/7")
+    await router.push({
+      path: "/persons/7",
+      query: { member: "测试乙", relationship: "测试称谓" },
+    })
     await router.isReady()
 
     // When
-    const wrapper = mount(ArchiveDetailPage, { global: { plugins: [router, ElementPlus] } })
+    const wrapper = mount(ArchiveDetailPage, {
+      attachTo: document.body,
+      global: { plugins: [router, ElementPlus] },
+    })
     await flushPromises()
 
     // Then
@@ -124,9 +133,15 @@ describe("ArchiveDetailPage", () => {
     expect(wrapper.text()).toContain("测试奖励")
     expect(wrapper.text()).toContain("测试面貌")
     expect(wrapper.text()).toContain("申报信息")
+    expect(wrapper.text()).toContain("详情导航")
+    expect(wrapper.text()).not.toContain("FULL-TIME")
+    expect(wrapper.text()).not.toContain("IN-SERVICE")
+    expect(wrapper.text()).not.toContain("DECLARATION")
     expect(wrapper.get('img[alt="测试甲的档案照片"]').attributes("src")).toBe("blob:person-photo")
     expect(apiMocks.downloadPersonPhoto).toHaveBeenCalledWith("7")
     expect(createObjectUrl).toHaveBeenCalledOnce()
+    expect(wrapper.get(".family-member-row").classes()).toContain("is-search-match")
+    expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "center" })
 
     wrapper.unmount()
     expect(revokeObjectUrl).toHaveBeenCalledWith("blob:person-photo")

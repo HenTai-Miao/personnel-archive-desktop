@@ -1,0 +1,212 @@
+/* 学历、经历、家庭成员与申报记录。 */
+.education-summary-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.education-card {
+  overflow: hidden;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.education-card > header {
+  display: flex;
+  min-height: 44px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  background: var(--el-fill-color-lighter);
+  border-bottom: 1px solid var(--el-border-color-light);
+}
+
+.education-card > header span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.education-card dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.education-card dl > div {
+  min-height: 68px;
+  padding: 11px 14px;
+  border-right: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--el-border-color-lighter);
+}
+
+.education-card dl > div:nth-child(even) {
+  border-right: 0;
+}
+
+.education-card dl > div:nth-last-child(-n + 2) {
+  border-bottom: 0;
+}
+
+.dossier-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.dossier-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.dossier-table th,
+.dossier-table td {
+  padding: 11px 14px;
+  border-right: 1px solid var(--el-border-color-lighter);
+  border-bottom: 1px solid var(--el-border-color-lighter);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+.dossier-table th:last-child,
+.dossier-table td:last-child {
+  border-right: 0;
+}
+
+.dossier-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.dossier-table tbody tr:hover td {
+  background: var(--el-fill-color-light);
+}
+
+.dossier-table th {
+  color: var(--el-text-color-regular);
+  background: var(--el-fill-color-lighter);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dossier-table td {
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.dossier-table .row-number-column {
+  width: 56px;
+}
+
+.dossier-table .period-column {
+  width: 210px;
+}
+
+.dossier-table .row-number {
+  color: var(--el-text-color-secondary);
+}
+
+.dossier-table .primary-cell {
+  color: var(--el-text-color-primary);
+  font-weight: 500;
+}
+
+.dossier-empty-row {
+  display: grid;
+  min-height: 88px;
+  place-items: center;
+  color: var(--el-text-color-placeholder);
+  background: var(--el-fill-color-extra-light);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+  font-size: 13px;
+}
+
+.family-table {
+  min-width: 900px;
+}
+
+.family-table th:nth-child(1) {
+  width: 100px;
+}
+
+.family-table th:nth-child(2) {
+  width: 110px;
+}
+
+.family-table th:nth-child(3) {
+  width: 125px;
+}
+
+.family-table th:nth-child(4) {
+  width: 78px;
+}
+
+.family-table th:nth-child(5) {
+  width: 125px;
+}
+
+.family-member-row {
+  scroll-margin-top: 90px;
+}
+
+.family-table tbody .family-member-row.is-search-match td {
+  background: var(--el-color-warning-light-9);
+}
+
+.family-table tbody .family-member-row.is-search-match td:first-child {
+  box-shadow: inset 3px 0 var(--el-color-warning);
+}
+
+.family-member-row.is-search-match .primary-cell {
+  color: var(--el-color-warning-dark-2);
+  font-weight: 600;
+}
+
+.declaration-panel {
+  display: grid;
+  grid-template-columns: 160px minmax(0, 1fr);
+  overflow: hidden;
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.declaration-panel > div:first-child {
+  display: grid;
+  align-content: center;
+  padding: 16px;
+  background: var(--el-fill-color-lighter);
+  border-right: 1px solid var(--el-border-color-light);
+}
+
+.declaration-panel > div span {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.declaration-panel dl {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+}
+
+.declaration-panel dl > div {
+  padding: 14px 18px;
+  border-right: 1px solid var(--el-border-color-lighter);
+}
+
+.snapshot-note {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 20px;
+  margin-top: 16px;
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.snapshot-note span:first-child {
+  color: var(--el-color-success);
+  font-weight: 500;
+}

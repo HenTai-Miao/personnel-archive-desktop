@@ -1,0 +1,180 @@
+/* 人员目录、家庭成员查询与统一分页布局。 */
+.archive-list-ledger {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  margin-bottom: 16px;
+  overflow: hidden;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.ledger-count {
+  display: grid;
+  align-content: center;
+  min-height: 104px;
+  padding: 16px 20px;
+  background: var(--el-fill-color-light);
+  border-right: 1px solid var(--el-border-color-light);
+}
+
+.ledger-count span {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.ledger-count strong {
+  margin-top: 4px;
+  color: var(--el-text-color-primary);
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.ledger-count small {
+  color: var(--el-text-color-placeholder);
+  font-size: 11px;
+}
+
+.person-filter-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(150px, 1fr)) auto;
+  gap: 14px;
+  align-items: end;
+  padding: 20px;
+}
+
+.person-filter-form label > span {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+}
+
+.filter-actions,
+.picker-actions {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.filter-actions .el-button + .el-button,
+.picker-actions .el-button + .el-button {
+  margin-left: 0;
+}
+
+.list-alert,
+.page-stack > .el-alert {
+  margin-bottom: 16px;
+}
+
+.list-loading {
+  padding: 24px;
+}
+
+.person-list-card,
+.result-card {
+  overflow: hidden;
+}
+
+.table-heading {
+  display: flex;
+  min-height: 56px;
+  gap: 20px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--el-border-color-light);
+}
+
+.table-heading strong,
+.table-heading span {
+  display: block;
+}
+
+.table-heading strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.table-heading span {
+  margin-top: 3px;
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.batch-export-strip {
+  display: flex;
+  min-height: 32px;
+  gap: 10px;
+  align-items: center;
+}
+
+.person-list-card .table-heading .batch-export-strip > span {
+  margin: 0;
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+}
+
+.person-name,
+.matched-name {
+  color: var(--el-color-primary);
+}
+
+.relationship {
+  display: block;
+  margin-top: 3px;
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.search-ledger {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 16px;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.index-drawer,
+.drawer-tab {
+  display: none;
+}
+
+.result-card {
+  margin-top: 16px;
+}
+
+.fixed-list-pagination {
+  display: flex;
+  min-height: 56px;
+  gap: 18px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--el-bg-color);
+  border-top: 1px solid var(--el-border-color-light);
+}
+
+.fixed-list-pagination > span {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.fixed-list-pagination .el-pagination {
+  padding: 0;
+}
+
+@media (max-width: 1280px) {
+  .person-filter-form {
+    grid-template-columns: repeat(3, minmax(130px, 1fr));
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}

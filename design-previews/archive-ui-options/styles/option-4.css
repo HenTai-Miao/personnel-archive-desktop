@@ -1,0 +1,401 @@
+:root {
+  --ink: #1f2d36;
+  --blue: #1e5f8c;
+  --blue-dark: #174b70;
+  --canvas: #e5eaee;
+  --panel: #f8fafb;
+  --line: #aebbc5;
+  --line-dark: #7f919e;
+  --muted: #657580;
+  --selection: #dcecf6;
+}
+
+body {
+  color: var(--ink);
+  background: var(--canvas);
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+}
+
+.app-shell {
+  display: grid;
+  grid-template: 58px 30px minmax(0, 1fr) 62px / 218px minmax(0, 1fr) 264px;
+  grid-template-areas:
+    "brand brand user"
+    "label workspace workspace"
+    "nav workspace workspace"
+    "nav workspace workspace";
+}
+
+.brand-block {
+  grid-area: brand;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 0 18px;
+  color: #fff;
+  background: var(--blue);
+  border-bottom: 1px solid #113e5d;
+  box-shadow: inset 0 1px rgb(255 255 255 / 18%);
+}
+
+.brand-mark {
+  width: 26px;
+  height: 25px;
+  gap: 2px;
+  padding: 5px 4px;
+  background: #f3f7f9;
+  border: 1px solid #0f3f60;
+}
+
+.brand-mark span {
+  height: 2px;
+  background: var(--blue-dark);
+}
+
+.brand-copy strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.brand-copy span {
+  margin-top: 2px;
+  color: #c7dce9;
+  font-size: 9px;
+}
+
+.user-panel {
+  grid-area: user;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 16px;
+  color: #fff;
+  background: var(--blue);
+  border-bottom: 1px solid #113e5d;
+}
+
+.user-avatar {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  color: var(--blue-dark);
+  background: #eef4f7;
+  border: 1px solid #0f4567;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.user-copy strong {
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.user-copy small {
+  color: #c4d8e5;
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 9px;
+}
+
+.logout-button {
+  height: 27px;
+  padding: 0 9px;
+  color: #123f5d;
+  background: #e8eff3;
+  border: 1px solid #0e4669;
+  box-shadow: inset 1px 1px #fff;
+  font-size: 10px;
+}
+
+.nav-label {
+  grid-area: label;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  color: #40515d;
+  background: #d2dbe1;
+  border-right: 1px solid var(--line-dark);
+  border-bottom: 1px solid var(--line);
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.primary-nav {
+  grid-area: nav;
+  position: relative;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 2px;
+  padding: 12px 10px;
+  background: #edf1f4;
+  border-right: 1px solid var(--line-dark);
+}
+
+.primary-nav::before {
+  position: absolute;
+  top: 31px;
+  bottom: 35px;
+  left: 25px;
+  width: 1px;
+  background: #a8b4bd;
+  content: "";
+}
+
+.nav-item {
+  position: relative;
+  z-index: 1;
+  min-height: 38px;
+  gap: 8px;
+  padding: 0 8px;
+  color: #334651;
+  border: 1px solid transparent;
+  font-size: 11px;
+}
+
+.nav-item::before {
+  position: absolute;
+  left: 15px;
+  width: 10px;
+  height: 1px;
+  background: #a8b4bd;
+  content: "";
+}
+
+.nav-item:hover {
+  background: #e1e8ec;
+  border-color: #bdc8cf;
+}
+
+.nav-item.active {
+  color: #fff;
+  background: var(--blue);
+  border-color: #174b70;
+}
+
+.nav-icon {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  place-items: center;
+  background: #f7fafb;
+  border: 1px solid #9aaab5;
+  font-family: Consolas, monospace;
+  font-size: 11px;
+}
+
+.nav-item.active .nav-icon {
+  color: var(--blue-dark);
+}
+
+.workspace {
+  grid-area: workspace;
+  display: grid;
+  grid-template-rows: 43px 87px minmax(0, 1fr);
+  gap: 9px;
+  padding: 12px 16px 16px;
+  background: var(--canvas);
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  background: #f7f9fa;
+  border: 1px solid var(--line);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.page-title h1 {
+  font-size: 17px;
+  font-weight: 600;
+}
+
+.overview {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  background: var(--panel);
+  border: 1px solid var(--line-dark);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.count-panel {
+  display: grid;
+  align-content: center;
+  padding: 10px 14px;
+  background: #dce6ec;
+  border-right: 1px solid var(--line);
+}
+
+.count-panel span {
+  color: #4d5f6b;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.count-panel strong {
+  color: var(--blue-dark);
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 27px;
+  font-weight: 600;
+}
+
+.filter-form {
+  gap: 10px;
+  padding: 11px 14px;
+}
+
+.filter-field {
+  min-width: 110px;
+  flex: 1;
+}
+
+.filter-field span {
+  margin-bottom: 4px;
+  color: #40515d;
+  font-size: 10px;
+}
+
+.filter-field input {
+  height: 29px;
+  padding: 0 8px;
+  background: #fff;
+  border: 1px solid #8195a2;
+  box-shadow: inset 1px 1px 2px rgb(39 62 76 / 10%);
+  font-size: 11px;
+}
+
+.filter-field input:focus {
+  border-color: var(--blue);
+}
+
+.filter-actions {
+  gap: 6px;
+  align-self: flex-end;
+}
+
+.filter-actions button,
+.batch-button {
+  height: 29px;
+  padding: 0 12px;
+  border: 1px solid #778c99;
+  box-shadow: inset 1px 1px #fff;
+  font-size: 10px;
+}
+
+.primary-button,
+.batch-button {
+  color: #fff;
+  background: var(--blue);
+  border-color: var(--blue-dark);
+  box-shadow: inset 1px 1px rgb(255 255 255 / 28%);
+}
+
+.secondary-button {
+  color: #364a56;
+  background: #e8edf0;
+}
+
+button:disabled {
+  color: #8b989f;
+  background: #e7ebed;
+  border-color: #b6c0c6;
+}
+
+.directory {
+  display: grid;
+  min-height: 0;
+  grid-template-rows: 48px minmax(0, 1fr) 42px;
+  background: var(--panel);
+  border: 1px solid var(--line-dark);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.directory-header {
+  justify-content: space-between;
+  padding: 7px 10px;
+  background: #edf1f3;
+  border-bottom: 1px solid var(--line-dark);
+}
+
+.directory-title strong {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.directory-title span,
+.batch-actions > span {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.batch-actions {
+  gap: 9px;
+}
+
+thead {
+  color: #263b48;
+  background: #d8e1e7;
+}
+
+th,
+td {
+  height: 38px;
+  padding: 0 8px;
+  border-right: 1px solid #b8c4cb;
+  border-bottom: 1px solid #c7d0d6;
+  font-size: 11px;
+}
+
+th {
+  font-weight: 600;
+}
+
+tbody tr:nth-child(even) {
+  background: #f2f5f7;
+}
+
+tbody tr:hover {
+  background: var(--selection);
+}
+
+.person-name,
+.row-actions button {
+  color: var(--blue-dark);
+  font-weight: 700;
+}
+
+.organization small {
+  margin-top: 1px;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.employee-no,
+.updated-at {
+  font-family: "Cascadia Mono", Consolas, monospace;
+  font-size: 10px;
+}
+
+.pagination {
+  justify-content: space-between;
+  padding: 5px 10px;
+  color: #51636f;
+  background: #edf1f3;
+  border-top: 1px solid var(--line-dark);
+  font-size: 9px;
+}
+
+.pager button {
+  width: 27px;
+  height: 27px;
+  color: #334854;
+  background: #e9eef1;
+  border: 1px solid #8fa1ac;
+  box-shadow: inset 1px 1px #fff;
+}
+
+.pager button.current {
+  color: #fff;
+  background: var(--blue);
+  border-color: var(--blue-dark);
+}

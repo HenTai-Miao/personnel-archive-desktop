@@ -8,7 +8,7 @@ const detailResponse = {
   id: "7",
   employeeNo: "E-001",
   name: "测试甲",
-  identityCardMasked: "**************0012",
+  identityCardMasked: "1234***********678",
   personal: {
     gender: "女",
     birthDate: "2000-01-01",
@@ -21,7 +21,7 @@ const detailResponse = {
     healthStatus: "健康",
     mailingAddress: "测试地址",
     postalCode: "410000",
-    phoneNumber: "00000002",
+    phoneNumberMasked: "1380****000",
   },
   employment: {
     organization: "测试单位",
@@ -89,7 +89,8 @@ test("opens a complete imported archive from the personnel list", async () => {
       )
       await page.route("http://127.0.0.1:8080/api/v1/**", async (route) => {
         const request = route.request()
-        const path = new URL(request.url()).pathname
+        const url = new URL(request.url())
+        const path = url.pathname
         if (path === "/api/v1/auth/login") {
           await route.fulfill({
             status: 200,
@@ -136,6 +137,30 @@ test("opens a complete imported archive from the personnel list", async () => {
           })
           return
         }
+        if (path === "/api/v1/persons/7/sensitive-value") {
+          const field = url.searchParams.get("field")
+          switch (field) {
+            case "IDENTITY_CARD":
+              await route.fulfill({
+                status: 200,
+                contentType: "application/json",
+                headers: { "Cache-Control": "no-store" },
+                json: { value: "123456789012345678" },
+              })
+              return
+            case "PHONE_NUMBER":
+              await route.fulfill({
+                status: 200,
+                contentType: "application/json",
+                headers: { "Cache-Control": "no-store" },
+                json: { value: "13800138000" },
+              })
+              return
+            default:
+              await route.fulfill({ status: 400, contentType: "application/json", body: "{}" })
+              return
+          }
+        }
         if (path === "/api/v1/persons/7/photo") {
           const png = Buffer.from(
             "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
@@ -150,7 +175,7 @@ test("opens a complete imported archive from the personnel list", async () => {
       // When
       await page.getByPlaceholder("请输入用户名").fill("admin")
       await page.getByPlaceholder("请输入密码").fill("test-password")
-      await page.getByRole("button", { name: "进入档案柜" }).click()
+      await page.getByRole("button", { name: "登录" }).click()
       await page.getByRole("button", { name: "查看", exact: true }).click()
 
       // Then
@@ -160,6 +185,14 @@ test("opens a complete imported archive from the personnel list", async () => {
       await expect(page.getByText("覆盖版本", { exact: true })).toBeVisible()
       await expect(page.getByText("测试奖励", { exact: true })).toBeVisible()
       await expect(page.getByText("群众", { exact: true })).toBeVisible()
+      await expect(page.getByText("1234***********678", { exact: true })).toBeVisible()
+      await expect(page.getByText("1380****000", { exact: true })).toBeVisible()
+      await page.getByRole("button", { name: "显示完整身份证号码" }).click()
+      await expect(page.getByText("123456789012345678", { exact: true })).toBeVisible()
+      await page.getByRole("button", { name: "隐藏完整身份证号码" }).click()
+      await expect(page.getByText("123456789012345678", { exact: true })).toHaveCount(0)
+      await page.getByRole("button", { name: "显示完整手机号码" }).click()
+      await expect(page.getByText("13800138000", { exact: true })).toBeVisible()
       await expect(page.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
       const detailUrl = page.url()
       await page.getByRole("button", { name: "学历教育", exact: true }).click()

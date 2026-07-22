@@ -39,29 +39,13 @@ async function signOut(): Promise<void> {
 
 <template>
   <div class="app-shell">
-    <aside class="archive-nav">
+    <header class="system-bar">
       <div class="brand-block">
-        <div class="brand-seal">档</div>
         <div>
           <strong>人员档案助手</strong>
           <span>人员信息档案管理系统</span>
         </div>
       </div>
-      <div class="cabinet-label">业务档案柜</div>
-      <nav aria-label="主导航">
-        <RouterLink to="/persons" :class="{ active: route.path.startsWith('/persons') }">
-          <el-icon><Files /></el-icon><span>人员档案</span>
-        </RouterLink>
-        <RouterLink to="/search" :class="{ active: route.path.startsWith('/search') }">
-          <el-icon><Search /></el-icon><span>家庭成员查询</span>
-        </RouterLink>
-        <RouterLink v-if="canImport" to="/import" :class="{ active: route.path === '/import' }">
-          <el-icon><DocumentAdd /></el-icon><span>批量导入档案</span>
-        </RouterLink>
-        <RouterLink v-if="canImport" to="/settings" :class="{ active: route.path === '/settings' }">
-          <el-icon><Setting /></el-icon><span>文件夹设置</span>
-        </RouterLink>
-      </nav>
       <div class="nav-foot">
         <div class="user-card">
           <span class="user-avatar">{{ auth.user?.displayName.slice(0, 1) }}</span>
@@ -76,6 +60,23 @@ async function signOut(): Promise<void> {
           </div>
         </div>
       </div>
+    </header>
+    <aside class="archive-nav">
+      <div class="cabinet-label">业务导航</div>
+      <nav aria-label="主导航">
+        <RouterLink to="/persons" :class="{ active: route.path.startsWith('/persons') }">
+          <el-icon><Files /></el-icon><span>人员档案</span>
+        </RouterLink>
+        <RouterLink to="/search" :class="{ active: route.path.startsWith('/search') }">
+          <el-icon><Search /></el-icon><span>家庭成员查询</span>
+        </RouterLink>
+        <RouterLink v-if="canImport" to="/import" :class="{ active: route.path === '/import' }">
+          <el-icon><DocumentAdd /></el-icon><span>批量导入档案</span>
+        </RouterLink>
+        <RouterLink v-if="canImport" to="/settings" :class="{ active: route.path === '/settings' }">
+          <el-icon><Setting /></el-icon><span>文件夹设置</span>
+        </RouterLink>
+      </nav>
     </aside>
     <main class="paper-workspace"><RouterView /></main>
   </div>

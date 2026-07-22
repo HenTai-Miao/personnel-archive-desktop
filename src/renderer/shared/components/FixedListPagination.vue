@@ -12,10 +12,10 @@ function changePage(oneBasedPage: number): void {
 
 <template>
   <footer v-if="total > 0" class="fixed-list-pagination" data-test="list-pagination">
-    <span>每页 {{ LIST_PAGE_SIZE }} 条</span>
+    <span>每页 {{ LIST_PAGE_SIZE }} 条，共 {{ total }} 条</span>
     <el-pagination
       background
-      layout="prev, pager, next, total"
+      layout="prev, pager, next"
       :current-page="page + 1"
       :page-size="LIST_PAGE_SIZE"
       :total="total"

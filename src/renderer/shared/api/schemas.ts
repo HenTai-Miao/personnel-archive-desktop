@@ -3,6 +3,7 @@ import { z } from "zod"
 
 export const personIdSchema = z.string().min(1).brand("PersonId")
 export const importItemIdSchema = z.string().min(1).brand("ImportItemId")
+export const importBatchIdSchema = z.string().min(1).brand("ImportBatchId")
 
 export const roleSchema = z.enum(["ADMIN", "ARCHIVE_EDITOR", "VIEWER"])
 export const userSchema = z
@@ -36,3 +37,4 @@ export type AuthTokens = z.infer<typeof authTokensSchema>
 export type User = z.infer<typeof userSchema>
 export type PersonId = z.infer<typeof personIdSchema>
 export type ImportItemId = z.infer<typeof importItemIdSchema>
+export type ImportBatchId = z.infer<typeof importBatchIdSchema>

@@ -1,0 +1,381 @@
+:root {
+  --ink: #243237;
+  --charcoal: #202e34;
+  --charcoal-deep: #172329;
+  --teal: #0f716a;
+  --teal-soft: #d9ebe8;
+  --canvas: #e9efef;
+  --paper: #fff;
+  --line: #c7d2d2;
+  --muted: #687a7d;
+}
+
+body {
+  color: var(--ink);
+  background: var(--canvas);
+  font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+}
+
+.app-shell {
+  display: grid;
+  grid-template: 78px 34px minmax(0, 1fr) 72px / 188px minmax(0, 1fr);
+  grid-template-areas:
+    "brand workspace"
+    "label workspace"
+    "nav workspace"
+    "user workspace";
+}
+
+.brand-block {
+  grid-area: brand;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  padding: 0 17px;
+  color: #fff;
+  background: var(--charcoal-deep);
+}
+
+.brand-mark {
+  width: 28px;
+}
+
+.brand-mark span {
+  background: #53aaa3;
+}
+
+.brand-mark span:nth-child(2) {
+  width: 18px;
+}
+
+.brand-copy strong {
+  font-size: 15px;
+  letter-spacing: 0.04em;
+}
+
+.brand-copy span {
+  width: 110px;
+  margin-top: 4px;
+  overflow: hidden;
+  color: #8ea3ab;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-label {
+  grid-area: label;
+  padding: 13px 16px 0;
+  color: #81959c;
+  background: var(--charcoal);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: 0.15em;
+}
+
+.primary-nav {
+  grid-area: nav;
+  flex-direction: column;
+  gap: 3px;
+  padding: 12px 9px;
+  background: var(--charcoal);
+}
+
+.nav-item {
+  width: 100%;
+  min-height: 43px;
+  gap: 9px;
+  padding: 0 10px;
+  color: #bac8cc;
+  border-left: 3px solid transparent;
+  font-size: 11px;
+}
+
+.nav-item:hover {
+  background: rgb(255 255 255 / 5%);
+}
+
+.nav-item.active {
+  color: #fff;
+  background: #2b3c43;
+  border-left-color: #4ba39c;
+  font-weight: 700;
+}
+
+.nav-icon {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  color: #87a3aa;
+  background: #18262c;
+  font-family: Bahnschrift, sans-serif;
+  font-size: 12px;
+}
+
+.user-panel {
+  grid-area: user;
+  gap: 8px;
+  padding: 13px 12px;
+  color: #ecf3f3;
+  background: var(--charcoal-deep);
+}
+
+.user-avatar {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  background: var(--teal);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.user-copy {
+  min-width: 0;
+  flex: 1;
+}
+
+.user-copy strong {
+  overflow: hidden;
+  font-size: 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-copy small {
+  color: #80969d;
+  font-family: Bahnschrift, sans-serif;
+  font-size: 9px;
+}
+
+.logout-button {
+  padding: 0;
+  color: #82979d;
+  background: transparent;
+  border: 0;
+  font-size: 9px;
+}
+
+.workspace {
+  grid-area: workspace;
+  display: grid;
+  grid-template: 54px minmax(0, 1fr) / 248px minmax(0, 1fr);
+  grid-template-areas:
+    "title directory"
+    "overview directory";
+  gap: 14px;
+  padding: 20px 22px 22px;
+  background: var(--canvas);
+}
+
+.page-title {
+  grid-area: title;
+  display: flex;
+  align-items: center;
+  padding: 0 15px;
+  color: #fff;
+  background: var(--teal);
+}
+
+.page-title h1 {
+  font-size: 19px;
+  letter-spacing: 0.04em;
+}
+
+.overview {
+  grid-area: overview;
+  display: flex;
+  min-height: 0;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid #b9c8c8;
+}
+
+.count-panel {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: end;
+  padding: 17px 16px;
+  background: #dce9e8;
+  border-bottom: 1px solid #b9c8c8;
+}
+
+.count-panel span {
+  padding-bottom: 4px;
+  color: #4f686a;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.count-panel strong {
+  color: var(--teal);
+  font-family: Bahnschrift, sans-serif;
+  font-size: 31px;
+  font-weight: 600;
+}
+
+.filter-form {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 15px;
+  padding: 18px 16px;
+}
+
+.filter-field span {
+  margin-bottom: 6px;
+  color: #4d6063;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.filter-field input {
+  height: 34px;
+  padding: 0 10px;
+  color: var(--ink);
+  background: #f8fafa;
+  border: 1px solid #aebebe;
+  font-size: 11px;
+}
+
+.filter-field input:focus {
+  background: #fff;
+  border-color: var(--teal);
+}
+
+.filter-actions {
+  display: grid;
+  grid-template-columns: 1fr 70px;
+  gap: 7px;
+  margin-top: 3px;
+}
+
+.filter-actions button,
+.batch-button {
+  height: 34px;
+  padding: 0 12px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.primary-button,
+.batch-button {
+  color: #fff;
+  background: var(--teal);
+  border: 1px solid var(--teal);
+}
+
+.secondary-button {
+  color: #526669;
+  background: #fff;
+  border: 1px solid #b8c5c6;
+}
+
+button:disabled {
+  opacity: 0.43;
+}
+
+.directory {
+  grid-area: directory;
+  display: grid;
+  min-width: 0;
+  min-height: 0;
+  grid-template-rows: 66px minmax(0, 1fr) 48px;
+  overflow: hidden;
+  background: var(--paper);
+  border: 1px solid #b9c8c8;
+}
+
+.directory-header {
+  justify-content: space-between;
+  padding: 11px 14px 11px 18px;
+  border-bottom: 1px solid #aebebe;
+}
+
+.directory-title strong {
+  font-size: 14px;
+}
+
+.directory-title span,
+.batch-actions > span {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 9px;
+}
+
+.directory-title strong::after {
+  display: inline-block;
+  width: 34px;
+  height: 2px;
+  margin: 0 0 3px 10px;
+  background: var(--teal);
+  content: "";
+}
+
+.batch-actions {
+  gap: 9px;
+}
+
+.table-wrap table {
+  min-width: 920px;
+}
+
+thead {
+  color: #eaf5f4;
+  background: #31464d;
+}
+
+th,
+td {
+  height: 42px;
+  padding: 0 10px;
+  border-right: 1px solid #e0e6e6;
+  border-bottom: 1px solid #d8e0e0;
+  font-size: 10px;
+}
+
+tbody tr:hover {
+  background: #ebf4f3;
+}
+
+.person-name,
+.row-actions button {
+  color: var(--teal);
+  font-weight: 700;
+}
+
+.organization small {
+  margin-top: 2px;
+  color: var(--muted);
+  font-size: 8px;
+}
+
+.employee-no,
+.updated-at {
+  font-family: Bahnschrift, "Microsoft YaHei UI", sans-serif;
+  font-size: 9px;
+}
+
+.pagination {
+  justify-content: space-between;
+  padding: 7px 13px;
+  color: var(--muted);
+  background: #f3f7f7;
+  border-top: 1px solid #aebebe;
+  font-size: 9px;
+}
+
+.pager button {
+  width: 29px;
+  height: 29px;
+  color: #50666a;
+  background: #fff;
+  border: 1px solid #b9c7c8;
+}
+
+.pager button.current {
+  color: #fff;
+  background: var(--teal);
+  border-color: var(--teal);
+}

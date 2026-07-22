@@ -8,6 +8,7 @@ const paginationStub = defineComponent({
   name: "ElPagination",
   props: {
     currentPage: { type: Number, required: true },
+    layout: { type: String, required: true },
     pageSize: { type: Number, required: true },
     total: { type: Number, required: true },
   },
@@ -28,7 +29,9 @@ describe("FixedListPagination", () => {
 
     // Then
     expect(wrapper.text()).toContain("每页 20 条")
+    expect(wrapper.text()).toContain("共 3 条")
     expect(pagination.props("currentPage")).toBe(1)
+    expect(pagination.props("layout")).toBe("prev, pager, next")
     expect(pagination.props("pageSize")).toBe(20)
     expect(pagination.props("total")).toBe(3)
   })

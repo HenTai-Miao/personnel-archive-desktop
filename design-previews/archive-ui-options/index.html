@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' fill='%23172c3a'/%3E%3Cpath d='M7 8h18v16H7z' fill='%23f4f6f7'/%3E%3Cpath d='M10 12h12M10 16h12M10 20h8' stroke='%232f776f' stroke-width='2'/%3E%3C/svg%3E" />
+    <title>人员档案助手 · 五版设计比较</title>
+    <style>
+      :root { color: #21313d; background: #e5eaed; font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif; }
+      * { box-sizing: border-box; }
+      html, body { height: 100%; margin: 0; }
+      body { display: grid; grid-template-rows: auto auto minmax(0, 1fr); overflow: hidden; }
+      header { display: flex; align-items: center; justify-content: space-between; padding: 14px 22px; color: #f7fafb; background: #172c3a; border-bottom: 1px solid #0d202c; }
+      header div { display: flex; gap: 12px; align-items: baseline; }
+      h1 { margin: 0; font-size: 18px; letter-spacing: .04em; }
+      header span { color: #9fb0ba; font-size: 12px; }
+      #open-current { padding: 7px 12px; color: #eaf2f4; background: transparent; border: 1px solid #617986; cursor: pointer; font: inherit; font-size: 12px; }
+      nav { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; padding: 1px; background: #b8c2c8; border-bottom: 1px solid #aab5bc; }
+      nav button { min-width: 0; padding: 11px 14px; color: #43525e; background: #f4f6f7; border: 0; cursor: pointer; text-align: left; font: inherit; }
+      nav button:hover { background: #fff; }
+      nav button.active { color: #173f54; background: #fff; box-shadow: inset 0 -3px #2f776f; }
+      nav b, nav small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+      nav b { font-size: 13px; }
+      nav small { margin-top: 3px; color: #788690; font-size: 10px; font-weight: 400; }
+      iframe { width: 100%; height: 100%; background: #fff; border: 0; }
+      @media (max-width: 1050px) { nav small { display: none; } nav button { text-align: center; } header span { display: none; } }
+    </style>
+  </head>
+  <body>
+    <header><div><h1>人员档案助手 · 五版设计比较</h1><span>业务内容完全一致，只比较布局与视觉</span></div><button id="open-current" type="button">新窗口打开本版</button></header>
+    <nav aria-label="设计方案">
+      <button class="active" data-src="option-1.html"><b>01 蓝灰档案台账</b><small>当前方向的精修版</small></button>
+      <button data-src="option-2.html"><b>02 横向业务栏</b><small>释放表格横向空间</small></button>
+      <button data-src="option-3.html"><b>03 纸质卷宗柜</b><small>更强的档案行业识别</small></button>
+      <button data-src="option-4.html"><b>04 Windows 管理台</b><small>传统政企桌面效率</small></button>
+      <button data-src="option-5.html"><b>05 双栏检索工作台</b><small>面向高频查档操作</small></button>
+    </nav>
+    <iframe id="preview" title="设计方案预览" src="option-1.html"></iframe>
+    <script>
+      const preview = document.querySelector("#preview")
+      const buttons = [...document.querySelectorAll("nav button")]
+      const selectOption = (button) => {
+        buttons.forEach((item) => item.classList.toggle("active", item === button))
+        preview.src = button.dataset.src
+        location.hash = button.dataset.src.replace("option-", "").replace(".html", "")
+      }
+      buttons.forEach((button) => button.addEventListener("click", () => selectOption(button)))
+      document.querySelector("#open-current").addEventListener("click", () => window.open(preview.src, "_blank"))
+      const initial = buttons.find((button) => button.dataset.src === `option-${location.hash.slice(1)}.html`)
+      if (initial) selectOption(initial)
+    </script>
+  </body>
+</html>

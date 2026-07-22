@@ -1,0 +1,120 @@
+/* 档案详情标题、页内导航与分区容器。 */
+.archive-detail-page {
+  width: min(1400px, 100%);
+  scroll-behavior: smooth;
+}
+
+.person-dossier-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 20px;
+  align-items: center;
+  padding: 18px 20px;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base) var(--el-border-radius-base) 0 0;
+}
+
+.person-dossier-header::before {
+  display: none;
+}
+
+.person-dossier-header h1 {
+  margin: 2px 0 4px;
+  font-size: 22px;
+}
+
+.person-dossier-header p {
+  max-width: 760px;
+  margin: 0;
+  color: var(--el-text-color-regular);
+  font-size: 13px;
+}
+
+.person-dossier-header .record-number {
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.dossier-index {
+  position: sticky;
+  top: -1px;
+  z-index: 8;
+  display: flex;
+  min-height: 44px;
+  align-items: stretch;
+  margin: 0;
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-top: 0;
+  border-radius: 0 0 var(--el-border-radius-base) var(--el-border-radius-base);
+}
+
+.dossier-index > span,
+.dossier-index button {
+  display: inline-flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.dossier-index > span {
+  color: var(--el-text-color-secondary);
+  background: var(--el-fill-color-light);
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.dossier-index button {
+  color: var(--el-text-color-regular);
+  background: transparent;
+  border: 0;
+  border-right: 1px solid var(--el-border-color-lighter);
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.dossier-index button:hover,
+.dossier-index button:focus-visible {
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+}
+
+.dossier-index button::after {
+  display: none;
+}
+
+.detail-alert {
+  margin-top: 16px;
+}
+
+.dossier-sections {
+  display: grid;
+  gap: 16px;
+  margin-top: 16px;
+  padding-bottom: 20px;
+}
+
+.dossier-section {
+  scroll-margin-top: 60px;
+  padding: 0 20px 20px;
+  overflow: hidden;
+}
+
+.dossier-section-heading {
+  display: flex;
+  min-height: 50px;
+  align-items: center;
+  margin: 0 -20px 20px;
+  padding: 0 20px;
+  background: var(--el-fill-color-lighter);
+  border-bottom: 1px solid var(--el-border-color-light);
+}
+
+.dossier-section-heading h2 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.detail-loading {
+  padding: 32px;
+}

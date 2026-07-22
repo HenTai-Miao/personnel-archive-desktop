@@ -1,7 +1,7 @@
 <!-- 完整档案查看页：读取全部入库字段与照片，并按原工作簿分区呈现。 -->
 <script setup lang="ts">
 import { ArrowLeft, Download } from "@element-plus/icons-vue"
-import { computed, onBeforeUnmount, onMounted, ref } from "vue"
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { errorMessage } from "@/shared/api/error"
 import { personIdSchema } from "@/shared/api/schemas"
@@ -9,9 +9,9 @@ import ArchiveCareerSheet from "./ArchiveCareerSheet.vue"
 import ArchiveEducationSheet from "./ArchiveEducationSheet.vue"
 import ArchiveFamilySheet from "./ArchiveFamilySheet.vue"
 import ArchiveIdentitySheet from "./ArchiveIdentitySheet.vue"
-import { downloadPersonPhoto, getPerson } from "./api"
+import { downloadPersonPhoto, getPerson, revealSensitiveValue } from "./api"
 import { downloadAndOpenArchive } from "./open-archive"
-import type { PersonDetail } from "./schemas"
+import type { PersonDetail, SensitiveField } from "./schemas"
 
 const route = useRoute()
 const router = useRouter()
@@ -23,6 +23,14 @@ const messageFailed = ref(false)
 const photoUrl = ref("")
 const photoLoading = ref(false)
 const photoError = ref("")
+const highlightedMemberName = ref("")
+const highlightedRelationship = ref("")
+const sensitiveValues = reactive<Record<SensitiveField, string>>({
+  IDENTITY_CARD: "",
+  PHONE_NUMBER: "",
+})
+const sensitiveLoading = ref<SensitiveField | null>(null)
+const sensitiveError = ref("")
 
 const employmentSummary = computed(() => {
   const current = person.value
@@ -49,7 +57,11 @@ const updatedAtLabel = computed(() => {
 })
 
 onMounted(loadDetail)
-onBeforeUnmount(revokePhotoUrl)
+onBeforeUnmount(() => {
+  revokePhotoUrl()
+  sensitiveValues.IDENTITY_CARD = ""
+  sensitiveValues.PHONE_NUMBER = ""
+})
 
 async function loadDetail(): Promise<void> {
   const parsed = personIdSchema.safeParse(route.params["personId"])
@@ -63,6 +75,7 @@ async function loadDetail(): Promise<void> {
     person.value = detail
     // 详情先落屏，照片走独立加载状态，慢图片不能阻塞其余已入库字段。
     loading.value = false
+    await focusMatchedFamilyMember(detail)
     if (detail.photo !== null) await loadPhoto()
   } catch (error) {
     if (!(error instanceof Error)) throw error
@@ -90,6 +103,26 @@ async function loadPhoto(): Promise<void> {
   }
 }
 
+async function toggleSensitive(field: SensitiveField): Promise<void> {
+  const current = person.value
+  if (current === null || sensitiveLoading.value !== null) return
+  sensitiveError.value = ""
+  if (sensitiveValues[field].length > 0) {
+    sensitiveValues[field] = ""
+    return
+  }
+  sensitiveLoading.value = field
+  try {
+    const result = await revealSensitiveValue(current.id, field)
+    sensitiveValues[field] = result.value
+  } catch (error) {
+    if (!(error instanceof Error)) throw error
+    sensitiveError.value = errorMessage(error)
+  } finally {
+    sensitiveLoading.value = null
+  }
+}
+
 async function openArchive(): Promise<void> {
   const current = person.value
   if (current === null) return
@@ -104,6 +137,27 @@ async function openArchive(): Promise<void> {
   } finally {
     opening.value = false
   }
+}
+
+async function focusMatchedFamilyMember(detail: PersonDetail): Promise<void> {
+  const member = typeof route.query["member"] === "string" ? route.query["member"].trim() : ""
+  const relationship =
+    typeof route.query["relationship"] === "string" ? route.query["relationship"].trim() : ""
+  if (member.length === 0) return
+
+  const exactMatch = detail.familyMembers.some(
+    (candidate) => candidate.name === member && candidate.relationship === relationship,
+  )
+  const nameMatch = detail.familyMembers.some((candidate) => candidate.name === member)
+  if (!exactMatch && !nameMatch) return
+
+  highlightedMemberName.value = member
+  highlightedRelationship.value = exactMatch ? relationship : ""
+  await nextTick()
+  document.querySelector<HTMLElement>(".family-member-row.is-search-match")?.scrollIntoView({
+    behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth",
+    block: "center",
+  })
 }
 
 function revokePhotoUrl(): void {
@@ -132,19 +186,17 @@ function scrollToSection(sectionId: "identity" | "education" | "career" | "famil
     <template v-else>
       <header class="person-dossier-header">
         <div class="dossier-heading-copy">
-          <span class="dossier-eyebrow">CURRENT PERSONNEL RECORD</span>
-          <p class="record-number">档案号 · {{ person.employeeNo || '未填写' }}</p>
+          <p class="record-number">档案编号：{{ person.employeeNo || '未填写' }}</p>
           <h1>{{ person.name || '未填写姓名' }}</h1>
           <p>{{ employmentSummary || '当前任职信息未填写' }}</p>
         </div>
-        <div class="active-stamp">有效<br />档案</div>
         <el-button type="primary" size="large" :icon="Download" :loading="opening" @click="openArchive">
           下载并打开 Excel
         </el-button>
       </header>
 
       <nav class="dossier-index" aria-label="档案内容索引">
-        <span>卷内目录</span>
+        <span>详情导航</span>
         <button type="button" @click="scrollToSection('identity')">基本与任职</button>
         <button type="button" @click="scrollToSection('education')">学历教育</button>
         <button type="button" @click="scrollToSection('career')">经历奖惩</button>
@@ -166,7 +218,11 @@ function scrollToSection(sectionId: "identity" | "education" | "career" | "famil
           :photo-url="photoUrl"
           :photo-loading="photoLoading"
           :photo-error="photoError"
+          :sensitive-values="sensitiveValues"
+          :sensitive-loading="sensitiveLoading"
+          :sensitive-error="sensitiveError"
           @retry-photo="loadPhoto"
+          @toggle-sensitive="toggleSensitive"
         />
         <ArchiveEducationSheet
           :full-time="person.education.fullTime"
@@ -177,7 +233,12 @@ function scrollToSection(sectionId: "identity" | "education" | "career" | "famil
           :work-experiences="person.workExperiences"
           :rewards-punishments="person.rewardsPunishments"
         />
-        <ArchiveFamilySheet :person="person" :updated-at-label="updatedAtLabel" />
+        <ArchiveFamilySheet
+          :person="person"
+          :updated-at-label="updatedAtLabel"
+          :highlighted-member-name="highlightedMemberName"
+          :highlighted-relationship="highlightedRelationship"
+        />
       </div>
     </template>
   </section>

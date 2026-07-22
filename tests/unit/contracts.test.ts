@@ -1,6 +1,7 @@
 /** HTTP 契约测试：验证共享 Zod DTO 接受约定数据并拒绝结构漂移。 */
 import { describe, expect, it } from "vitest"
 import { router } from "@/app/router"
+import { buildImportHistoryPath } from "@/features/archive-import/api"
 import { importBatchSchema } from "@/features/archive-import/schemas"
 import { buildFamilySearchPath } from "@/features/family-search/api"
 import { familySearchPageSchema } from "@/features/family-search/schemas"
@@ -45,6 +46,14 @@ describe("API response contracts", () => {
       totalPages: 1,
     })
     expect(page.content[0]?.id).toBe("9007199254740993")
+  })
+
+  it("uses server pagination for permanent import records", () => {
+    // Given / When
+    const path = buildImportHistoryPath({ page: 2, size: 20 })
+
+    // Then
+    expect(path).toBe("imports/history?page=2&size=20")
   })
 
   it("keeps repeated family member matches", () => {

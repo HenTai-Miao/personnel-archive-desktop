@@ -9,6 +9,7 @@ import { errorMessage } from "@/shared/api/error"
 import type { PersonId } from "@/shared/api/schemas"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import BatchExportControl from "./BatchExportControl.vue"
+import { PERSON_LIST_CRUD_OPTION } from "./person-list-crud"
 import type { PersonListItem } from "./schemas"
 import { usePersonListStore } from "./store"
 
@@ -18,6 +19,7 @@ const router = useRouter()
 const openingPersonId = ref<PersonId | null>(null)
 const actionMessage = ref("")
 const actionFailed = ref(false)
+const crudRows = computed(() => store.results.map((person) => ({ ...person })))
 const canImport = computed(() => {
   const roles = auth.user?.roles ?? []
   return roles.includes("ADMIN") || roles.includes("ARCHIVE_EDITOR")
@@ -55,18 +57,14 @@ async function openArchive(person: PersonListItem): Promise<void> {
   <section class="page-stack person-list-page">
     <header class="page-header">
       <div>
-        <span class="section-kicker">在册总目</span>
         <h1>人员档案</h1>
-        <p>查看当前有效档案，可按姓名、人员编号或单位部门快速定位。</p>
       </div>
-      <div class="header-stamp">在册<br />档案</div>
     </header>
 
     <div class="archive-list-ledger">
       <div class="ledger-count">
-        <span>活动档案</span>
+        <span>档案总数</span>
         <strong>{{ store.total }}</strong>
-        <small>份在册记录</small>
       </div>
       <form class="person-filter-form" @submit.prevent="store.load(0)">
         <label>
@@ -128,35 +126,29 @@ async function openArchive(person: PersonListItem): Promise<void> {
         </div>
         <BatchExportControl />
       </div>
-      <el-table v-loading="store.loading" :data="store.results" stripe @selection-change="store.select">
-        <el-table-column type="selection" width="52" align="center" />
-        <el-table-column label="人员编号" min-width="125">
-          <template #default="scope">{{ scope.row.employeeNo || '—' }}</template>
-        </el-table-column>
-        <el-table-column label="姓名" min-width="115">
-          <template #default="scope"><strong class="person-name">{{ scope.row.name || '未填写姓名' }}</strong></template>
-        </el-table-column>
-        <el-table-column label="单位 / 部门" min-width="230">
-          <template #default="scope">
-            {{ scope.row.organization || '—' }}
-            <small v-if="scope.row.department" class="relationship">{{ scope.row.department }}</small>
-          </template>
-        </el-table-column>
-        <el-table-column prop="position" label="职务" min-width="130">
-          <template #default="scope">{{ scope.row.position || '—' }}</template>
-        </el-table-column>
-        <el-table-column prop="titleOrSkill" label="职称 / 技能" min-width="140">
-          <template #default="scope">{{ scope.row.titleOrSkill || '—' }}</template>
-        </el-table-column>
-        <el-table-column label="更新日期" width="155">
-          <template #default="scope">{{ updatedAtLabel(scope.row.updatedAt) }}</template>
-        </el-table-column>
-        <el-table-column label="档案操作" width="170" fixed="right">
-          <template #default="scope">
+      <avue-crud
+        class="archive-crud"
+        :data="crudRows"
+        :option="PERSON_LIST_CRUD_OPTION"
+        :table-loading="store.loading"
+        @selection-change="store.select"
+      >
+        <template #employeeNo="{ row }">{{ row.employeeNo || '—' }}</template>
+        <template #name="{ row }">
+          <strong class="person-name">{{ row.name || '未填写姓名' }}</strong>
+        </template>
+        <template #organization="{ row }">
+          {{ row.organization || '—' }}
+          <small v-if="row.department" class="relationship">{{ row.department }}</small>
+        </template>
+        <template #position="{ row }">{{ row.position || '—' }}</template>
+        <template #titleOrSkill="{ row }">{{ row.titleOrSkill || '—' }}</template>
+        <template #updatedAt="{ row }">{{ updatedAtLabel(row.updatedAt) }}</template>
+        <template #menu="{ row }">
             <el-button
               type="primary"
               link
-              @click="router.push({ name: 'person-detail', params: { personId: scope.row.id } })"
+              @click="router.push({ name: 'person-detail', params: { personId: row.id } })"
             >
               查看
             </el-button>
@@ -164,14 +156,13 @@ async function openArchive(person: PersonListItem): Promise<void> {
               type="primary"
               link
               :icon="Download"
-              :loading="openingPersonId === scope.row.id"
-              @click="openArchive(scope.row)"
+              :loading="openingPersonId === row.id"
+              @click="openArchive(row)"
             >
               导出
             </el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+        </template>
+      </avue-crud>
       <FixedListPagination
         :page="store.page"
         :total="store.total"

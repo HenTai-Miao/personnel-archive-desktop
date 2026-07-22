@@ -2,12 +2,23 @@
 import { mount } from "@vue/test-utils"
 import ElementPlus from "element-plus"
 import { createPinia, setActivePinia } from "pinia"
-import { describe, expect, it } from "vitest"
+import { beforeEach, describe, expect, it, vi } from "vitest"
 import { defineComponent } from "vue"
+import { fetchImportHistory } from "@/features/archive-import/api"
 import ImportPage from "@/features/archive-import/ImportPage.vue"
 import type { ImportRow, QueuedWorkbook } from "@/features/archive-import/queue-model"
-import { importItemSchema } from "@/features/archive-import/schemas"
+import {
+  type ImportStatus,
+  importHistoryPageSchema,
+  importItemSchema,
+} from "@/features/archive-import/schemas"
 import { useImportStore } from "@/features/archive-import/store"
+
+vi.mock("@/features/archive-import/api", () => ({
+  fetchImportHistory: vi.fn(),
+  submitDecision: vi.fn(),
+  uploadWorkbooks: vi.fn(),
+}))
 
 const tableStub = defineComponent({
   name: "ElTable",
@@ -42,6 +53,20 @@ function importRows(count: number): readonly ImportRow[] {
   }))
 }
 
+function importRowsWithStatuses(statuses: readonly ImportStatus[]): readonly ImportRow[] {
+  return statuses.map((status, index) => ({
+    ...importItemSchema.parse({
+      itemId: `summary-${index + 1}`,
+      fileName: `汇总-${index + 1}.xlsx`,
+      status,
+      code: status,
+      message: "处理结果",
+    }),
+    source: { kind: "MANUAL" } as const,
+    localState: { kind: "MANUAL_RETAINED" } as const,
+  }))
+}
+
 function queuedWorkbooks(count: number): readonly QueuedWorkbook[] {
   return Array.from({ length: count }, (_, index) => ({
     id: `queue-${index + 1}`,
@@ -60,6 +85,18 @@ function mountImportPage() {
 }
 
 describe("ImportPage list pagination", () => {
+  beforeEach(() => {
+    vi.mocked(fetchImportHistory).mockResolvedValue(
+      importHistoryPageSchema.parse({
+        content: [],
+        page: 0,
+        size: 20,
+        totalElements: 0,
+        totalPages: 0,
+      }),
+    )
+  })
+
   it("shows only the first 20 import results on the first page", () => {
     // Given
     setActivePinia(createPinia())
@@ -74,6 +111,34 @@ describe("ImportPage list pagination", () => {
     expect(results.text()).toContain("结果-20.xlsx")
     expect(results.text()).not.toContain("结果-21.xlsx")
     expect(wrapper.text()).toContain("每页 20 条")
+    wrapper.unmount()
+  })
+
+  it("labelsABatchAsAllFailedWhenEveryWorkbookFailed", () => {
+    // Given
+    setActivePinia(createPinia())
+    useImportStore().items = importRowsWithStatuses(["FAILED", "FAILED"])
+
+    // When
+    const wrapper = mountImportPage()
+
+    // Then
+    expect(wrapper.text()).toContain("全部失败")
+    expect(wrapper.text()).not.toContain("部分成功")
+    wrapper.unmount()
+  })
+
+  it("labelsABatchAsPartiallySuccessfulWhenSuccessAndFailureAreMixed", () => {
+    // Given
+    setActivePinia(createPinia())
+    useImportStore().items = importRowsWithStatuses(["IMPORTED", "FAILED"])
+
+    // When
+    const wrapper = mountImportPage()
+
+    // Then
+    expect(wrapper.text()).toContain("部分成功")
+    expect(wrapper.text()).not.toContain("全部失败")
     wrapper.unmount()
   })
 

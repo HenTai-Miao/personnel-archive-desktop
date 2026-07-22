@@ -71,7 +71,7 @@ test("shows 20 personnel rows per page and loads the next server page", async ()
       })
       await page.getByPlaceholder("请输入用户名").fill("admin")
       await page.getByPlaceholder("请输入密码").fill("test-password")
-      await page.getByRole("button", { name: "进入档案柜" }).click()
+      await page.getByRole("button", { name: "登录" }).click()
       await expect(page.getByText("分页人员20", { exact: true })).toBeVisible()
       await expect(page.getByText("分页人员21", { exact: true })).toHaveCount(0)
 

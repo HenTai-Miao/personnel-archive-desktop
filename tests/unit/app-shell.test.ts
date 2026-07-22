@@ -8,8 +8,8 @@ import { useAuthStore } from "@/features/auth/store"
 import { userSchema } from "@/shared/api/schemas"
 import AppShell from "@/shared/components/AppShell.vue"
 
-describe("AppShell user actions", () => {
-  it("places the logout control beside the display name", async () => {
+describe("AppShell Windows management layout", () => {
+  it("keeps the brand and user actions together in the top system bar", async () => {
     // Given
     const pinia = createPinia()
     setActivePinia(pinia)
@@ -48,9 +48,13 @@ describe("AppShell user actions", () => {
     const wrapper = mount(AppShell, { global: { plugins: [pinia, router, ElementPlus] } })
 
     // Then
+    const systemBar = wrapper.get(".system-bar")
     const nameRow = wrapper.get(".user-name-row")
     const displayName = nameRow.get("strong")
     const logout = nameRow.get("button.logout-button")
+    expect(systemBar.find(".brand-block").exists()).toBe(true)
+    expect(systemBar.find(".nav-foot").exists()).toBe(true)
+    expect(wrapper.get(".archive-nav").find(".brand-block").exists()).toBe(false)
     expect(displayName.text()).toBe("本地测试管理员")
     expect(displayName.element.nextElementSibling).toBe(logout.element)
     expect(wrapper.findAll("nav a").map((link) => link.text())).toContain("文件夹设置")

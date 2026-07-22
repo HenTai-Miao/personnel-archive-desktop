@@ -5,8 +5,10 @@ import { computed, ref } from "vue"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import { useLocalListPagination } from "@/shared/components/list-pagination"
 import type { WorkbookSource } from "./archive-policy"
+import ImportHistoryPanel from "./ImportHistoryPanel.vue"
 import type { ImportRow, LocalFileState } from "./queue-model"
-import type { ImportDecision, ImportStatus } from "./schemas"
+import type { ImportDecision } from "./schemas"
+import { importBatchSummary, importStatusMeta } from "./status-presentation"
 import { useImportStore } from "./store"
 
 const store = useImportStore()
@@ -16,18 +18,14 @@ const dialogVisible = ref(false)
 const activeItem = ref<ImportRow | null>(null)
 const decision = ref<ImportDecision>("SKIP")
 
-const statusMap: Readonly<
-  Record<ImportStatus, { label: string; type: "info" | "success" | "warning" | "danger" }>
-> = {
-  PENDING_DECISION: { label: "待确认", type: "warning" },
-  IMPORTED: { label: "已导入", type: "success" },
-  OVERWRITTEN: { label: "已覆盖", type: "success" },
-  SKIPPED: { label: "已跳过", type: "info" },
-  FAILED: { label: "失败", type: "danger" },
-}
-
 const completedCount = computed(
   () => store.items.filter((item) => item.status !== "PENDING_DECISION").length,
+)
+const historyRefreshKey = computed(() =>
+  store.items.map((item) => `${item.itemId}:${item.status}`).join("|"),
+)
+const currentBatchSummary = computed(() =>
+  importBatchSummary(store.items.map((item) => item.status)),
 )
 
 const timestampFormatter = new Intl.DateTimeFormat("zh-CN", {
@@ -47,10 +45,6 @@ function openDecision(item: ImportRow): void {
   activeItem.value = item
   decision.value = "SKIP"
   dialogVisible.value = true
-}
-
-function statusMeta(item: ImportRow) {
-  return statusMap[item.status]
 }
 
 function sourceLabel(source: WorkbookSource): string {
@@ -107,14 +101,11 @@ async function submit(): Promise<void> {
 
 <template>
   <section class="page-stack">
-    <header class="page-header">
-      <div><span class="section-kicker">档案入柜</span><h1>批量导入人员档案</h1><p>档案字段可留空；姓名与身份证同时匹配时，由用户选择覆盖或跳过。</p></div>
-      <div class="header-stamp">逐份<br />核验</div>
-    </header>
+    <header class="page-header"><div><h1>批量导入</h1></div></header>
 
     <div class="paper-card import-picker">
       <div>
-        <strong>01 · 上传队列</strong>
+        <strong>选择文件</strong>
         <p>不设必填字段；仅支持 .xlsx，每批最多 100 份，单份不超过 12 MiB。</p>
       </div>
       <div class="picker-actions">
@@ -145,8 +136,10 @@ async function submit(): Promise<void> {
 
     <div v-if="store.items.length" class="paper-card result-card">
       <div class="table-heading">
-        <div><strong>02 · 逐项结果</strong><span>{{ completedCount }} / {{ store.items.length }} 已处理</span></div>
-        <el-tag v-if="store.pendingCount" type="warning">{{ store.pendingCount }} 项待确认</el-tag>
+        <div><strong>处理结果</strong><span>{{ completedCount }} / {{ store.items.length }} 已处理</span></div>
+        <el-tag :type="currentBatchSummary.type">
+          {{ currentBatchSummary.kind === 'PENDING' ? `${store.pendingCount} 项待确认` : currentBatchSummary.label }}
+        </el-tag>
       </div>
       <el-table :data="resultPagination.visibleItems.value" stripe>
         <el-table-column prop="fileName" label="工作簿" min-width="240" show-overflow-tooltip />
@@ -154,7 +147,7 @@ async function submit(): Promise<void> {
           <template #default="scope"><el-tag effect="plain" :type="scope.row.source.kind === 'AUTO' ? 'warning' : 'info'">{{ sourceLabel(scope.row.source) }}</el-tag></template>
         </el-table-column>
         <el-table-column label="状态" width="110">
-          <template #default="scope"><el-tag :type="statusMeta(scope.row).type">{{ statusMeta(scope.row).label }}</el-tag></template>
+          <template #default="scope"><el-tag :type="importStatusMeta(scope.row.status).type">{{ importStatusMeta(scope.row.status).label }}</el-tag></template>
         </el-table-column>
         <el-table-column prop="message" label="处理说明" min-width="220" />
         <el-table-column label="本地文件" min-width="210">
@@ -177,7 +170,9 @@ async function submit(): Promise<void> {
       />
     </div>
 
-    <div v-else-if="!store.loading" class="empty-sheet"><span>尚无导入批次</span><p>手动选择文件，或把工作簿放入待上传文件夹。</p></div>
+    <div v-else-if="!store.loading" class="empty-sheet"><span>当前没有处理中的批次</span><p>手动选择文件，或把工作簿放入待上传文件夹。</p></div>
+
+    <ImportHistoryPanel :refresh-key="historyRefreshKey" />
 
     <el-dialog v-model="dialogVisible" title="发现重复档案" width="560px" :close-on-click-modal="false">
       <div v-if="activeItem?.duplicate" class="duplicate-sheet">

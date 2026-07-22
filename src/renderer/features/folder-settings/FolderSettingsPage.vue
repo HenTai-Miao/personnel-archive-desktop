@@ -61,14 +61,7 @@ function assertNever(value: never): never {
 
 <template>
   <section class="page-stack folder-settings-page">
-    <header class="page-header">
-      <div>
-        <span class="section-kicker">本机流转规则</span>
-        <h1>文件夹设置</h1>
-        <p>指定工作簿从哪里进入上传队列，以及导入成功后存放到哪里。</p>
-      </div>
-      <div class="header-stamp">本机<br />专用</div>
-    </header>
+    <header class="page-header"><div><h1>文件夹设置</h1></div></header>
 
     <div class="folder-route" aria-label="工作簿流转路径">
       <div class="route-node">

@@ -1,0 +1,205 @@
+/* 登录后的应用框架、导航和页面容器。 */
+.app-shell {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr);
+  height: 100%;
+}
+
+.archive-nav {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  color: var(--el-text-color-primary);
+  background: var(--el-bg-color);
+  border-right: 1px solid var(--el-border-color-light);
+}
+
+.archive-nav::after {
+  display: none;
+}
+
+.brand-block {
+  display: flex;
+  min-height: 64px;
+  align-items: center;
+  padding: 0 20px;
+  border-bottom: 1px solid var(--el-border-color-light);
+}
+
+.brand-block strong,
+.brand-block span {
+  display: block;
+}
+
+.brand-block strong {
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.brand-block span {
+  margin-top: 3px;
+  color: var(--el-text-color-secondary);
+  font-size: 11px;
+}
+
+.cabinet-label {
+  margin: 18px 20px 8px;
+  color: var(--el-text-color-placeholder);
+  font-size: 12px;
+}
+
+.archive-nav nav {
+  display: grid;
+  gap: 4px;
+  padding: 0 12px;
+}
+
+.archive-nav nav a {
+  display: flex;
+  min-height: 44px;
+  gap: 10px;
+  align-items: center;
+  padding: 0 12px;
+  color: var(--el-text-color-regular);
+  border-radius: var(--el-border-radius-base);
+  text-decoration: none;
+}
+
+.archive-nav nav a:hover {
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+}
+
+.archive-nav nav a.active {
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  font-weight: 500;
+}
+
+.archive-nav nav .el-icon {
+  font-size: 18px;
+}
+
+.nav-foot {
+  margin-top: auto;
+  padding: 16px;
+  border-top: 1px solid var(--el-border-color-light);
+}
+
+.user-card {
+  display: flex;
+  min-width: 0;
+  gap: 10px;
+  align-items: center;
+}
+
+.user-avatar {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--el-color-primary);
+  background: var(--el-color-primary-light-9);
+  border-radius: 50%;
+  font-weight: 600;
+}
+
+.user-identity {
+  min-width: 0;
+  flex: 1;
+}
+
+.user-name-row {
+  display: flex;
+  min-width: 0;
+  gap: 6px;
+  align-items: center;
+}
+
+.user-name-row strong {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-card small {
+  display: block;
+  margin-top: 3px;
+  color: var(--el-text-color-secondary);
+  font-size: 12px;
+}
+
+.logout-button {
+  display: inline-flex;
+  gap: 3px;
+  align-items: center;
+  flex: 0 0 auto;
+  padding: 4px 6px;
+  color: var(--el-text-color-secondary);
+  background: transparent;
+  border: 0;
+  border-radius: var(--el-border-radius-base);
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.logout-button:hover {
+  color: var(--el-color-primary);
+  background: var(--el-fill-color-light);
+}
+
+.paper-workspace {
+  min-width: 0;
+  overflow: auto;
+  padding: 20px;
+  background: var(--el-bg-color-page);
+}
+
+.page-stack {
+  width: min(1400px, 100%);
+  min-height: 100%;
+  margin: 0 auto;
+}
+
+.page-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 16px;
+}
+
+.page-header p {
+  max-width: 720px;
+  margin: 0;
+  color: var(--el-text-color-secondary);
+  font-size: 13px;
+}
+
+.back-link {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+  margin-bottom: 12px;
+  padding: 4px 0;
+  color: var(--el-color-primary);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    grid-template-columns: 200px minmax(0, 1fr);
+  }
+
+  .paper-workspace {
+    padding: 16px;
+  }
+
+  .brand-block span {
+    display: none;
+  }
+}

@@ -1,0 +1,595 @@
+/* 传统 Windows 管理软件风格：标准控件、紧凑布局、灰白工作区和明确边框。 */
+:root {
+  --ink: #222;
+  --indigo-950: #2f4050;
+  --indigo-900: #36566f;
+  --indigo-800: #2f6f9f;
+  --paper: #fff;
+  --paper-muted: #f4f4f4;
+  --desk: #e9edf0;
+  --line: #c8cdd2;
+  --muted: #666;
+  --vermilion: #b6493e;
+  --vermilion-dark: #8f3028;
+  --success: #3d7752;
+  --el-border-radius-base: 2px;
+  --el-border-radius-small: 2px;
+  --el-border-radius-round: 2px;
+  --el-font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", sans-serif;
+  color: var(--ink);
+  background: var(--desk);
+  font-family: var(--el-font-family);
+}
+
+h1,
+h2,
+h3 {
+  font-family: inherit;
+  letter-spacing: 0;
+}
+
+h1 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 600;
+  line-height: 30px;
+}
+
+h2 {
+  font-size: 16px;
+}
+
+.paper-card {
+  background: #fff;
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.el-button,
+.el-input__wrapper,
+.el-select__wrapper,
+.el-textarea__inner,
+.el-dialog,
+.el-alert,
+.el-tag {
+  border-radius: 2px;
+}
+
+.el-button--primary {
+  --el-button-bg-color: #2f6f9f;
+  --el-button-border-color: #285f88;
+  --el-button-hover-bg-color: #285f88;
+  --el-button-hover-border-color: #244f70;
+}
+
+.el-input__wrapper,
+.el-select__wrapper {
+  box-shadow: 0 0 0 1px #aeb6bd inset;
+}
+
+.el-input__wrapper.is-focus,
+.el-select__wrapper.is-focused {
+  box-shadow: 0 0 0 1px #2f6f9f inset;
+}
+
+.el-table {
+  --el-table-header-bg-color: #e8ecef;
+  --el-table-row-hover-bg-color: #eaf3f9;
+  --el-table-border-color: #c8cdd2;
+  color: #222;
+  border-top: 1px solid var(--line);
+}
+
+.el-table th.el-table__cell {
+  height: 36px;
+  padding: 4px 0;
+  color: #333;
+  background: #e8ecef;
+  font-weight: 600;
+}
+
+.el-table td.el-table__cell {
+  padding: 6px 0;
+}
+
+.el-dialog {
+  border-top: 0;
+}
+
+/* 登录页采用普通系统登录窗口，不使用品牌宣言或视觉装置。 */
+.login-page {
+  display: grid;
+  grid-template-rows: 48px 1fr;
+  grid-template-columns: 1fr;
+  min-height: 100%;
+  background: #dfe4e8;
+}
+
+.login-identity {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  color: #fff;
+  background: #36566f;
+  border-bottom: 1px solid #263e51;
+}
+
+.login-identity h1 {
+  color: #fff;
+  font-size: 18px;
+}
+
+.login-identity p {
+  margin: 0;
+  color: #d8e2e9;
+  font-size: 12px;
+}
+
+.login-panel {
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: transparent;
+}
+
+.login-form-wrap {
+  width: 390px;
+  padding: 24px 28px 20px;
+  background: #f7f7f7;
+  border: 1px solid #aeb5bb;
+  box-shadow: 0 2px 7px rgba(0, 0, 0, 0.12);
+}
+
+.login-form-wrap h2 {
+  margin: 0 0 5px;
+  font-size: 18px;
+}
+
+.login-form-wrap .muted {
+  margin-bottom: 20px;
+}
+
+.security-note {
+  color: #777;
+}
+
+/* 主框架：窄侧栏、常规菜单和紧凑工作区。 */
+.app-shell {
+  grid-template-columns: 196px minmax(0, 1fr);
+}
+
+.archive-nav {
+  padding: 0;
+  color: #222;
+  background: #f3f3f3;
+  border-right: 1px solid #aeb5bb;
+}
+
+.archive-nav::after,
+.brand-seal,
+.header-stamp,
+.active-stamp,
+.red-stamp,
+.section-kicker,
+.section-index {
+  display: none;
+}
+
+.brand-block {
+  min-height: 50px;
+  padding: 0 14px;
+  color: #fff;
+  background: #36566f;
+  border-bottom: 1px solid #263e51;
+}
+
+.brand-block strong {
+  font-family: inherit;
+  font-size: 15px;
+  letter-spacing: 0;
+}
+
+.brand-block span {
+  display: none;
+}
+
+.cabinet-label {
+  margin: 14px 12px 5px;
+  color: #666;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.archive-nav nav {
+  display: block;
+}
+
+.archive-nav nav a {
+  gap: 8px;
+  min-height: 36px;
+  padding: 0 12px;
+  color: #333;
+  border: 0;
+  border-bottom: 1px solid #ddd;
+  border-radius: 0;
+}
+
+.archive-nav nav a:hover {
+  color: #222;
+  background: #e4eaee;
+}
+
+.archive-nav nav a.active {
+  color: #fff;
+  background: #4c7c9e;
+  border-left: 0;
+}
+
+.nav-foot {
+  padding: 10px 12px;
+  border-top: 1px solid #c8cdd2;
+}
+
+.user-card small,
+.logout-button {
+  color: #555;
+}
+
+.user-avatar {
+  width: 30px;
+  height: 30px;
+  color: #fff;
+  background: #687f91;
+  font-family: inherit;
+  border-radius: 2px;
+}
+
+.logout-button {
+  background: #eee;
+  border-color: #bbb;
+}
+
+.logout-button:hover {
+  color: #222;
+  background: #ddd;
+  border-color: #999;
+}
+
+.paper-workspace {
+  padding: 16px 18px 24px;
+  background: var(--desk);
+}
+
+.page-stack,
+.archive-detail-page {
+  width: 100%;
+  max-width: none;
+}
+
+.page-header {
+  min-height: 38px;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  background: #f6f6f6;
+  border: 1px solid var(--line);
+  border-left: 4px solid #4c7c9e;
+}
+
+.page-header p {
+  display: none;
+}
+
+.empty-sheet {
+  min-height: 150px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.empty-sheet span {
+  color: #555;
+  font: 14px inherit;
+}
+
+.empty-sheet p {
+  margin-top: 6px;
+  font-size: 12px;
+}
+
+/* 列表和搜索直接由工具栏与表格组成。 */
+.archive-list-ledger {
+  grid-template-columns: 100px minmax(0, 1fr);
+  margin-bottom: 10px;
+  background: #f7f7f7;
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.ledger-count {
+  min-height: 78px;
+  padding: 12px;
+  color: #222;
+  background: #e8ecef;
+  border-left: 0;
+  border-right: 1px solid var(--line);
+}
+
+.ledger-count span,
+.ledger-count small {
+  color: #555;
+  font-size: 11px;
+  letter-spacing: 0;
+}
+
+.ledger-count strong {
+  margin: 2px 0 0;
+  font: 600 24px inherit;
+}
+
+.person-filter-form {
+  gap: 10px;
+  padding: 12px 14px;
+}
+
+.person-filter-form label > span {
+  margin-bottom: 4px;
+  color: #444;
+  font-size: 12px;
+}
+
+.person-list-card .table-heading,
+.result-card .table-heading {
+  min-height: 42px;
+  padding: 7px 10px;
+  background: #f4f4f4;
+}
+
+.person-list-card .table-heading strong,
+.result-card .table-heading strong {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.person-list-card .table-heading span,
+.result-card .table-heading span {
+  margin-top: 2px;
+  font-size: 11px;
+}
+
+.batch-export-strip {
+  gap: 8px;
+  min-height: 30px;
+  padding-left: 10px;
+  border-left: 1px solid #bbb;
+}
+
+.person-list-card .el-pagination,
+.result-card .el-pagination {
+  padding: 9px 10px;
+}
+
+.search-ledger {
+  gap: 8px;
+  padding: 10px;
+  background: #f7f7f7;
+  border: 1px solid var(--line);
+  border-left: 1px solid var(--line);
+}
+
+.search-ledger .el-button {
+  color: #fff;
+  background: #2f6f9f;
+  border-color: #285f88;
+}
+
+.index-drawer,
+.drawer-tab {
+  display: none;
+}
+
+.result-card {
+  margin-top: 10px;
+  box-shadow: none;
+}
+
+.matched-name,
+.person-name {
+  color: #234f70;
+}
+
+/* 导入和文件夹设置采用普通分组框。 */
+.import-picker {
+  padding: 12px;
+}
+
+.import-picker > div:first-child strong {
+  font-family: inherit;
+  font-size: 14px;
+}
+
+.import-picker > div:first-child p {
+  margin: 3px 0 0;
+  font-size: 12px;
+}
+
+.folder-route {
+  display: none;
+}
+
+.folder-settings-card {
+  border-top: 1px solid var(--line);
+}
+
+.folder-setting-row {
+  gap: 12px;
+  padding: 14px;
+}
+
+.folder-setting-icon {
+  width: 34px;
+  height: 34px;
+  background: #e4e8eb;
+}
+
+.folder-rule-note {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #f7f7f7;
+  border: 1px solid var(--line);
+}
+
+/* 详情页使用标准标题、页签式目录和紧凑分组。 */
+.back-link {
+  margin-bottom: 8px;
+  color: #245f8a;
+  font-size: 12px;
+}
+
+.person-dossier-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 16px;
+  min-height: auto;
+  padding: 12px 14px;
+  color: #222;
+  background: #f7f7f7;
+  border: 1px solid var(--line);
+  border-left: 4px solid #4c7c9e;
+  box-shadow: none;
+}
+
+.person-dossier-header::before,
+.dossier-eyebrow {
+  display: none;
+}
+
+.person-dossier-header h1 {
+  margin: 2px 0;
+  color: #222;
+  font-size: 20px;
+  line-height: 1.3;
+}
+
+.person-dossier-header p,
+.person-dossier-header .record-number {
+  margin: 0;
+  color: #666;
+  font: 12px inherit;
+  letter-spacing: 0;
+}
+
+.person-dossier-header .el-button,
+.person-dossier-header .el-button:hover {
+  min-width: 140px;
+  color: #fff;
+  background: #2f6f9f;
+  border-color: #285f88;
+}
+
+.dossier-index {
+  min-height: 38px;
+  margin: 0;
+  background: #e8ecef;
+  border: 1px solid var(--line);
+  border-top: 0;
+  box-shadow: none;
+}
+
+.dossier-index > span,
+.dossier-index button {
+  padding: 0 14px;
+}
+
+.dossier-index > span {
+  color: #333;
+  background: #d8dde1;
+  font-size: 12px;
+  letter-spacing: 0;
+}
+
+.dossier-index button {
+  color: #333;
+  border-right-color: #bec5ca;
+  font-size: 12px;
+}
+
+.dossier-index button:hover,
+.dossier-index button:focus-visible {
+  background: #fff;
+}
+
+.dossier-index button::after {
+  display: none;
+}
+
+.dossier-sections {
+  gap: 10px;
+  margin-top: 10px;
+  padding-bottom: 10px;
+}
+
+.dossier-section {
+  scroll-margin-top: 48px;
+  padding: 0 14px 14px;
+}
+
+.dossier-section-heading {
+  min-height: 38px;
+  margin: 0 -14px 12px;
+  padding: 0 12px;
+  background: #e8ecef;
+  border-bottom: 1px solid var(--line);
+}
+
+.dossier-section-heading h2 {
+  margin: 0;
+  color: #222;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.dossier-subsection {
+  margin-top: 10px;
+}
+
+.subsection-heading {
+  min-height: 32px;
+}
+
+.family-member-row {
+  scroll-margin-top: 90px;
+}
+
+.family-table tbody .family-member-row.is-search-match td {
+  background: #fff2a8;
+  box-shadow:
+    inset 0 1px #d6bd53,
+    inset 0 -1px #d6bd53;
+}
+
+.family-table tbody .family-member-row.is-search-match td:first-child {
+  box-shadow:
+    inset 4px 0 #c44b3f,
+    inset 0 1px #d6bd53,
+    inset 0 -1px #d6bd53;
+}
+
+.family-member-row.is-search-match .primary-cell {
+  color: #7d231b;
+  font-weight: 700;
+}
+
+@media (max-width: 1180px) {
+  .app-shell {
+    grid-template-columns: 180px minmax(0, 1fr);
+  }
+
+  .paper-workspace {
+    padding: 12px;
+  }
+
+  .person-filter-form {
+    grid-template-columns: repeat(3, minmax(130px, 1fr));
+  }
+}

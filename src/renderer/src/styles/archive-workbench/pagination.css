@@ -1,0 +1,40 @@
+/* 固定分页脚注模拟桌面数据表状态栏，始终显示每页二十条的数据口径。 */
+.fixed-list-pagination {
+  display: flex;
+  min-height: 42px;
+  gap: 14px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 6px 10px;
+  color: #51636f;
+  background: #edf1f3;
+  border-top: 1px solid var(--archive-line-strong);
+}
+
+.fixed-list-pagination > span {
+  color: var(--archive-muted);
+  font-family: var(--archive-data-font);
+  font-size: 9px;
+  white-space: nowrap;
+}
+
+.fixed-list-pagination .el-pagination {
+  padding: 0;
+}
+
+.fixed-list-pagination .el-pagination.is-background .btn-next,
+.fixed-list-pagination .el-pagination.is-background .btn-prev,
+.fixed-list-pagination .el-pagination.is-background .el-pager li {
+  min-width: 27px;
+  height: 27px;
+  margin: 0 2px;
+  border: 1px solid #8fa1ac;
+  border-radius: 0;
+  box-shadow: inset 1px 1px #fff;
+  line-height: 25px;
+}
+
+.fixed-list-pagination .el-pagination.is-background .el-pager li.is-active {
+  border-color: var(--archive-navy-deep);
+  box-shadow: inset 1px 1px rgb(255 255 255 / 28%);
+}

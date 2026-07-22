@@ -76,21 +76,21 @@ describe("PersonListPage batch export", () => {
     })
     await router.push("/persons")
     await router.isReady()
-    const tableStub = defineComponent({
-      name: "ElTable",
+    const avueCrudStub = defineComponent({
+      name: "AvueCrud",
       emits: ["selection-change"],
       template: "<div><slot /></div>",
     })
     const wrapper = mount(PersonListPage, {
       global: {
         plugins: [pinia, router, ElementPlus],
-        stubs: { ElTable: tableStub, ElTableColumn: true },
+        stubs: { AvueCrud: avueCrudStub },
       },
     })
     await flushPromises()
 
     // When
-    wrapper.getComponent(tableStub).vm.$emit("selection-change", [person, secondPerson])
+    wrapper.getComponent(avueCrudStub).vm.$emit("selection-change", [person, secondPerson])
     await wrapper.vm.$nextTick()
     await wrapper.get('[data-test="batch-export"]').trigger("click")
     await flushPromises()

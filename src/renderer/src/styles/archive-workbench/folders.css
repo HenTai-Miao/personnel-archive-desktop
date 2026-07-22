@@ -1,0 +1,148 @@
+/* 文件夹设置以系统流程条和属性页呈现自动扫描、移动与失败保留规则。 */
+.folder-settings-page {
+  width: min(1180px, 100%);
+}
+
+.folder-route {
+  display: grid;
+  grid-template-columns: 176px minmax(150px, 1fr) 176px;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.route-node {
+  display: grid;
+  min-height: 58px;
+  align-content: center;
+  padding: 9px 12px;
+  background: var(--archive-surface);
+  border: 1px solid var(--archive-line-strong);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.route-node::before {
+  display: none;
+}
+
+.route-node.is-archive {
+  background: #edf3f6;
+}
+
+.route-node span {
+  color: var(--archive-muted);
+  font-size: 9px;
+}
+
+.route-node strong {
+  margin-top: 3px;
+  color: var(--archive-ink);
+  font-size: 12px;
+}
+
+.route-line {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.route-line::before {
+  position: absolute;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: var(--archive-line-strong);
+  content: "";
+}
+
+.route-line::after {
+  position: absolute;
+  right: 0;
+  width: 7px;
+  height: 7px;
+  border-top: 1px solid var(--archive-line-strong);
+  border-right: 1px solid var(--archive-line-strong);
+  content: "";
+  transform: rotate(45deg);
+}
+
+.route-line span {
+  position: relative;
+  z-index: 1;
+  padding: 2px 8px;
+  color: var(--archive-muted);
+  background: var(--archive-canvas);
+  font-size: 9px;
+}
+
+.folder-settings-card {
+  padding: 0 18px;
+}
+
+.folder-setting-row {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+  padding: 17px 0;
+}
+
+.folder-setting-row + .folder-setting-row {
+  border-top: 1px solid var(--archive-line);
+}
+
+.folder-setting-icon {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  color: var(--archive-navy-deep);
+  background: #e4ebef;
+  border: 1px solid var(--archive-line-strong);
+  box-shadow: inset 1px 1px #fff;
+  font-size: 16px;
+}
+
+.folder-setting-icon.archive {
+  color: var(--archive-teal);
+  background: #e6efed;
+  border-color: #8ba7a3;
+}
+
+.folder-setting-copy strong {
+  color: var(--archive-ink);
+  font-size: 13px;
+}
+
+.folder-setting-copy p {
+  margin: 4px 0 9px;
+  color: var(--archive-muted);
+  font-size: 10px;
+}
+
+.folder-setting-copy .el-input__wrapper {
+  background: #fff;
+}
+
+.folder-rule-note {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 9px;
+  padding: 9px 12px;
+  color: var(--archive-muted);
+  background: #dce3e7;
+  border: 1px solid var(--archive-line);
+  font-size: 10px;
+}
+
+.folder-rule-note strong {
+  color: var(--archive-warning);
+}
+
+.folder-rule-note.ready {
+  border-left: 4px solid var(--archive-teal);
+}
+
+.folder-rule-note.ready strong {
+  color: var(--archive-teal);
+}

@@ -21,6 +21,7 @@ import {
   splitUploadQueue,
 } from "./queue-model"
 import type { ImportDecision } from "./schemas"
+import { importBatchSummary } from "./status-presentation"
 
 const MAX_QUEUE_SIZE = 100
 const AUTO_SCAN_INTERVAL_MS = 5_000
@@ -116,9 +117,26 @@ export const useImportStore = defineStore("archive-import", () => {
         queuedWorkbooks.value = queued.slice(processedCount)
         await archiveCompletedRows(paired)
       }
-      message.value = items.value.some((item) => item.status === "FAILED")
-        ? "批次已处理，部分文件需要检查"
-        : "批次处理完成"
+      const summary = importBatchSummary(items.value.map((item) => item.status))
+      switch (summary.kind) {
+        case "PENDING":
+          message.value = "批次已检查，存在需要确认的重复档案"
+          break
+        case "FAILED":
+          message.value = "批次处理失败，请检查每份工作簿的处理说明"
+          break
+        case "PARTIAL_SUCCESS":
+          message.value = "批次部分成功，失败文件需要检查"
+          break
+        case "SUCCESS":
+          message.value = "批次处理完成"
+          break
+        case "EMPTY":
+          message.value = "批次未返回处理结果"
+          break
+        default:
+          assertNever(summary.kind)
+      }
     } catch (error) {
       if (!(error instanceof Error)) throw error
       message.value =

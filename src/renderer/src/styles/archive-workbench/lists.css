@@ -1,0 +1,220 @@
+/* 人员目录与家庭查询使用传统管理软件的工具条和高密度数据网格。 */
+.archive-list-ledger {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  margin-bottom: 9px;
+  overflow: hidden;
+  background: var(--archive-surface);
+  border: 1px solid var(--archive-line-strong);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.ledger-count {
+  display: grid;
+  align-content: center;
+  min-height: 86px;
+  padding: 11px 14px;
+  background: #dce6ec;
+  border-right: 1px solid var(--archive-line);
+}
+
+.ledger-count span {
+  color: #4d5f6b;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.ledger-count strong {
+  color: var(--archive-navy-deep);
+  font-family: var(--archive-data-font);
+  font-size: 27px;
+  font-weight: 650;
+  line-height: 1.2;
+}
+
+.person-filter-form {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(130px, 1fr)) auto;
+  gap: 10px;
+  align-items: end;
+  padding: 11px 14px;
+}
+
+.person-filter-form label > span {
+  display: block;
+  margin-bottom: 4px;
+  color: #40515d;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.filter-actions,
+.picker-actions {
+  display: flex;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.filter-actions .el-button + .el-button,
+.picker-actions .el-button + .el-button {
+  margin-left: 0;
+}
+
+.list-alert,
+.page-stack > .el-alert {
+  margin-bottom: 9px;
+}
+
+.list-loading {
+  padding: 20px;
+}
+
+.person-list-card,
+.result-card {
+  overflow: hidden;
+}
+
+.table-heading {
+  display: flex;
+  min-height: 48px;
+  gap: 16px;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 10px;
+  background: #edf1f3;
+  border-bottom: 1px solid var(--archive-line-strong);
+}
+
+.table-heading > div:first-child {
+  padding-left: 0;
+  border-left: 0;
+}
+
+.table-heading strong,
+.table-heading span {
+  display: block;
+}
+
+.table-heading strong {
+  color: var(--archive-ink);
+  font-size: 12px;
+  font-weight: 650;
+}
+
+.table-heading span {
+  margin-top: 2px;
+  color: var(--archive-muted);
+  font-size: 9px;
+}
+
+.batch-export-strip {
+  display: flex;
+  min-height: 29px;
+  gap: 9px;
+  align-items: center;
+}
+
+.person-list-card .table-heading .batch-export-strip > span {
+  margin: 0;
+  color: var(--archive-muted);
+  font-size: 9px;
+}
+
+.archive-crud > .el-card,
+.archive-crud > .el-card.is-always-shadow {
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+.archive-crud > .el-card > .el-card__body {
+  padding: 0;
+}
+
+.archive-crud .avue-crud__menu {
+  justify-content: flex-start;
+}
+
+.archive-crud .avue-crud__menu .el-button + .el-button {
+  margin-left: 9px;
+}
+
+.person-list-card .el-table,
+.result-card .el-table {
+  --el-table-border-color: #b8c4cb;
+  --el-table-header-bg-color: #d8e1e7;
+  --el-table-row-hover-bg-color: #dcecf6;
+  --el-fill-color-lighter: #f2f5f7;
+  color: var(--archive-ink);
+  font-size: 11px;
+}
+
+.person-list-card .el-table th.el-table__cell,
+.result-card .el-table th.el-table__cell {
+  height: 38px;
+  padding: 0;
+  color: #263b48;
+  background: #d8e1e7;
+  border-right: 1px solid #b8c4cb;
+  border-bottom-color: var(--archive-line-strong);
+  font-size: 10px;
+  font-weight: 650;
+}
+
+.person-list-card .el-table td.el-table__cell,
+.result-card .el-table td.el-table__cell {
+  height: 39px;
+  padding: 2px 0;
+  border-right: 1px solid #c7d0d6;
+  border-bottom-color: #c7d0d6;
+}
+
+.person-list-card .el-table .cell,
+.result-card .el-table .cell {
+  padding: 0 8px;
+  line-height: 1.35;
+}
+
+.person-list-card .el-table__fixed-right,
+.result-card .el-table__fixed-right {
+  box-shadow: -3px 0 5px rgb(40 60 73 / 10%);
+}
+
+.person-name,
+.matched-name {
+  color: var(--archive-navy-deep);
+  font-weight: 700;
+}
+
+.relationship {
+  display: block;
+  margin-top: 1px;
+  color: var(--archive-muted);
+  font-size: 9px;
+}
+
+.search-ledger {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px;
+  margin-bottom: 9px;
+  padding: 11px;
+  background: var(--archive-surface);
+  border: 1px solid var(--archive-line-strong);
+  box-shadow: inset 1px 1px #fff;
+}
+
+.result-card {
+  margin-top: 9px;
+}
+
+@media (max-width: 1280px) {
+  .person-filter-form {
+    grid-template-columns: repeat(3, minmax(115px, 1fr));
+  }
+
+  .filter-actions {
+    grid-column: 1 / -1;
+    justify-content: flex-end;
+  }
+}

@@ -1,0 +1,120 @@
+/* 全局仅采用 Element Plus 设计变量，业务样式只负责布局。 */
+:root {
+  color: var(--el-text-color-primary);
+  background: var(--el-bg-color-page);
+  font-family: var(--el-font-family);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 960px;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  color: var(--el-text-color-primary);
+  background: var(--el-bg-color-page);
+}
+
+button,
+input {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--el-text-color-primary);
+  font-family: inherit;
+}
+
+h1 {
+  margin-bottom: 6px;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+h2 {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+h3 {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.muted {
+  color: var(--el-text-color-secondary);
+}
+
+.paper-card {
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+}
+
+.empty-sheet {
+  display: grid;
+  min-height: 180px;
+  place-content: center;
+  padding: 32px;
+  color: var(--el-text-color-secondary);
+  background: var(--el-bg-color);
+  border: 1px solid var(--el-border-color-light);
+  border-radius: var(--el-border-radius-base);
+  text-align: center;
+}
+
+.empty-sheet span {
+  color: var(--el-text-color-primary);
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.empty-sheet p {
+  margin: 8px 0 0;
+  font-size: 13px;
+}
+
+.section-kicker,
+.header-stamp,
+.active-stamp,
+.red-stamp,
+.brand-seal,
+.section-index,
+.dossier-eyebrow {
+  display: none;
+}
+
+:focus-visible {
+  outline: 2px solid var(--el-color-primary-light-5);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition: none;
+  }
+}

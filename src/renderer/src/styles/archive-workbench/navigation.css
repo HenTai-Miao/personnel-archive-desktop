@@ -1,0 +1,220 @@
+/* 左侧导航采用桌面管理软件的树形连接线，顶部系统栏集中品牌与用户操作。 */
+.brand-block {
+  display: flex;
+  min-width: 270px;
+  align-items: center;
+  padding: 0 18px;
+}
+
+.brand-block::before {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  place-items: center;
+  margin-right: 10px;
+  color: var(--archive-navy-deep);
+  background: #f3f7f9;
+  border: 1px solid #0f3f60;
+  box-shadow: inset 1px 1px #fff;
+  content: "▤";
+  font-family: var(--archive-data-font);
+  font-size: 15px;
+}
+
+.brand-block strong,
+.brand-block span {
+  display: block;
+}
+
+.brand-block strong {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 650;
+  letter-spacing: 0.02em;
+}
+
+.brand-block span {
+  margin-top: 2px;
+  color: #c7dce9;
+  font-size: 9px;
+}
+
+.archive-nav {
+  grid-area: navigation;
+  display: grid;
+  min-width: 0;
+  grid-template-rows: 30px minmax(0, 1fr);
+  color: var(--archive-ink);
+  background: #edf1f4;
+  border-right: 1px solid var(--archive-line-strong);
+}
+
+.archive-nav::after {
+  display: none;
+}
+
+.cabinet-label {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0 12px;
+  color: #40515d;
+  background: #d2dbe1;
+  border-bottom: 1px solid var(--archive-line);
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.archive-nav nav {
+  position: relative;
+  display: grid;
+  align-content: start;
+  gap: 2px;
+  padding: 12px 10px;
+}
+
+.archive-nav nav::before {
+  position: absolute;
+  top: 31px;
+  bottom: 35px;
+  left: 25px;
+  width: 1px;
+  background: #a8b4bd;
+  content: "";
+}
+
+.archive-nav nav a {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  min-height: 38px;
+  gap: 8px;
+  align-items: center;
+  padding: 0 8px;
+  color: #334651;
+  border: 1px solid transparent;
+  text-decoration: none;
+  transition:
+    background 100ms ease,
+    color 100ms ease;
+}
+
+.archive-nav nav a::before {
+  position: absolute;
+  left: 15px;
+  width: 10px;
+  height: 1px;
+  background: #a8b4bd;
+  content: "";
+}
+
+.archive-nav nav a:hover {
+  background: #e1e8ec;
+  border-color: #bdc8cf;
+}
+
+.archive-nav nav a.active {
+  color: #fff;
+  background: var(--archive-blue);
+  border-color: var(--archive-navy-deep);
+  font-weight: 650;
+}
+
+.archive-nav nav .el-icon {
+  display: grid;
+  width: 17px;
+  height: 17px;
+  place-items: center;
+  flex: 0 0 auto;
+  color: #48606e;
+  background: #f7fafb;
+  border: 1px solid #9aaab5;
+  font-size: 10px;
+}
+
+.archive-nav nav a.active .el-icon {
+  color: var(--archive-navy-deep);
+  border-color: #d4e1e9;
+}
+
+.nav-foot {
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+}
+
+.user-card {
+  display: flex;
+  min-width: 0;
+  gap: 8px;
+  align-items: center;
+}
+
+.user-avatar {
+  display: grid;
+  width: 29px;
+  height: 29px;
+  place-items: center;
+  flex: 0 0 auto;
+  color: var(--archive-navy-deep);
+  background: #eef4f7;
+  border: 1px solid #0f4567;
+  box-shadow: inset 1px 1px #fff;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.user-identity {
+  min-width: 0;
+}
+
+.user-name-row {
+  display: flex;
+  min-width: 0;
+  gap: 9px;
+  align-items: center;
+}
+
+.user-name-row strong {
+  min-width: 0;
+  overflow: hidden;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 650;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.user-card small {
+  display: block;
+  margin-top: 1px;
+  color: #c4d8e5;
+  font-family: var(--archive-data-font);
+  font-size: 9px;
+}
+
+.logout-button {
+  display: inline-flex;
+  min-height: 27px;
+  gap: 3px;
+  align-items: center;
+  padding: 0 9px;
+  color: #123f5d;
+  background: #e8eff3;
+  border: 1px solid #0e4669;
+  box-shadow: inset 1px 1px #fff;
+  cursor: pointer;
+  font-size: 10px;
+}
+
+.logout-button:hover {
+  color: #0d334d;
+  background: #fff;
+}
+
+@media (max-width: 1180px) {
+  .brand-block span {
+    display: none;
+  }
+}
