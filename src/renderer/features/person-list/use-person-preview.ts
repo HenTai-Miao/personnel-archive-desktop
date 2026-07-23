@@ -73,7 +73,15 @@ export function usePersonPreview(): PersonPreview {
 
   async function retryPhoto(): Promise<void> {
     const current = state.value
-    if (current.kind !== "ready" || current.person.photo === null) return
+    // Only a visible failed state may start a retry. This also coalesces rapid clicks before
+    // Vue removes the retry button, preventing competing responses and leaked Object URLs.
+    if (
+      current.kind !== "ready" ||
+      current.person.photo === null ||
+      current.photo.kind !== "failed"
+    ) {
+      return
+    }
     const token = requestToken
     state.value = { ...current, photo: { kind: "loading" } }
     await loadPhoto(token, current.personId, current.person)

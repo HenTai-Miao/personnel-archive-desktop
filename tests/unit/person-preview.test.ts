@@ -98,6 +98,36 @@ describe("usePersonPreview", () => {
     expect(apiMocks.downloadPersonPhoto).toHaveBeenCalledTimes(2)
   })
 
+  it("ignores a repeated photo retry while the failed photo is already reloading", async () => {
+    // Given
+    let resolveRetry: ((blob: Blob) => void) | undefined
+    const retryResult = new Promise<Blob>((resolve) => {
+      resolveRetry = resolve
+    })
+    apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, photo: PHOTO_METADATA })
+    apiMocks.downloadPersonPhoto
+      .mockRejectedValueOnce(new Error("offline"))
+      .mockReturnValueOnce(retryResult)
+      .mockReturnValueOnce(new Promise<Blob>(() => undefined))
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:retried-photo")
+    const preview = usePersonPreview()
+    await preview.select(personIdSchema.parse("7"))
+
+    // When
+    const retry = preview.retryPhoto()
+    const repeatedRetry = preview.retryPhoto()
+
+    // Then
+    expect(apiMocks.downloadPersonPhoto).toHaveBeenCalledTimes(2)
+    resolveRetry?.(new Blob(["photo"], { type: "image/png" }))
+    await Promise.all([retry, repeatedRetry])
+    expect(preview.state.value).toMatchObject({
+      kind: "ready",
+      personId: "7",
+      photo: { kind: "ready", url: "blob:retried-photo" },
+    })
+  })
+
   it("clears the selected person and revokes its temporary photo URL", async () => {
     // Given
     apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, photo: PHOTO_METADATA })
