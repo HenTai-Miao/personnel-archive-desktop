@@ -9,13 +9,16 @@ import { errorMessage } from "@/shared/api/error"
 import type { PersonId } from "@/shared/api/schemas"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import BatchExportControl from "./BatchExportControl.vue"
+import PersonArchivePreview from "./PersonArchivePreview.vue"
 import { PERSON_LIST_CRUD_OPTION } from "./person-list-crud"
 import type { PersonListItem } from "./schemas"
 import { usePersonListStore } from "./store"
+import { usePersonPreview } from "./use-person-preview"
 
 const store = usePersonListStore()
 const auth = useAuthStore()
 const router = useRouter()
+const preview = usePersonPreview()
 const openingPersonId = ref<PersonId | null>(null)
 const actionMessage = ref("")
 const actionFailed = ref(false)
@@ -25,7 +28,7 @@ const canImport = computed(() => {
   return roles.includes("ADMIN") || roles.includes("ARCHIVE_EDITOR")
 })
 
-onMounted(() => store.load(store.page))
+onMounted(() => loadPage(store.page))
 
 function updatedAtLabel(value: string): string {
   return new Intl.DateTimeFormat("zh-CN", {
@@ -37,7 +40,7 @@ function updatedAtLabel(value: string): string {
   }).format(new Date(value))
 }
 
-async function openArchive(person: PersonListItem): Promise<void> {
+async function openArchive(person: Pick<PersonListItem, "id" | "name">): Promise<void> {
   openingPersonId.value = person.id
   actionMessage.value = ""
   try {
@@ -50,6 +53,28 @@ async function openArchive(person: PersonListItem): Promise<void> {
   } finally {
     openingPersonId.value = null
   }
+}
+
+async function loadPage(page: number): Promise<void> {
+  preview.clear()
+  await store.load(page)
+}
+
+async function applyFilters(): Promise<void> {
+  await loadPage(0)
+}
+
+async function resetFilters(): Promise<void> {
+  preview.clear()
+  await store.reset()
+}
+
+function viewDetail(personId: PersonId): void {
+  router.push({ name: "person-detail", params: { personId } })
+}
+
+function previewPerson(person: PersonListItem): void {
+  preview.select(person.id)
 }
 </script>
 
@@ -66,7 +91,7 @@ async function openArchive(person: PersonListItem): Promise<void> {
         <span>档案总数</span>
         <strong>{{ store.total }}</strong>
       </div>
-      <form class="person-filter-form" @submit.prevent="store.load(0)">
+      <form class="person-filter-form" @submit.prevent="applyFilters">
         <label>
           <span>姓名</span>
           <el-input v-model="store.name" clearable placeholder="输入姓名片段" />
@@ -83,7 +108,7 @@ async function openArchive(person: PersonListItem): Promise<void> {
           <el-button type="primary" native-type="submit" :icon="Search" :loading="store.loading">
             筛选档案
           </el-button>
-          <el-button :disabled="!store.hasFilters || store.loading" @click="store.reset">
+          <el-button :disabled="!store.hasFilters || store.loading" @click="resetFilters">
             重置
           </el-button>
         </div>
@@ -118,37 +143,47 @@ async function openArchive(person: PersonListItem): Promise<void> {
     <div v-if="store.loading && store.results.length === 0" class="paper-card list-loading">
       <el-skeleton :rows="7" animated />
     </div>
-    <div v-else-if="store.results.length" class="paper-card person-list-card">
-      <div class="table-heading">
-        <div>
-          <strong>{{ store.hasFilters ? '筛选结果' : '在册档案目录' }}</strong>
-          <span>共 {{ store.total }} 份当前有效档案</span>
+    <div v-else-if="store.results.length" class="person-workbench">
+      <div class="paper-card person-list-card">
+        <div class="table-heading">
+          <div>
+            <strong>{{ store.hasFilters ? '筛选结果' : '在册档案目录' }}</strong>
+            <span>共 {{ store.total }} 份当前有效档案</span>
+          </div>
+          <BatchExportControl />
         </div>
-        <BatchExportControl />
-      </div>
-      <avue-crud
-        class="archive-crud"
-        :data="crudRows"
-        :option="PERSON_LIST_CRUD_OPTION"
-        :table-loading="store.loading"
-        @selection-change="store.select"
-      >
-        <template #employeeNo="{ row }">{{ row.employeeNo || '—' }}</template>
-        <template #name="{ row }">
-          <strong class="person-name">{{ row.name || '未填写姓名' }}</strong>
-        </template>
-        <template #organization="{ row }">
-          {{ row.organization || '—' }}
-          <small v-if="row.department" class="relationship">{{ row.department }}</small>
-        </template>
-        <template #position="{ row }">{{ row.position || '—' }}</template>
-        <template #titleOrSkill="{ row }">{{ row.titleOrSkill || '—' }}</template>
-        <template #updatedAt="{ row }">{{ updatedAtLabel(row.updatedAt) }}</template>
-        <template #menu="{ row }">
+        <avue-crud
+          class="archive-crud"
+          :data="crudRows"
+          :option="PERSON_LIST_CRUD_OPTION"
+          :table-loading="store.loading"
+          @row-click="previewPerson"
+          @selection-change="store.select"
+        >
+          <template #employeeNo="{ row }">{{ row.employeeNo || '—' }}</template>
+          <template #name="{ row }">
+            <strong class="person-name">{{ row.name || '未填写姓名' }}</strong>
+          </template>
+          <template #organization="{ row }">
+            {{ row.organization || '—' }}
+            <small v-if="row.department" class="relationship">{{ row.department }}</small>
+          </template>
+          <template #position="{ row }">{{ row.position || '—' }}</template>
+          <template #titleOrSkill="{ row }">{{ row.titleOrSkill || '—' }}</template>
+          <template #updatedAt="{ row }">{{ updatedAtLabel(row.updatedAt) }}</template>
+          <template #menu="{ row }">
+            <el-button
+              data-test="preview-person"
+              type="primary"
+              link
+              @click.stop="preview.select(row.id)"
+            >
+              预览
+            </el-button>
             <el-button
               type="primary"
               link
-              @click="router.push({ name: 'person-detail', params: { personId: row.id } })"
+              @click.stop="viewDetail(row.id)"
             >
               查看
             </el-button>
@@ -157,30 +192,50 @@ async function openArchive(person: PersonListItem): Promise<void> {
               link
               :icon="Download"
               :loading="openingPersonId === row.id"
-              @click="openArchive(row)"
+              @click.stop="openArchive(row)"
             >
               导出
             </el-button>
-        </template>
-      </avue-crud>
-      <FixedListPagination
-        :page="store.page"
-        :total="store.total"
-        @change="store.load"
+          </template>
+        </avue-crud>
+        <FixedListPagination :page="store.page" :total="store.total" @change="loadPage" />
+      </div>
+      <PersonArchivePreview
+        :state="preview.state.value"
+        :opening-person-id="openingPersonId"
+        @retry="preview.select"
+        @retry-photo="preview.retryPhoto"
+        @view="viewDetail"
+        @export-person="openArchive"
       />
     </div>
     <div v-else-if="store.message" class="empty-sheet person-list-empty">
       <span>档案目录暂时无法加载</span>
       <p>请检查服务连接后重试。</p>
-      <el-button type="primary" @click="store.load(store.page)">重新加载</el-button>
+      <el-button type="primary" @click="loadPage(store.page)">重新加载</el-button>
     </div>
     <div v-else-if="store.loaded && !store.loading" class="empty-sheet person-list-empty">
       <span>{{ store.hasFilters ? '没有符合条件的档案' : '还没有人员档案' }}</span>
       <p>{{ store.hasFilters ? '可调整筛选条件后再次查找。' : '导入标准工作簿后，档案会显示在这里。' }}</p>
-      <el-button v-if="store.hasFilters" @click="store.reset">清除筛选条件</el-button>
+      <el-button v-if="store.hasFilters" @click="resetFilters">清除筛选条件</el-button>
       <el-button v-else-if="canImport" type="primary" @click="router.push({ name: 'import' })">
         前往批量导入
       </el-button>
     </div>
   </section>
 </template>
+
+<style scoped>
+.person-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.85fr);
+  align-items: start;
+  gap: 14px;
+}
+
+.person-list-card { min-width: 0; }
+
+@media (max-width: 1180px) {
+  .person-workbench { grid-template-columns: 1fr; }
+}
+</style>

@@ -12,6 +12,11 @@ import PersonListPage from "@/features/person-list/PersonListPage.vue"
 import { personListItemSchema } from "@/features/person-list/schemas"
 import { userSchema } from "@/shared/api/schemas"
 
+const apiMocks = vi.hoisted(() => ({
+  getPerson: vi.fn(),
+  downloadPersonPhoto: vi.fn(),
+}))
+
 vi.mock("@/features/person-list/api", () => ({
   fetchPersons: vi.fn(),
   downloadPersonArchives: vi.fn(),
@@ -21,7 +26,56 @@ vi.mock("@/features/archive-view/open-archive", () => ({
   downloadAndOpenArchive: vi.fn(),
 }))
 
+vi.mock("@/features/archive-view/api", () => apiMocks)
+
 describe("PersonListPage batch export", () => {
+  it("does not load a dossier when rows are selected for batch export", async () => {
+    // Given
+    const person = personListItemSchema.parse({
+      id: "9007199254740993",
+      employeeNo: "E-001",
+      name: "测试甲",
+      organization: "测试单位",
+      department: "档案部",
+      position: "职员",
+      titleOrSkill: "",
+      updatedAt: "2026-07-22T03:00:00Z",
+    })
+    vi.mocked(fetchPersons).mockResolvedValue({
+      content: [person],
+      page: 0,
+      size: 20,
+      totalElements: 1,
+      totalPages: 1,
+    })
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: "/persons", component: PersonListPage },
+        { path: "/persons/:personId", name: "person-detail", component: { template: "<div />" } },
+      ],
+    })
+    await router.push("/persons")
+    await router.isReady()
+    const avueCrudStub = defineComponent({
+      name: "AvueCrud",
+      emits: ["selection-change"],
+      template: "<div><slot /></div>",
+    })
+    const wrapper = mount(PersonListPage, {
+      global: { plugins: [createPinia(), router, ElementPlus], stubs: { AvueCrud: avueCrudStub } },
+    })
+    await flushPromises()
+
+    // When
+    wrapper.getComponent(avueCrudStub).vm.$emit("selection-change", [person])
+    await wrapper.vm.$nextTick()
+
+    // Then
+    expect(apiMocks.getPerson).not.toHaveBeenCalled()
+    wrapper.unmount()
+  })
+
   it("downloads selected archives and saves one zip bundle", async () => {
     // Given
     const person = personListItemSchema.parse({
