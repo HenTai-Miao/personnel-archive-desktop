@@ -81,7 +81,9 @@ test("shows 20 personnel rows per page and loads the next server page", async ()
       // Then
       await expect(page.getByText("分页人员21", { exact: true })).toBeVisible()
       await expect(page.getByText("分页人员01", { exact: true })).toHaveCount(0)
-      await expect(page.getByText("每页 20 条", { exact: true })).toBeVisible()
+      await expect(page.locator('[data-test="list-pagination"]')).toContainText(
+        "每页 20 条，共 21 条",
+      )
       expect(requestedPages).toEqual(["0", "1"])
     } finally {
       await application.close()

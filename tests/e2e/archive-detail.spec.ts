@@ -70,7 +70,7 @@ const detailResponse = {
   archive: { templateVersion: "V1", snapshotVersion: 2, updatedAt: "2026-07-22T03:00:00Z" },
 } as const
 
-test("opens a complete imported archive from the personnel list", async () => {
+test("previews a masked dossier before opening the complete archive", async () => {
   // Given
   const userDataDirectory = await mkdtemp(join(tmpdir(), "personnel-archive-detail-e2e-"))
   try {
@@ -81,6 +81,7 @@ test("opens a complete imported archive from the personnel list", async () => {
       const page = await application.firstWindow()
       const pageErrors: string[] = []
       const requestFailures: string[] = []
+      const sensitiveValueRequests: string[] = []
       page.on("pageerror", (error) => pageErrors.push(error.message))
       page.on("requestfailed", (request) =>
         requestFailures.push(
@@ -139,6 +140,7 @@ test("opens a complete imported archive from the personnel list", async () => {
         }
         if (path === "/api/v1/persons/7/sensitive-value") {
           const field = url.searchParams.get("field")
+          sensitiveValueRequests.push(field ?? "missing-field")
           switch (field) {
             case "IDENTITY_CARD":
               await route.fulfill({
@@ -176,9 +178,18 @@ test("opens a complete imported archive from the personnel list", async () => {
       await page.getByPlaceholder("请输入用户名").fill("admin")
       await page.getByPlaceholder("请输入密码").fill("test-password")
       await page.getByRole("button", { name: "登录" }).click()
-      await page.getByRole("button", { name: "查看", exact: true }).click()
+      await page.getByRole("button", { name: "预览", exact: true }).click()
 
       // Then
+      const preview = page.locator('[data-test="person-preview"]')
+      await expect(preview.getByRole("heading", { name: "测试甲", level: 2 })).toBeVisible()
+      await expect(preview.getByText("1234***********678", { exact: true })).toBeVisible()
+      await expect(preview.getByText("1380****000", { exact: true })).toBeVisible()
+      await expect(preview.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
+      await expect(preview.getByRole("button", { name: /显示完整/ })).toHaveCount(0)
+      expect(sensitiveValueRequests).toEqual([])
+
+      await preview.getByRole("button", { name: "查看完整档案" }).click()
       await expect(page.getByRole("heading", { name: "测试甲", level: 1 })).toBeVisible()
       await expect(page.getByRole("heading", { name: "基本情况与任职信息" })).toBeVisible()
       await expect(page.getByText("全日制大学", { exact: true })).toBeVisible()
