@@ -1,23 +1,22 @@
-/* 固定分页脚注模拟桌面数据表状态栏，始终显示每页二十条的数据口径。 */
+/* 固定分页脚注保留每页二十条口径，并沿用 03 的轻量工具条。 */
 .fixed-list-pagination {
   display: flex;
-  min-height: 42px;
+  min-height: 48px;
   gap: 14px;
   align-items: center;
   justify-content: space-between;
-  padding: 6px 10px;
-  color: #51636f;
-  background: #edf1f3;
-  border-top: 1px solid var(--archive-line-strong);
+  padding: 8px 14px;
+  color: var(--archive-muted);
+  background: #fff;
+  border-top: 1px solid var(--archive-line);
 }
 
 .fixed-list-pagination > span {
   color: var(--archive-muted);
   font-family: var(--archive-data-font);
-  font-size: 9px;
+  font-size: 10px;
   white-space: nowrap;
 }
-
 .fixed-list-pagination .el-pagination {
   padding: 0;
 }
@@ -25,16 +24,17 @@
 .fixed-list-pagination .el-pagination.is-background .btn-next,
 .fixed-list-pagination .el-pagination.is-background .btn-prev,
 .fixed-list-pagination .el-pagination.is-background .el-pager li {
-  min-width: 27px;
-  height: 27px;
+  min-width: 28px;
+  height: 28px;
   margin: 0 2px;
-  border: 1px solid #8fa1ac;
-  border-radius: 0;
-  box-shadow: inset 1px 1px #fff;
-  line-height: 25px;
+  background: #fff;
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-chip);
+  line-height: 26px;
 }
 
 .fixed-list-pagination .el-pagination.is-background .el-pager li.is-active {
-  border-color: var(--archive-navy-deep);
-  box-shadow: inset 1px 1px rgb(255 255 255 / 28%);
+  color: #fff;
+  background: var(--archive-blue);
+  border-color: var(--archive-blue);
 }

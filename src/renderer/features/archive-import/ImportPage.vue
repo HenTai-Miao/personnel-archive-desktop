@@ -101,7 +101,7 @@ async function submit(): Promise<void> {
 
 <template>
   <section class="page-stack">
-    <header class="page-header"><div><h1>批量导入</h1></div></header>
+    <header class="page-header"><div><p class="page-eyebrow">工作簿接收 / 逐份处理</p><h1>批量导入</h1><p class="page-summary">统一处理手动文件与自动扫描队列，并逐份确认重复档案。</p></div></header>
 
     <div class="paper-card import-picker">
       <div>

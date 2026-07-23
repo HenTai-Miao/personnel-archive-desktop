@@ -1,89 +1,100 @@
-/* Windows 管理台框架：顶部系统栏、左侧树形导航和右侧固定业务工作区。 */
+/* 登录后工作台骨架：60px 轻顶栏、200px 业务目录和自适应冷白工作区。 */
 .app-shell {
   display: grid;
-  grid-template: 58px minmax(0, 1fr) / 218px minmax(0, 1fr);
-  grid-template-areas:
-    "system system"
-    "navigation workspace";
+  grid-template: 60px minmax(0, 1fr) / 200px minmax(0, 1fr);
+  grid-template-areas: "system system" "navigation workspace";
   height: 100%;
 }
 
 .system-bar {
+  position: relative;
+  z-index: 20;
   grid-area: system;
   display: flex;
   min-width: 0;
-  align-items: stretch;
+  align-items: center;
   justify-content: space-between;
-  color: #fff;
-  background: var(--archive-blue);
-  border-bottom: 1px solid #113e5d;
-  box-shadow: inset 0 1px rgb(255 255 255 / 18%);
+  padding: 0 24px;
+  color: var(--archive-ink);
+  background: rgb(255 255 255 / 82%);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--archive-line);
 }
 
 .paper-workspace {
   grid-area: workspace;
   min-width: 0;
   overflow: auto;
-  padding: 12px 16px 18px;
+  padding: 24px 24px 30px;
   background: var(--archive-canvas);
 }
 
+.workbench-surface {
+  isolation: isolate;
+}
+
 .page-stack {
-  width: min(1480px, 100%);
+  width: min(1600px, 100%);
   min-height: 100%;
   margin: 0 auto;
 }
 
 .page-header {
   display: flex;
-  min-height: 43px;
-  align-items: center;
+  min-height: 88px;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 10px;
-  padding: 0 12px;
-  background: var(--archive-surface);
-  border: 1px solid var(--archive-line-strong);
-  box-shadow: inset 1px 1px #fff;
+  gap: 18px;
+  padding: 3px 0 18px;
 }
 
 .page-header h1 {
   margin: 0;
-  padding: 0;
 }
-
 .page-header h1::before {
   display: none;
 }
 
-.page-header p {
-  max-width: 720px;
-  margin: 0;
+.page-eyebrow,
+.section-eyebrow {
+  display: block;
+  margin: 0 0 3px;
+  color: var(--archive-blue);
+  font-size: 10.5px;
+  font-weight: 650;
+  letter-spacing: 0.1em;
+}
+
+.page-summary {
+  max-width: 760px;
+  margin: 5px 0 0;
   color: var(--archive-muted);
-  font-size: 12px;
+  font-size: 11.5px;
 }
 
 .back-link {
   display: inline-flex;
-  min-height: 29px;
-  gap: 5px;
+  min-height: 32px;
+  gap: 6px;
   align-items: center;
-  margin-bottom: 8px;
-  padding: 0 9px;
-  color: #314b5a;
-  background: #edf1f3;
-  border: 1px solid var(--archive-line-strong);
-  box-shadow: inset 1px 1px #fff;
+  margin-bottom: 10px;
+  padding: 0 10px;
+  color: var(--archive-muted);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--archive-radius-item);
   cursor: pointer;
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 12px;
 }
 
-@media (max-width: 1180px) {
-  .app-shell {
-    grid-template-columns: 198px minmax(0, 1fr);
-  }
+.back-link:hover {
+  color: var(--archive-blue);
+  background: #fff;
+  border-color: var(--archive-line);
+}
 
+@media (max-width: 1280px) {
   .paper-workspace {
-    padding: 10px 12px 14px;
+    padding: 20px 20px 26px;
   }
 }

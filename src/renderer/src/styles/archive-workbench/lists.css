@@ -1,35 +1,35 @@
-/* 人员目录与家庭查询使用传统管理软件的工具条和高密度数据网格。 */
+/* 03 目录与查询：主列表保持筛选、批量处理和卷宗联动上下文。 */
+@import "./preview.css";
+
 .archive-list-ledger {
   display: grid;
-  grid-template-columns: 104px minmax(0, 1fr);
-  margin-bottom: 9px;
+  grid-template-columns: 112px minmax(0, 1fr);
+  margin-bottom: 12px;
   overflow: hidden;
-  background: var(--archive-surface);
-  border: 1px solid var(--archive-line-strong);
-  box-shadow: inset 1px 1px #fff;
+  background: rgb(255 255 255 / 88%);
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-card);
 }
 
 .ledger-count {
   display: grid;
+  min-height: 88px;
   align-content: center;
-  min-height: 86px;
-  padding: 11px 14px;
-  background: #dce6ec;
-  border-right: 1px solid var(--archive-line);
+  padding: 12px 16px;
+  background: #eaf1fe;
+  border-right: 1px solid #dbe7fd;
 }
-
 .ledger-count span {
-  color: #4d5f6b;
+  color: var(--archive-muted);
   font-size: 10px;
   font-weight: 600;
 }
-
 .ledger-count strong {
-  color: var(--archive-navy-deep);
+  color: var(--archive-ink);
   font-family: var(--archive-data-font);
-  font-size: 27px;
+  font-size: 26px;
   font-weight: 650;
-  line-height: 1.2;
+  line-height: 1.25;
 }
 
 .person-filter-form {
@@ -37,24 +37,21 @@
   grid-template-columns: repeat(3, minmax(130px, 1fr)) auto;
   gap: 10px;
   align-items: end;
-  padding: 11px 14px;
+  padding: 12px;
 }
-
 .person-filter-form label > span {
   display: block;
   margin-bottom: 4px;
-  color: #40515d;
-  font-size: 10px;
+  color: var(--archive-muted);
+  font-size: 10.5px;
   font-weight: 600;
 }
-
 .filter-actions,
 .picker-actions {
   display: flex;
   gap: 6px;
   white-space: nowrap;
 }
-
 .filter-actions .el-button + .el-button,
 .picker-actions .el-button + .el-button {
   margin-left: 0;
@@ -62,62 +59,68 @@
 
 .list-alert,
 .page-stack > .el-alert {
-  margin-bottom: 9px;
+  margin-bottom: 10px;
 }
-
 .list-loading {
-  padding: 20px;
+  padding: 24px;
 }
-
 .person-list-card,
 .result-card {
+  min-width: 0;
   overflow: hidden;
+}
+
+.person-workbench {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 320px;
+  gap: 18px;
+  align-items: start;
 }
 
 .table-heading {
   display: flex;
-  min-height: 48px;
+  min-height: 60px;
   gap: 16px;
   align-items: center;
   justify-content: space-between;
-  padding: 7px 10px;
-  background: #edf1f3;
-  border-bottom: 1px solid var(--archive-line-strong);
+  padding: 10px 14px;
+  background: #fff;
+  border-bottom: 1px solid var(--archive-line);
 }
 
 .table-heading > div:first-child {
   padding-left: 0;
   border-left: 0;
 }
-
 .table-heading strong,
 .table-heading span {
   display: block;
 }
-
 .table-heading strong {
   color: var(--archive-ink);
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 650;
 }
-
 .table-heading span {
   margin-top: 2px;
   color: var(--archive-muted);
+  font-size: 10.5px;
+}
+.table-heading .section-eyebrow {
+  margin-bottom: 2px;
   font-size: 9px;
 }
 
 .batch-export-strip {
   display: flex;
-  min-height: 29px;
+  min-height: 30px;
   gap: 9px;
   align-items: center;
 }
-
 .person-list-card .table-heading .batch-export-strip > span {
   margin: 0;
   color: var(--archive-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .archive-crud > .el-card,
@@ -126,95 +129,95 @@
   border-radius: 0;
   box-shadow: none;
 }
-
 .archive-crud > .el-card > .el-card__body {
   padding: 0;
 }
-
 .archive-crud .avue-crud__menu {
   justify-content: flex-start;
 }
-
 .archive-crud .avue-crud__menu .el-button + .el-button {
-  margin-left: 9px;
+  margin-left: 8px;
 }
 
 .person-list-card .el-table,
 .result-card .el-table {
-  --el-table-border-color: #b8c4cb;
-  --el-table-header-bg-color: #d8e1e7;
-  --el-table-row-hover-bg-color: #dcecf6;
-  --el-fill-color-lighter: #f2f5f7;
+  --el-table-border-color: var(--archive-line);
+  --el-table-header-bg-color: #fcfcfe;
+  --el-table-row-hover-bg-color: #fafbfe;
+  --el-fill-color-lighter: #fafbfe;
   color: var(--archive-ink);
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .person-list-card .el-table th.el-table__cell,
 .result-card .el-table th.el-table__cell {
-  height: 38px;
+  height: 42px;
   padding: 0;
-  color: #263b48;
-  background: #d8e1e7;
-  border-right: 1px solid #b8c4cb;
-  border-bottom-color: var(--archive-line-strong);
-  font-size: 10px;
+  color: var(--archive-muted);
+  background: #fcfcfe;
+  font-size: 11px;
   font-weight: 650;
 }
-
 .person-list-card .el-table td.el-table__cell,
 .result-card .el-table td.el-table__cell {
-  height: 39px;
+  height: 44px;
   padding: 2px 0;
-  border-right: 1px solid #c7d0d6;
-  border-bottom-color: #c7d0d6;
+  border-bottom-color: var(--archive-line);
 }
-
 .person-list-card .el-table .cell,
 .result-card .el-table .cell {
-  padding: 0 8px;
-  line-height: 1.35;
+  padding: 0 10px;
+  line-height: 1.4;
 }
-
 .person-list-card .el-table__fixed-right,
 .result-card .el-table__fixed-right {
-  box-shadow: -3px 0 5px rgb(40 60 73 / 10%);
+  box-shadow: -4px 0 12px rgb(20 25 40 / 6%);
 }
 
+.person-list-card .el-table__row.current-row > td.el-table__cell {
+  background: #eaf1fe;
+}
+.person-list-card .el-table__row.current-row > td:first-child {
+  box-shadow: inset 3px 0 var(--archive-blue);
+}
 .person-name,
 .matched-name {
-  color: var(--archive-navy-deep);
+  color: var(--archive-ink);
   font-weight: 700;
 }
-
+.matched-name {
+  color: var(--archive-blue);
+}
 .relationship {
   display: block;
-  margin-top: 1px;
+  margin-top: 2px;
   color: var(--archive-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .search-ledger {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   gap: 8px;
-  margin-bottom: 9px;
-  padding: 11px;
-  background: var(--archive-surface);
-  border: 1px solid var(--archive-line-strong);
-  box-shadow: inset 1px 1px #fff;
+  margin-bottom: 10px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-card);
 }
-
 .result-card {
-  margin-top: 9px;
+  margin-top: 10px;
 }
 
 @media (max-width: 1280px) {
   .person-filter-form {
     grid-template-columns: repeat(3, minmax(115px, 1fr));
   }
-
   .filter-actions {
     grid-column: 1 / -1;
     justify-content: flex-end;
+  }
+  .person-workbench {
+    grid-template-columns: minmax(0, 1fr);
   }
 }

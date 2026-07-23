@@ -1,5 +1,61 @@
 /* 登录页沿用 Windows 管理台线框，避免营销式大图和装饰性层叠。 */
 .login-page {
+  --archive-ink: #1f2d36;
+  --archive-navy: #1e5f8c;
+  --archive-navy-deep: #174b70;
+  --archive-blue: #1e5f8c;
+  --archive-teal: #2f746d;
+  --archive-canvas: #e5eaee;
+  --archive-surface: #f8fafb;
+  --archive-surface-muted: #edf1f3;
+  --archive-line: #c7d0d6;
+  --archive-line-strong: #7f919e;
+  --archive-muted: #657580;
+  --archive-faint: #8b989f;
+  --archive-warning: #946525;
+  --archive-danger: #a13f3f;
+  --archive-radius-button: 0;
+  --archive-radius-field: 0;
+  --el-color-primary: #1e5f8c;
+  --el-color-primary-light-3: #6090b0;
+  --el-color-primary-light-5: #8fadc1;
+  --el-color-primary-light-7: #bdcfdb;
+  --el-color-primary-light-8: #d4e0e7;
+  --el-color-primary-light-9: #edf3f6;
+  --el-color-primary-dark-2: #174b70;
+  --el-color-success: #2f746d;
+  --el-color-warning: #946525;
+  --el-color-danger: #a13f3f;
+  --el-border-radius-base: 0;
+  --el-border-radius-small: 0;
+  --el-border-radius-round: 0;
+}
+
+.login-page .el-button,
+.login-page .el-alert,
+.login-page .el-input__wrapper {
+  border-radius: 0;
+}
+
+.login-page .el-button {
+  box-shadow: inset 1px 1px rgb(255 255 255 / 65%);
+}
+.login-page .el-button--primary {
+  box-shadow: inset 1px 1px rgb(255 255 255 / 28%);
+}
+.login-page .el-input__wrapper {
+  background: #fff;
+  box-shadow:
+    inset 1px 1px 2px rgb(39 62 76 / 9%),
+    0 0 0 1px var(--archive-line-strong) inset;
+}
+.login-page .el-input__wrapper:hover {
+  box-shadow:
+    inset 1px 1px 2px rgb(39 62 76 / 12%),
+    0 0 0 1px #667f8f inset;
+}
+
+.login-page {
   display: grid;
   grid-template-columns: minmax(330px, 34%) minmax(540px, 1fr);
   min-height: 100%;

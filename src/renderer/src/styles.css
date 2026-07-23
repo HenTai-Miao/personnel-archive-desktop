@@ -1,4 +1,4 @@
-/* Windows 政企管理台：旧主题保留但不参与级联，避免多套视觉相互覆盖。 */
+/* 03 卷宗联动台：登录页在 auth.css 内隔离保留原视觉，其余登录后页面共享当前主题。 */
 @import "./styles/archive-workbench/theme.css";
 @import "./styles/archive-workbench/auth.css";
 @import "./styles/archive-workbench/shell.css";

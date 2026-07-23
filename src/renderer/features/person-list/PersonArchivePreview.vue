@@ -147,30 +147,3 @@ function assertNever(value: never): never {
     </div>
   </aside>
 </template>
-
-<style scoped>
-.person-preview { min-width: 0; border: 1px solid var(--archive-line-strong); background: var(--archive-surface); }
-.preview-state { min-height: 320px; padding: 24px; color: var(--archive-muted); }
-.preview-state strong { display: block; margin-bottom: 8px; color: var(--archive-ink); font-size: 16px; }
-.preview-dossier { max-height: calc(100vh - 210px); overflow: auto; }
-.preview-heading { position: sticky; top: 0; z-index: 2; display: flex; justify-content: space-between; gap: 16px; padding: 18px; border-bottom: 2px solid var(--archive-blue); background: var(--archive-surface); }
-.preview-heading span, .preview-heading p { color: var(--archive-muted); font-size: 12px; }
-.preview-heading h2 { margin: 4px 0; font-size: 22px; }
-.preview-actions { display: flex; flex-direction: column; align-items: stretch; gap: 8px; }
-.preview-actions :deep(.el-button + .el-button) { margin-left: 0; }
-.preview-section { margin: 12px; padding: 14px; border: 1px solid var(--archive-line); }
-.preview-section > header { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-.preview-section h3 { margin: 0; font-size: 15px; }
-.preview-section header span { color: var(--archive-muted); font-size: 12px; }
-.preview-photo { display: grid; place-items: center; min-height: 150px; margin: 0 0 12px; border: 1px dashed var(--archive-line-strong); color: var(--archive-muted); }
-.preview-photo img { width: 120px; max-height: 160px; object-fit: contain; }
-.preview-photo button { margin-left: 6px; color: var(--archive-blue); }
-.preview-fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); margin: 0; border-top: 1px solid var(--archive-line); border-left: 1px solid var(--archive-line); }
-.preview-fields div { min-width: 0; padding: 8px; border-right: 1px solid var(--archive-line); border-bottom: 1px solid var(--archive-line); }
-.preview-fields dt { color: var(--archive-muted); font-size: 11px; }
-.preview-fields dd { margin: 3px 0 0; overflow-wrap: anywhere; }
-.person-preview :deep(.dossier-section) { margin: 12px; padding: 14px; box-shadow: none; }
-.person-preview :deep(.education-summary-grid) { grid-template-columns: 1fr; }
-.person-preview :deep(.dossier-table) { min-width: 620px; }
-@media (max-width: 1180px) { .preview-dossier { max-height: none; } }
-</style>

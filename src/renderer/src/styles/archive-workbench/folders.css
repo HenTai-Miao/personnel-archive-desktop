@@ -1,42 +1,51 @@
-/* 文件夹设置以系统流程条和属性页呈现自动扫描、移动与失败保留规则。 */
+/* 本地目录设置以真实安全流转线连接自动扫描与完成归档。 */
 .folder-settings-page {
   width: min(1180px, 100%);
 }
 
 .folder-route {
   display: grid;
-  grid-template-columns: 176px minmax(150px, 1fr) 176px;
+  grid-template-columns: 188px minmax(150px, 1fr) 188px;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 14px;
 }
 
 .route-node {
+  position: relative;
   display: grid;
-  min-height: 58px;
+  min-height: 68px;
   align-content: center;
-  padding: 9px 12px;
+  padding: 11px 14px 11px 18px;
   background: var(--archive-surface);
-  border: 1px solid var(--archive-line-strong);
-  box-shadow: inset 1px 1px #fff;
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-panel);
+  box-shadow: var(--archive-shadow-panel);
 }
 
 .route-node::before {
-  display: none;
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 0;
+  width: 3px;
+  background: var(--archive-blue);
+  border-radius: 0 3px 3px 0;
+  content: "";
 }
-
 .route-node.is-archive {
-  background: #edf3f6;
+  background: #f7fbf8;
 }
-
+.route-node.is-archive::before {
+  background: var(--archive-teal);
+}
 .route-node span {
   color: var(--archive-muted);
-  font-size: 9px;
+  font-size: 10px;
 }
-
 .route-node strong {
   margin-top: 3px;
   color: var(--archive-ink);
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .route-line {
@@ -44,105 +53,94 @@
   display: grid;
   place-items: center;
 }
-
 .route-line::before {
   position: absolute;
   right: 0;
   left: 0;
   height: 1px;
-  background: var(--archive-line-strong);
+  background: #bcd0f5;
   content: "";
 }
-
 .route-line::after {
   position: absolute;
-  right: 0;
-  width: 7px;
-  height: 7px;
-  border-top: 1px solid var(--archive-line-strong);
-  border-right: 1px solid var(--archive-line-strong);
+  right: 1px;
+  width: 8px;
+  height: 8px;
+  border-top: 1px solid var(--archive-blue);
+  border-right: 1px solid var(--archive-blue);
   content: "";
   transform: rotate(45deg);
 }
-
 .route-line span {
   position: relative;
   z-index: 1;
-  padding: 2px 8px;
+  padding: 3px 9px;
   color: var(--archive-muted);
   background: var(--archive-canvas);
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .folder-settings-card {
   padding: 0 18px;
 }
-
 .folder-setting-row {
   display: grid;
-  grid-template-columns: 38px minmax(0, 1fr) auto;
-  gap: 12px;
+  grid-template-columns: 42px minmax(0, 1fr) auto;
+  gap: 14px;
   align-items: center;
-  padding: 17px 0;
+  padding: 20px 0;
 }
-
 .folder-setting-row + .folder-setting-row {
   border-top: 1px solid var(--archive-line);
 }
 
 .folder-setting-icon {
   display: grid;
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   place-items: center;
-  color: var(--archive-navy-deep);
-  background: #e4ebef;
-  border: 1px solid var(--archive-line-strong);
-  box-shadow: inset 1px 1px #fff;
-  font-size: 16px;
+  color: var(--archive-blue);
+  background: #eaf1fe;
+  border: 1px solid #dbe7fd;
+  border-radius: var(--archive-radius-button);
+  font-size: 18px;
 }
-
 .folder-setting-icon.archive {
   color: var(--archive-teal);
-  background: #e6efed;
-  border-color: #8ba7a3;
+  background: #edf8f1;
+  border-color: #cde8d5;
 }
-
 .folder-setting-copy strong {
   color: var(--archive-ink);
   font-size: 13px;
 }
-
 .folder-setting-copy p {
-  margin: 4px 0 9px;
+  margin: 4px 0 10px;
   color: var(--archive-muted);
-  font-size: 10px;
+  font-size: 10.5px;
 }
-
 .folder-setting-copy .el-input__wrapper {
-  background: #fff;
+  background: #fafbfe;
 }
 
 .folder-rule-note {
   display: grid;
   grid-template-columns: auto minmax(0, 1fr);
   gap: 10px;
-  margin-top: 9px;
-  padding: 9px 12px;
+  margin-top: 10px;
+  padding: 11px 13px;
   color: var(--archive-muted);
-  background: #dce3e7;
+  background: #fff;
   border: 1px solid var(--archive-line);
-  font-size: 10px;
+  border-radius: var(--archive-radius-field);
+  font-size: 10.5px;
 }
-
 .folder-rule-note strong {
   color: var(--archive-warning);
 }
-
 .folder-rule-note.ready {
-  border-left: 4px solid var(--archive-teal);
+  border-left: 3px solid var(--archive-teal);
 }
-
 .folder-rule-note.ready strong {
   color: var(--archive-teal);
 }

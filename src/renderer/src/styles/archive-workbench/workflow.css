@@ -1,53 +1,50 @@
-/* 导入流程采用桌面任务面板，突出文件队列、重复决定和稳定结果状态。 */
+/* 导入工作流：文件队列、逐份状态、重复决定与持久记录共享一套工作台语言。 */
 .import-picker {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 12px;
+  gap: 14px;
   align-items: center;
-  padding: 16px 18px;
+  padding: 18px;
   overflow: hidden;
 }
 
 .import-picker::before {
   display: none;
 }
-
 .import-picker strong {
   color: var(--archive-ink);
-  font-size: 13px;
+  font-size: 14px;
 }
-
 .import-picker p {
   margin: 4px 0 0;
   color: var(--archive-muted);
   font-size: 11px;
-  line-height: 1.55;
+  line-height: 1.6;
 }
 
 .file-chips {
   grid-column: 1 / -1;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 5px;
-  padding-top: 11px;
+  gap: 6px;
+  padding-top: 12px;
   border-top: 1px solid var(--archive-line);
 }
-
 .import-picker > .fixed-list-pagination {
   grid-column: 1 / -1;
-  margin: 0 -18px -16px;
+  margin: 0 -18px -18px;
 }
 
 .queued-file-chip {
   display: flex;
   min-width: 0;
-  gap: 7px;
+  gap: 8px;
   align-items: center;
-  padding: 6px 8px;
+  padding: 7px 9px;
   background: var(--archive-surface-muted);
   border: 1px solid var(--archive-line);
-  border-radius: 0;
-  font-size: 10px;
+  border-radius: var(--archive-radius-item);
+  font-size: 10.5px;
 }
 
 .queued-file-chip > span:last-child {
@@ -56,10 +53,15 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-
 .archive-error {
   color: var(--archive-danger);
   font-weight: 650;
+}
+.import-history-card {
+  margin-top: 18px;
+}
+.import-history-card .list-loading {
+  min-height: 170px;
 }
 
 .duplicate-sheet dl {
@@ -69,35 +71,40 @@
   margin: 0 0 16px;
   overflow: hidden;
   background: var(--archive-line);
-  border: 1px solid var(--archive-line-strong);
-  border-radius: 0;
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-field);
 }
-
 .duplicate-sheet dl > div {
-  padding: 10px 12px;
+  padding: 11px 12px;
   background: var(--archive-surface);
 }
-
 .duplicate-sheet dt {
   color: var(--archive-muted);
   font-size: 10px;
 }
-
 .duplicate-sheet dd {
   margin: 4px 0 0;
   color: var(--archive-ink);
+  font-family: var(--archive-data-font);
   font-size: 12px;
   font-weight: 650;
 }
-
 .decision-options {
   display: grid;
   gap: 7px;
   margin-top: 14px;
 }
-
 .decision-options .el-radio {
   width: 100%;
   margin: 0;
-  border-radius: 0;
+  border-radius: var(--archive-radius-item);
+}
+
+@media (max-width: 1180px) {
+  .import-picker {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .picker-actions {
+    justify-content: flex-end;
+  }
 }

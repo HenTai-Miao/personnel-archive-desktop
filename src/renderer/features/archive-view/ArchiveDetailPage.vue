@@ -184,7 +184,7 @@ function scrollToSection(sectionId: "identity" | "education" | "career" | "famil
       <template #extra><el-button @click="router.push('/persons')">返回档案列表</el-button></template>
     </el-result>
     <template v-else>
-      <header class="person-dossier-header">
+      <header class="person-dossier-header workbench-heading">
         <div class="dossier-heading-copy">
           <p class="record-number">档案编号：{{ person.employeeNo || '未填写' }}</p>
           <h1>{{ person.name || '未填写姓名' }}</h1>

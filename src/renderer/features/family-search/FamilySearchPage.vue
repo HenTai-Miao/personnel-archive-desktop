@@ -19,7 +19,7 @@ function openMatchedArchive(personId: string, memberName: string, relationship: 
 
 <template>
   <section class="page-stack search-page">
-    <header class="page-header"><div><h1>家庭成员查询</h1></div></header>
+    <header class="page-header"><div><p class="page-eyebrow">关系检索 / 有效档案</p><h1>家庭成员查询</h1><p class="page-summary">按成员姓名模糊检索，保留每一条人员与家庭成员匹配关系。</p></div></header>
     <div class="search-ledger">
       <el-input v-model="store.query" size="large" clearable placeholder="例如：输入“晓华”" @keyup.enter="store.search(0)">
         <template #prefix><el-icon><Search /></el-icon></template>

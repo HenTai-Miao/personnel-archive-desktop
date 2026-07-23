@@ -82,7 +82,9 @@ function previewPerson(person: PersonListItem): void {
   <section class="page-stack person-list-page">
     <header class="page-header">
       <div>
+        <p class="page-eyebrow">人员目录 / 卷宗联动</p>
         <h1>人员档案</h1>
+        <p class="page-summary">筛选当前有效档案，并在工作台中联动核对卷宗摘要。</p>
       </div>
     </header>
 
@@ -224,18 +226,3 @@ function previewPerson(person: PersonListItem): void {
     </div>
   </section>
 </template>
-
-<style scoped>
-.person-workbench {
-  display: grid;
-  grid-template-columns: minmax(0, 1.45fr) minmax(360px, 0.85fr);
-  align-items: start;
-  gap: 14px;
-}
-
-.person-list-card { min-width: 0; }
-
-@media (max-width: 1180px) {
-  .person-workbench { grid-template-columns: 1fr; }
-}
-</style>

@@ -61,7 +61,7 @@ function assertNever(value: never): never {
 
 <template>
   <section class="page-stack folder-settings-page">
-    <header class="page-header"><div><h1>文件夹设置</h1></div></header>
+    <header class="page-header"><div><p class="page-eyebrow">自动扫描 / 安全归档</p><h1>文件夹设置</h1><p class="page-summary">配置工作簿从待上传目录到完成归档目录的本地流转路径。</p></div></header>
 
     <div class="folder-route" aria-label="工作簿流转路径">
       <div class="route-node">

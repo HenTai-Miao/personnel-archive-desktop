@@ -1,52 +1,48 @@
-/* 左侧导航采用桌面管理软件的树形连接线，顶部系统栏集中品牌与用户操作。 */
-.brand-block {
-  display: flex;
-  min-width: 270px;
+/* 03 系统身份与业务目录：轻量层级、明确选中态和就近用户操作。 */
+.system-identity {
+  display: inline-flex;
+  min-width: 0;
   align-items: center;
-  padding: 0 18px;
+  gap: 11px;
 }
 
-.brand-block::before {
+.identity-mark {
   display: grid;
-  width: 25px;
-  height: 25px;
+  width: 32px;
+  height: 32px;
   place-items: center;
-  margin-right: 10px;
-  color: var(--archive-navy-deep);
-  background: #f3f7f9;
-  border: 1px solid #0f3f60;
-  box-shadow: inset 1px 1px #fff;
-  content: "▤";
-  font-family: var(--archive-data-font);
-  font-size: 15px;
-}
-
-.brand-block strong,
-.brand-block span {
-  display: block;
-}
-
-.brand-block strong {
+  flex: 0 0 auto;
   color: #fff;
-  font-size: 16px;
+  background: var(--archive-blue);
+  border-radius: var(--archive-radius-button);
+  font-size: 18px;
+}
+
+.identity-copy {
+  display: grid;
+  min-width: 0;
+  line-height: 1.25;
+}
+.identity-copy strong {
+  color: var(--archive-ink);
+  font-size: 14px;
   font-weight: 650;
   letter-spacing: 0.02em;
 }
-
-.brand-block span {
-  margin-top: 2px;
-  color: #c7dce9;
-  font-size: 9px;
+.identity-copy small {
+  margin-top: 3px;
+  color: var(--archive-faint);
+  font-size: 10.5px;
 }
 
 .archive-nav {
   grid-area: navigation;
   display: grid;
   min-width: 0;
-  grid-template-rows: 30px minmax(0, 1fr);
+  grid-template-rows: 54px minmax(0, 1fr);
   color: var(--archive-ink);
-  background: #edf1f4;
-  border-right: 1px solid var(--archive-line-strong);
+  background: rgb(255 255 255 / 74%);
+  border-right: 1px solid var(--archive-line);
 }
 
 .archive-nav::after {
@@ -55,112 +51,102 @@
 
 .cabinet-label {
   display: flex;
-  align-items: center;
-  margin: 0;
-  padding: 0 12px;
-  color: #40515d;
-  background: #d2dbe1;
+  align-items: end;
+  margin: 0 16px;
+  padding: 0 2px 14px;
+  color: var(--archive-muted);
   border-bottom: 1px solid var(--archive-line);
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.02em;
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.12em;
 }
 
 .archive-nav nav {
-  position: relative;
   display: grid;
   align-content: start;
-  gap: 2px;
-  padding: 12px 10px;
+  gap: 4px;
+  padding: 12px 14px;
 }
-
 .archive-nav nav::before {
-  position: absolute;
-  top: 31px;
-  bottom: 35px;
-  left: 25px;
-  width: 1px;
-  background: #a8b4bd;
-  content: "";
+  display: none;
 }
 
 .archive-nav nav a {
   position: relative;
-  z-index: 1;
-  display: flex;
-  min-height: 38px;
-  gap: 8px;
+  display: grid;
+  min-height: 42px;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 9px;
   align-items: center;
-  padding: 0 8px;
-  color: #334651;
+  padding: 0 10px;
+  color: var(--archive-muted);
   border: 1px solid transparent;
+  border-radius: var(--archive-radius-item);
   text-decoration: none;
   transition:
-    background 100ms ease,
-    color 100ms ease;
+    background 120ms ease,
+    color 120ms ease,
+    border-color 120ms ease;
 }
 
 .archive-nav nav a::before {
-  position: absolute;
-  left: 15px;
-  width: 10px;
-  height: 1px;
-  background: #a8b4bd;
-  content: "";
+  display: none;
 }
-
 .archive-nav nav a:hover {
-  background: #e1e8ec;
-  border-color: #bdc8cf;
+  color: var(--archive-ink);
+  background: #fafbfe;
+  border-color: var(--archive-line);
 }
 
 .archive-nav nav a.active {
-  color: #fff;
-  background: var(--archive-blue);
-  border-color: var(--archive-navy-deep);
+  color: var(--archive-blue);
+  background: var(--archive-canvas);
+  border-color: #dbe7fd;
   font-weight: 650;
 }
 
-.archive-nav nav .el-icon {
-  display: grid;
-  width: 17px;
-  height: 17px;
-  place-items: center;
-  flex: 0 0 auto;
-  color: #48606e;
-  background: #f7fafb;
-  border: 1px solid #9aaab5;
-  font-size: 10px;
+.archive-nav nav a.active::after {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: -15px;
+  width: 3px;
+  background: var(--archive-blue);
+  border-radius: 0 3px 3px 0;
+  content: "";
 }
 
-.archive-nav nav a.active .el-icon {
-  color: var(--archive-navy-deep);
-  border-color: #d4e1e9;
+.archive-nav nav .el-icon {
+  width: 18px;
+  height: 18px;
+  color: currentcolor;
+  font-size: 18px;
 }
 
 .nav-foot {
   display: flex;
+  min-width: 0;
   align-items: center;
-  padding: 0 16px;
+  padding-left: 18px;
+  border-left: 1px solid var(--archive-line);
 }
-
 .user-card {
   display: flex;
   min-width: 0;
-  gap: 8px;
+  gap: 9px;
   align-items: center;
 }
 
 .user-avatar {
   display: grid;
-  width: 29px;
-  height: 29px;
+  width: 30px;
+  height: 30px;
   place-items: center;
   flex: 0 0 auto;
-  color: var(--archive-navy-deep);
-  background: #eef4f7;
-  border: 1px solid #0f4567;
-  box-shadow: inset 1px 1px #fff;
+  color: var(--archive-blue);
+  background: #eaf1fe;
+  border: 1px solid #dbe7fd;
+  border-radius: var(--archive-radius-item);
   font-size: 11px;
   font-weight: 700;
 }
@@ -168,7 +154,6 @@
 .user-identity {
   min-width: 0;
 }
-
 .user-name-row {
   display: flex;
   min-width: 0;
@@ -178,9 +163,10 @@
 
 .user-name-row strong {
   min-width: 0;
+  max-width: 180px;
   overflow: hidden;
-  color: #fff;
-  font-size: 10px;
+  color: var(--archive-ink);
+  font-size: 11px;
   font-weight: 650;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -189,32 +175,26 @@
 .user-card small {
   display: block;
   margin-top: 1px;
-  color: #c4d8e5;
+  color: var(--archive-faint);
   font-family: var(--archive-data-font);
   font-size: 9px;
 }
 
 .logout-button {
   display: inline-flex;
-  min-height: 27px;
-  gap: 3px;
+  min-height: 28px;
+  gap: 4px;
   align-items: center;
   padding: 0 9px;
-  color: #123f5d;
-  background: #e8eff3;
-  border: 1px solid #0e4669;
-  box-shadow: inset 1px 1px #fff;
+  color: var(--archive-muted);
+  background: #fff;
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-item);
   cursor: pointer;
   font-size: 10px;
 }
 
 .logout-button:hover {
-  color: #0d334d;
-  background: #fff;
-}
-
-@media (max-width: 1180px) {
-  .brand-block span {
-    display: none;
-  }
+  color: var(--archive-blue);
+  border-color: #bcd0f5;
 }

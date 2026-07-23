@@ -1,0 +1,176 @@
+/* 人员卷宗预览：右栏独立滚动，在 1280px 以下移到目录下方。 */
+.person-preview {
+  position: sticky;
+  top: 0;
+  min-width: 0;
+  max-height: calc(100vh - 108px);
+  overflow: hidden;
+  background: var(--archive-surface);
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-card);
+  box-shadow: var(--archive-shadow-panel);
+}
+
+.preview-state {
+  min-height: 320px;
+  padding: 24px;
+  color: var(--archive-muted);
+}
+
+.preview-state strong {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--archive-ink);
+  font-size: 16px;
+}
+
+.preview-dossier {
+  max-height: calc(100vh - 110px);
+  overflow: auto;
+}
+
+.preview-heading {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: grid;
+  gap: 12px;
+  padding: 16px;
+  background: rgb(255 255 255 / 96%);
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid var(--archive-line);
+  box-shadow: inset 3px 0 var(--archive-blue);
+}
+
+.preview-heading span,
+.preview-heading p {
+  margin-bottom: 0;
+  color: var(--archive-muted);
+  font-size: 11px;
+}
+
+.preview-heading h2 {
+  margin: 3px 0;
+  font-size: 20px;
+}
+
+.preview-actions {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 7px;
+}
+
+.preview-actions .el-button + .el-button {
+  margin-left: 0;
+}
+
+.preview-section {
+  margin: 12px;
+  padding: 14px;
+  border: 1px solid var(--archive-line);
+  border-radius: var(--archive-radius-panel);
+}
+
+.preview-section > header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.preview-section h3 {
+  margin: 0;
+  font-size: 14px;
+}
+
+.preview-section header span {
+  color: var(--archive-muted);
+  font-size: 10px;
+}
+
+.preview-photo {
+  display: grid;
+  min-height: 160px;
+  place-items: center;
+  margin: 0 0 12px;
+  color: var(--archive-muted);
+  background: var(--archive-canvas);
+  border: 1px solid #dbe7fd;
+  border-radius: var(--archive-radius-item);
+  font-size: 11px;
+}
+
+.preview-photo img {
+  width: 120px;
+  max-height: 160px;
+  object-fit: contain;
+}
+
+.preview-photo button {
+  margin-left: 6px;
+  color: var(--archive-blue);
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.preview-fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin: 0;
+  border-top: 1px solid var(--archive-line);
+  border-left: 1px solid var(--archive-line);
+}
+
+.preview-fields div {
+  min-width: 0;
+  padding: 8px;
+  border-right: 1px solid var(--archive-line);
+  border-bottom: 1px solid var(--archive-line);
+}
+
+.preview-fields dt {
+  color: var(--archive-muted);
+  font-size: 10px;
+}
+
+.preview-fields dd {
+  margin: 3px 0 0;
+  overflow-wrap: anywhere;
+  font-size: 11px;
+}
+
+.person-preview .dossier-section {
+  margin: 12px;
+  padding: 14px;
+  border-radius: var(--archive-radius-panel);
+  box-shadow: none;
+}
+
+.person-preview .education-summary-grid {
+  grid-template-columns: 1fr;
+}
+
+.person-preview .dossier-table {
+  min-width: 620px;
+}
+
+@media (max-width: 1280px) {
+  .person-preview {
+    position: static;
+    max-height: none;
+  }
+
+  .preview-dossier {
+    max-height: none;
+  }
+
+  .preview-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+
+  .preview-actions {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-self: end;
+  }
+}

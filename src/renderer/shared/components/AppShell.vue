@@ -40,11 +40,12 @@ async function signOut(): Promise<void> {
 <template>
   <div class="app-shell">
     <header class="system-bar">
-      <div class="brand-block">
-        <div>
+      <div class="system-identity">
+        <span class="identity-mark" aria-hidden="true"><el-icon><Files /></el-icon></span>
+        <span class="identity-copy">
           <strong>人员档案助手</strong>
-          <span>人员信息档案管理系统</span>
-        </div>
+          <small>人员信息档案管理系统</small>
+        </span>
       </div>
       <div class="nav-foot">
         <div class="user-card">
@@ -62,7 +63,7 @@ async function signOut(): Promise<void> {
       </div>
     </header>
     <aside class="archive-nav">
-      <div class="cabinet-label">业务导航</div>
+      <div class="cabinet-label">业务目录</div>
       <nav aria-label="主导航">
         <RouterLink to="/persons" :class="{ active: route.path.startsWith('/persons') }">
           <el-icon><Files /></el-icon><span>人员档案</span>
@@ -78,6 +79,6 @@ async function signOut(): Promise<void> {
         </RouterLink>
       </nav>
     </aside>
-    <main class="paper-workspace"><RouterView /></main>
+    <main class="paper-workspace workbench-surface"><RouterView /></main>
   </div>
 </template>

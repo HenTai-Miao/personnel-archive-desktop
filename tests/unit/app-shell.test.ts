@@ -8,8 +8,8 @@ import { useAuthStore } from "@/features/auth/store"
 import { userSchema } from "@/shared/api/schemas"
 import AppShell from "@/shared/components/AppShell.vue"
 
-describe("AppShell Windows management layout", () => {
-  it("keeps the brand and user actions together in the top system bar", async () => {
+describe("AppShell 03 authenticated workbench", () => {
+  it("presents the system identity, business directory, and workbench surface", async () => {
     // Given
     const pinia = createPinia()
     setActivePinia(pinia)
@@ -52,9 +52,11 @@ describe("AppShell Windows management layout", () => {
     const nameRow = wrapper.get(".user-name-row")
     const displayName = nameRow.get("strong")
     const logout = nameRow.get("button.logout-button")
-    expect(systemBar.find(".brand-block").exists()).toBe(true)
+    expect(systemBar.find(".system-identity").exists()).toBe(true)
     expect(systemBar.find(".nav-foot").exists()).toBe(true)
-    expect(wrapper.get(".archive-nav").find(".brand-block").exists()).toBe(false)
+    expect(wrapper.get(".archive-nav").text()).toContain("业务目录")
+    expect(wrapper.get(".system-identity").text()).toContain("人员档案助手")
+    expect(wrapper.get(".paper-workspace").classes()).toContain("workbench-surface")
     expect(displayName.text()).toBe("本地测试管理员")
     expect(displayName.element.nextElementSibling).toBe(logout.element)
     expect(wrapper.findAll("nav a").map((link) => link.text())).toContain("文件夹设置")

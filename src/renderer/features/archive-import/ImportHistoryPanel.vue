@@ -61,7 +61,7 @@ function formatTimestamp(value: string): string {
 <template>
   <section class="paper-card result-card import-history-card" data-test="import-history">
     <div class="table-heading">
-      <div><strong>导入记录</strong><span>记录保存在数据服务中，刷新或重新打开软件仍可查询</span></div>
+      <div><small class="section-eyebrow">处理轨迹</small><strong>导入记录</strong><span>记录保存在数据服务中，刷新或重新打开软件仍可查询</span></div>
       <el-button :loading="loading" @click="load(page)">刷新记录</el-button>
     </div>
 
