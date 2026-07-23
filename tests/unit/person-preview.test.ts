@@ -1,4 +1,6 @@
+import { mount } from "@vue/test-utils"
 import { afterEach, describe, expect, it, vi } from "vitest"
+import { defineComponent, h, ref } from "vue"
 import { usePersonPreview } from "@/features/person-list/use-person-preview"
 import { personIdSchema } from "@/shared/api/schemas"
 import { PERSON_DETAIL_FIXTURE } from "../support/person-detail-fixture"
@@ -110,6 +112,31 @@ describe("usePersonPreview", () => {
 
     // Then
     expect(preview.state.value).toEqual({ kind: "idle" })
+    expect(revokeObjectUrl).toHaveBeenCalledWith("blob:person-photo")
+  })
+
+  it("revokes the selected photo URL when its Vue host unmounts", async () => {
+    // Given
+    apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, photo: PHOTO_METADATA })
+    apiMocks.downloadPersonPhoto.mockResolvedValue(new Blob(["photo"], { type: "image/png" }))
+    vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:person-photo")
+    const revokeObjectUrl = vi.spyOn(URL, "revokeObjectURL").mockImplementation(() => undefined)
+    const previewRef = ref<ReturnType<typeof usePersonPreview> | null>(null)
+    const Host = defineComponent({
+      setup() {
+        previewRef.value = usePersonPreview()
+        return () => h("div")
+      },
+    })
+    const wrapper = mount(Host)
+    const preview = previewRef.value
+    if (preview === null) throw new Error("expected preview host setup to run")
+    await preview.select(personIdSchema.parse("7"))
+
+    // When
+    wrapper.unmount()
+
+    // Then
     expect(revokeObjectUrl).toHaveBeenCalledWith("blob:person-photo")
   })
 
