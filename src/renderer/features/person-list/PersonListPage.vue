@@ -28,6 +28,10 @@ const canImport = computed(() => {
   return roles.includes("ADMIN") || roles.includes("ARCHIVE_EDITOR")
 })
 
+type PreviewRowClassContext = {
+  readonly row: PersonListItem
+}
+
 onMounted(() => loadPage(store.page))
 
 function updatedAtLabel(value: string): string {
@@ -75,6 +79,11 @@ function viewDetail(personId: PersonId): void {
 
 function previewPerson(person: PersonListItem): void {
   preview.select(person.id)
+}
+
+function previewRowClassName({ row }: PreviewRowClassContext): string {
+  const current = preview.state.value
+  return "personId" in current && current.personId === row.id ? "is-preview-active" : ""
 }
 </script>
 
@@ -158,6 +167,7 @@ function previewPerson(person: PersonListItem): void {
           class="archive-crud"
           :data="crudRows"
           :option="PERSON_LIST_CRUD_OPTION"
+          :row-class-name="previewRowClassName"
           :table-loading="store.loading"
           @row-click="previewPerson"
           @selection-change="store.select"

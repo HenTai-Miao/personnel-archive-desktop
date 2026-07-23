@@ -14,6 +14,8 @@
   --archive-faint: #8b989f;
   --archive-warning: #946525;
   --archive-danger: #a13f3f;
+  --archive-font: "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+  --archive-data-font: "Cascadia Mono", Bahnschrift, Consolas, "Microsoft YaHei UI", sans-serif;
   --archive-radius-button: 0;
   --archive-radius-field: 0;
   --el-color-primary: #1e5f8c;
@@ -39,6 +41,10 @@
 
 .login-page .el-button {
   box-shadow: inset 1px 1px rgb(255 255 255 / 65%);
+}
+.login-page .el-alert {
+  border: 1px solid currentcolor;
+  border-color: color-mix(in srgb, currentcolor 28%, transparent);
 }
 .login-page .el-button--primary {
   box-shadow: inset 1px 1px rgb(255 255 255 / 28%);

@@ -174,10 +174,10 @@
   box-shadow: -4px 0 12px rgb(20 25 40 / 6%);
 }
 
-.person-list-card .el-table__row.current-row > td.el-table__cell {
+.person-list-card .el-table__row.is-preview-active > td.el-table__cell {
   background: #eaf1fe;
 }
-.person-list-card .el-table__row.current-row > td:first-child {
+.person-list-card .el-table__row.is-preview-active > td:first-child {
   box-shadow: inset 3px 0 var(--archive-blue);
 }
 .person-name,

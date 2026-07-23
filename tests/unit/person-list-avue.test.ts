@@ -52,13 +52,18 @@ const PERSON_PAGE = {
 
 const AVUE_CRUD_STUB = defineComponent({
   name: "AvueCrud",
-  props: { data: { type: Array, required: true }, option: { type: Object, required: true } },
+  props: {
+    data: { type: Array, required: true },
+    option: { type: Object, required: true },
+    rowClassName: { type: Function, default: () => "" },
+  },
   emits: ["row-click", "selection-change"],
   template: `
     <div>
       <span v-for="column in option.column" :key="column.prop">{{ column.label }}</span>
       <span>{{ option.menuTitle }}</span>
       <template v-if="data.length">
+        <span data-test="row-class">{{ rowClassName({ row: data[0] }) }}</span>
         <slot name="employeeNo" :row="data[0]" />
         <slot name="name" :row="data[0]" />
         <slot name="organization" :row="data[0]" />
@@ -152,6 +157,7 @@ describe("PersonListPage Avue directory", () => {
     vi.spyOn(URL, "createObjectURL").mockReturnValue("blob:person-preview")
     const wrapper = await mountPage()
     expect(apiMocks.getPerson).not.toHaveBeenCalled()
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("")
 
     // When
     await wrapper.get('[data-test="preview-person"]').trigger("click")
@@ -170,6 +176,7 @@ describe("PersonListPage Avue directory", () => {
     expect(preview.text()).toContain("2026-07-22")
     expect(preview.text()).not.toContain("显示完整")
     expect(preview.get("img").attributes("src")).toBe("blob:person-preview")
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
     wrapper.unmount()
   })
 
@@ -181,12 +188,14 @@ describe("PersonListPage Avue directory", () => {
     await wrapper.get('[data-test="preview-person"]').trigger("click")
     await flushPromises()
     expect(wrapper.get('[data-test="person-preview"]').text()).toContain("测试甲")
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
 
     // When
     await wrapper.get("form").trigger("submit")
 
     // Then
     expect(wrapper.get('[data-test="person-preview"]').text()).toContain("点击名册行")
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("")
     wrapper.unmount()
   })
 
@@ -203,6 +212,7 @@ describe("PersonListPage Avue directory", () => {
     // Then
     expect(apiMocks.getPerson).toHaveBeenCalledWith(PERSON.id)
     expect(wrapper.get('[data-test="person-preview"]').text()).toContain("测试甲")
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
     wrapper.unmount()
   })
 
