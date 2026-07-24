@@ -9,6 +9,7 @@ const ERROR_MESSAGES: Readonly<Record<string, string>> = {
   SESSION_EXPIRED: "登录已过期，请重新登录",
   UNAUTHORIZED: "登录已过期，请重新登录",
   FORBIDDEN: "当前账号没有执行此操作的权限",
+  NOT_FOUND: "档案不存在或已删除",
   VALIDATION_ERROR: "提交的数据未通过校验",
   TEMPLATE_INVALID: "工作簿格式与系统模板不一致",
   IDENTITY_CARD_CONFLICT: "身份证号已存在，但姓名不一致，无法导入",

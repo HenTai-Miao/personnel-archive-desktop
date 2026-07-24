@@ -1,6 +1,6 @@
 /** 有效人员档案列表 API，负责筛选/分页参数和响应校验。 */
 import { z } from "zod"
-import { requestArchiveBundle, requestJson } from "@/shared/api/client"
+import { requestArchiveBundle, requestJson, requestVoid } from "@/shared/api/client"
 import { personIdSchema } from "@/shared/api/schemas"
 import { personListPageSchema } from "./schemas"
 
@@ -22,6 +22,10 @@ const batchExportRequestSchema = z
       .max(100)
       .refine((ids) => new Set(ids).size === ids.length),
   })
+  .strict()
+
+const personDeletionRequestSchema = z
+  .object({ reason: z.string().trim().min(1).max(10_000) })
   .strict()
 
 export type PersonListQuery = Readonly<z.infer<typeof personListQuerySchema>>
@@ -49,5 +53,17 @@ export function downloadPersonArchives(input: unknown) {
     method: "post",
     json: request,
     timeout: 120_000,
+  })
+}
+
+export function buildPersonDeletionBody(input: unknown) {
+  return personDeletionRequestSchema.parse({ reason: input })
+}
+
+export function deletePerson(personId: unknown, reason: unknown): Promise<void> {
+  const id = personIdSchema.parse(personId)
+  return requestVoid(`persons/${id}/deletion`, {
+    method: "post",
+    json: buildPersonDeletionBody(reason),
   })
 }
