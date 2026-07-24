@@ -10,6 +10,8 @@
 
 **Execution adjustment:** The resize state described later in the original task steps was extracted from `PersonListPage.vue` into `PersonPreviewDock.vue` to keep each production component below the project's 250-line hard ceiling. The behavior, bounds, event contract, and test coverage are unchanged.
 
+**Post-implementation product change:** The directory action column now contains only view and export; clicking the personnel row is the sole entry point for opening the right-side preview.
+
 ## Global Constraints
 
 - Do not add a package dependency or persist the chosen preview width.

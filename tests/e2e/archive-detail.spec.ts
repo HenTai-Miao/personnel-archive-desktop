@@ -182,8 +182,9 @@ test("previews a masked dossier before opening the complete archive", async () =
       const preview = page.locator('[data-test="person-preview"]')
       const listCard = page.locator(".person-list-card")
       await expect(preview).toHaveCount(0)
+      await expect(page.getByRole("button", { name: "预览", exact: true })).toHaveCount(0)
       const initialListWidth = await elementWidth(listCard)
-      await page.getByRole("button", { name: "预览", exact: true }).click()
+      await page.getByText("测试甲", { exact: true }).first().click()
 
       // Then
       await expect(preview.getByRole("heading", { name: "测试甲", level: 2 })).toBeVisible()
@@ -208,7 +209,7 @@ test("previews a masked dossier before opening the complete archive", async () =
       await expect
         .poll(async () => Math.round(await elementWidth(listCard)))
         .toBe(Math.round(initialListWidth))
-      await page.getByRole("button", { name: "预览", exact: true }).click()
+      await page.getByText("测试甲", { exact: true }).first().click()
       await expect(preview).toBeVisible()
       await expect.poll(() => elementWidth(preview)).toBeGreaterThan(initialPreviewWidth + 60)
       expect(sensitiveValueRequests).toEqual([])

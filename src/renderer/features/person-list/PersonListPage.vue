@@ -191,14 +191,6 @@ function previewRowClassName({ row }: PreviewRowClassContext): string {
           <template #updatedAt="{ row }">{{ updatedAtLabel(row.updatedAt) }}</template>
           <template #menu="{ row }">
             <el-button
-              data-test="preview-person"
-              type="primary"
-              link
-              @click.stop="preview.select(row.id)"
-            >
-              预览
-            </el-button>
-            <el-button
               type="primary"
               link
               @click.stop="viewDetail(row.id)"

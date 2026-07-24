@@ -124,7 +124,7 @@ describe("PersonListPage Avue directory", () => {
     expect(wrapper.text()).toContain("更新日期")
     expect(wrapper.text()).toContain("档案操作")
     expect(wrapper.text()).toContain("测试人员")
-    expect(wrapper.text()).toContain("预览")
+    expect(wrapper.text()).not.toContain("预览")
     expect(wrapper.text()).toContain("查看")
     expect(wrapper.text()).toContain("导出")
     expect(wrapper.getComponent(AVUE_CRUD_STUB).props("option")).toMatchObject({
@@ -137,7 +137,7 @@ describe("PersonListPage Avue directory", () => {
     wrapper.unmount()
   })
 
-  it("loads the dossier only after an explicit preview action", async () => {
+  it("loads the dossier only after an explicit row action", async () => {
     // Given
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
     apiMocks.getPerson.mockResolvedValue({
@@ -174,7 +174,7 @@ describe("PersonListPage Avue directory", () => {
     expect(wrapper.get('[data-test="row-class"]').text()).toBe("")
 
     // When
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
 
     // Then
@@ -199,7 +199,7 @@ describe("PersonListPage Avue directory", () => {
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
     apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
     const wrapper = await mountPage()
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
     expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
 
@@ -221,7 +221,7 @@ describe("PersonListPage Avue directory", () => {
     expect(wrapper.find('[data-test="person-preview-resizer"]').exists()).toBe(false)
 
     // When
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
 
     // Then
@@ -234,7 +234,7 @@ describe("PersonListPage Avue directory", () => {
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
     apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
     const wrapper = await mountPage()
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
     const separator = wrapper.get('[data-test="person-preview-resizer"]')
     await separator.trigger("pointerdown", { pointerId: 1, clientX: 500 })
@@ -244,7 +244,7 @@ describe("PersonListPage Avue directory", () => {
     // When
     await wrapper.get('[aria-label="关闭卷宗预览"]').trigger("click")
     await flushPromises()
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
 
     // Then
@@ -259,7 +259,7 @@ describe("PersonListPage Avue directory", () => {
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
     apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
     const wrapper = await mountPage()
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
     expect(wrapper.get('[data-test="person-preview"]').text()).toContain("测试甲")
     expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
@@ -273,23 +273,6 @@ describe("PersonListPage Avue directory", () => {
     wrapper.unmount()
   })
 
-  it("loads the dossier when its directory row is activated", async () => {
-    // Given
-    vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
-    apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
-    const wrapper = await mountPage()
-
-    // When
-    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
-    await flushPromises()
-
-    // Then
-    expect(apiMocks.getPerson).toHaveBeenCalledWith(PERSON.id)
-    expect(wrapper.get('[data-test="person-preview"]').text()).toContain("测试甲")
-    expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
-    wrapper.unmount()
-  })
-
   it("shows a recoverable failure when the selected dossier cannot be read", async () => {
     // Given
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
@@ -297,7 +280,7 @@ describe("PersonListPage Avue directory", () => {
     const wrapper = await mountPage()
 
     // When
-    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    wrapper.getComponent(AVUE_CRUD_STUB).vm.$emit("row-click", PERSON)
     await flushPromises()
 
     // Then

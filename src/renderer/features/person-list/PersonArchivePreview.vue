@@ -63,7 +63,7 @@ function assertNever(value: never): never {
     />
     <div v-if="renderedState.kind === 'idle'" class="preview-state">
       <strong>卷宗预览</strong>
-      <p>点击名册行或“预览”按钮，在这里核对当前有效档案。</p>
+      <p>点击名册行，在这里核对当前有效档案。</p>
     </div>
     <div v-else-if="renderedState.kind === 'loading'" class="preview-state">
       <strong>正在读取卷宗</strong>
