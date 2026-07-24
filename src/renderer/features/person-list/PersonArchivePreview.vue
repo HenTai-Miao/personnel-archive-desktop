@@ -1,5 +1,6 @@
 <!-- 人员卷宗预览：只在显式选择后展示脱敏详情与鉴权照片，不提供敏感原文读取入口。 -->
 <script setup lang="ts">
+import { Close } from "@element-plus/icons-vue"
 import { computed } from "vue"
 import ArchiveCareerSheet from "@/features/archive-view/ArchiveCareerSheet.vue"
 import ArchiveEducationSheet from "@/features/archive-view/ArchiveEducationSheet.vue"
@@ -14,6 +15,7 @@ const props = defineProps<{
 }>()
 
 const emit = defineEmits<{
+  close: []
   retry: [personId: PersonId]
   retryPhoto: []
   view: [personId: PersonId]
@@ -51,6 +53,14 @@ function assertNever(value: never): never {
 
 <template>
   <aside class="person-preview" data-test="person-preview" aria-live="polite">
+    <el-button
+      class="preview-close"
+      circle
+      :icon="Close"
+      aria-label="关闭卷宗预览"
+      title="关闭卷宗预览"
+      @click="emit('close')"
+    />
     <div v-if="renderedState.kind === 'idle'" class="preview-state">
       <strong>卷宗预览</strong>
       <p>点击名册行或“预览”按钮，在这里核对当前有效档案。</p>

@@ -59,7 +59,7 @@ describe("AppShell 03 authenticated workbench", () => {
     expect(wrapper.get(".paper-workspace").classes()).toContain("workbench-surface")
     expect(displayName.text()).toBe("本地测试管理员")
     expect(displayName.element.nextElementSibling).toBe(logout.element)
-    expect(wrapper.findAll("nav a").map((link) => link.text())).toContain("文件夹设置")
+    expect(wrapper.findAll("nav a").map((link) => link.text())).not.toContain("文件夹设置")
     wrapper.unmount()
   })
 })

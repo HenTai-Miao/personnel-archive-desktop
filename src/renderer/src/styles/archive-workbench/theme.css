@@ -146,6 +146,11 @@ h3 {
   --el-button-active-border-color: #02389f;
 }
 
+/* Element Plus wraps labels in spans; keep filled actions white inside muted-text containers. */
+.el-button--primary:not(.is-link):not(.is-text) > span {
+  color: inherit;
+}
+
 .el-button.is-link,
 .el-button.is-text {
   box-shadow: none;

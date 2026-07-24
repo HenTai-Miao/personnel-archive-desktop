@@ -1,6 +1,6 @@
 <!-- 登录后的应用外壳：提供业务导航、当前用户信息和就近退出操作。 -->
 <script setup lang="ts">
-import { DocumentAdd, Files, Search, Setting, SwitchButton } from "@element-plus/icons-vue"
+import { DocumentAdd, Files, Search, SwitchButton } from "@element-plus/icons-vue"
 import { computed, onMounted, onUnmounted, watch } from "vue"
 import { RouterView, useRoute, useRouter } from "vue-router"
 import { useImportStore } from "@/features/archive-import/store"
@@ -73,9 +73,6 @@ async function signOut(): Promise<void> {
         </RouterLink>
         <RouterLink v-if="canImport" to="/import" :class="{ active: route.path === '/import' }">
           <el-icon><DocumentAdd /></el-icon><span>批量导入档案</span>
-        </RouterLink>
-        <RouterLink v-if="canImport" to="/settings" :class="{ active: route.path === '/settings' }">
-          <el-icon><Setting /></el-icon><span>文件夹设置</span>
         </RouterLink>
       </nav>
     </aside>

@@ -94,6 +94,20 @@ async function mountPage() {
 }
 
 describe("PersonListPage Avue directory", () => {
+  it("keeps the dossier preview hidden before an explicit selection", async () => {
+    // Given
+    vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
+
+    // When
+    const wrapper = await mountPage()
+
+    // Then
+    expect(apiMocks.getPerson).not.toHaveBeenCalled()
+    expect(wrapper.find('[data-test="person-preview"]').exists()).toBe(false)
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("")
+    wrapper.unmount()
+  })
+
   it("keeps the personnel columns and actions when Avue renders the directory", async () => {
     // Given
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
@@ -180,6 +194,25 @@ describe("PersonListPage Avue directory", () => {
     wrapper.unmount()
   })
 
+  it("closes the dossier preview and clears its active row", async () => {
+    // Given
+    vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
+    apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
+    const wrapper = await mountPage()
+    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    await flushPromises()
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("is-preview-active")
+
+    // When
+    await wrapper.get('[aria-label="关闭卷宗预览"]').trigger("click")
+    await flushPromises()
+
+    // Then
+    expect(wrapper.find('[data-test="person-preview"]').exists()).toBe(false)
+    expect(wrapper.get('[data-test="row-class"]').text()).toBe("")
+    wrapper.unmount()
+  })
+
   it("returns the preview to idle before a filter request", async () => {
     // Given
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
@@ -194,7 +227,7 @@ describe("PersonListPage Avue directory", () => {
     await wrapper.get("form").trigger("submit")
 
     // Then
-    expect(wrapper.get('[data-test="person-preview"]').text()).toContain("点击名册行")
+    expect(wrapper.find('[data-test="person-preview"]').exists()).toBe(false)
     expect(wrapper.get('[data-test="row-class"]').text()).toBe("")
     wrapper.unmount()
   })

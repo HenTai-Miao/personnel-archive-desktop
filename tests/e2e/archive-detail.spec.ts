@@ -187,6 +187,13 @@ test("previews a masked dossier before opening the complete archive", async () =
       await expect(preview.getByText("1380****000", { exact: true })).toBeVisible()
       await expect(preview.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
       await expect(preview.getByRole("button", { name: /显示完整/ })).toHaveCount(0)
+      await expect(page.getByRole("button", { name: "导出档案包" }).locator("span")).toHaveCSS(
+        "color",
+        "rgb(255, 255, 255)",
+      )
+      await expect(
+        preview.getByRole("button", { name: "下载并打开 Excel" }).locator("span"),
+      ).toHaveCSS("color", "rgb(255, 255, 255)")
       expect(sensitiveValueRequests).toEqual([])
 
       await preview.getByRole("button", { name: "查看完整档案" }).click()

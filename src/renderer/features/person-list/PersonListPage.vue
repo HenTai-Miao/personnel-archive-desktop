@@ -213,8 +213,10 @@ function previewRowClassName({ row }: PreviewRowClassContext): string {
         <FixedListPagination :page="store.page" :total="store.total" @change="loadPage" />
       </div>
       <PersonArchivePreview
+        v-if="preview.state.value.kind !== 'idle'"
         :state="preview.state.value"
         :opening-person-id="openingPersonId"
+        @close="preview.clear"
         @retry="preview.select"
         @retry-photo="preview.retryPhoto"
         @view="viewDetail"
