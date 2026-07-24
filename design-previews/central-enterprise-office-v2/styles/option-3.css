@@ -1,0 +1,324 @@
+/* 方案三：档案阅办工作台。窄轨负责模块切换，固定检索栏负责查档，正文可并排预览。 */
+:root {
+  --ink: #293433;
+  --muted: #68736f;
+  --faint: #909893;
+  --primary: #315f60;
+  --primary-dark: #273a3c;
+  --accent: #91453d;
+  --accent-soft: #f2e8e5;
+  --success: #3b7062;
+  --canvas: #e7e9e5;
+  --surface: #fbfbf7;
+  --surface-muted: #f1f1eb;
+  --surface-strong: #e5e6df;
+  --line: #d1d2ca;
+  --line-strong: #aaafa7;
+  --shadow: 0 2px 8px rgb(42 51 47 / 8%);
+  --font-ui: "Microsoft YaHei UI", "Microsoft YaHei", "Noto Sans CJK SC", sans-serif;
+}
+
+.enterprise-app {
+  grid-template: 60px minmax(0, 1fr) / 76px 244px minmax(0, 1fr);
+  grid-template-areas:
+    "header header header"
+    "nav context workspace";
+}
+
+.global-header {
+  padding: 0 18px;
+  color: #f7f6ef;
+  background: var(--primary-dark);
+  border-bottom: 1px solid #172728;
+  box-shadow: inset 0 -3px #8e453d;
+}
+.brand-area {
+  width: 306px;
+}
+.brand-mark {
+  color: #354846;
+  background: #e6e5dc;
+  border-color: #7c8883;
+  box-shadow: 3px 3px 0 #192929;
+}
+.brand-mark::after {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  content: "";
+}
+.brand-copy strong {
+  font-family: STSong, SimSun, serif;
+  font-size: 17px;
+  letter-spacing: 0.1em;
+}
+.brand-copy small {
+  color: #abb6b1;
+}
+.header-context {
+  color: #cad1cd;
+}
+.header-context-label {
+  color: #8f9e98;
+}
+.header-tools {
+  color: #e2e7e3;
+}
+.security-state {
+  color: #9fb0a9;
+}
+.user-avatar {
+  color: #fff;
+  background: var(--accent);
+  border-color: #c58a84;
+}
+
+.primary-nav {
+  color: #d8dfdb;
+  background: #314547;
+  border-right: 1px solid #1e2d2f;
+}
+.nav-heading {
+  min-height: 58px;
+  align-items: center;
+  padding: 0;
+  border-bottom: 1px solid rgb(255 255 255 / 9%);
+}
+.nav-heading span {
+  width: 2em;
+  color: #aab7b2;
+  font-size: 10px;
+  line-height: 1.5;
+  text-align: center;
+}
+.nav-heading small {
+  display: none;
+}
+.nav-items {
+  gap: 7px;
+  align-items: center;
+  padding: 15px 9px;
+}
+.nav-item {
+  width: 58px;
+  min-height: 58px;
+  flex-direction: column;
+  gap: 4px;
+  justify-content: center;
+  padding: 0;
+  color: #bdc8c3;
+  border-radius: 2px;
+}
+.nav-item:hover {
+  color: #fff;
+  background: rgb(255 255 255 / 6%);
+  border-color: rgb(255 255 255 / 10%);
+}
+.nav-item.active {
+  color: #fff;
+  background: #243638;
+  border-color: #556a68;
+  box-shadow: inset 3px 0 var(--accent);
+}
+.nav-icon {
+  width: 25px;
+  height: 25px;
+}
+.nav-copy {
+  flex: 0 0 auto;
+  align-items: center;
+}
+.nav-copy b {
+  font-size: 9px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.nav-copy small,
+.nav-chevron {
+  display: none;
+}
+.nav-footer {
+  min-height: 64px;
+  align-items: center;
+  padding: 0;
+  color: #aab8b2;
+}
+.nav-footer span {
+  justify-content: center;
+  font-size: 0;
+}
+.nav-footer span .ui-icon {
+  width: 18px;
+  height: 18px;
+}
+.nav-footer small {
+  display: none;
+}
+
+.archive-finder {
+  background: #f1f1eb;
+  border-right: 1px solid #aaafa7;
+  box-shadow: 4px 0 10px rgb(42 51 47 / 7%);
+}
+.archive-finder > header {
+  background: #e5e6df;
+  border-bottom-color: #bfc1b9;
+}
+.archive-finder > header span {
+  color: #344744;
+  font-family: STSong, SimSun, serif;
+  letter-spacing: 0.05em;
+}
+.rail-filter {
+  padding-top: 17px;
+}
+.rail-filter input {
+  background: #fbfbf7;
+}
+.saved-searches button {
+  color: #586861;
+}
+
+.workspace {
+  grid-template-rows: 40px minmax(0, 1fr);
+}
+.workspace-topbar {
+  background: #f8f8f3;
+}
+.page-view {
+  padding: 17px 18px 24px;
+}
+.page-heading {
+  min-height: 56px;
+}
+.page-heading h1 {
+  color: #344744;
+  font-family: STSong, SimSun, serif;
+  font-size: 22px;
+  letter-spacing: 0.07em;
+}
+.page-eyebrow {
+  color: var(--accent);
+}
+.metric-strip {
+  margin-bottom: 10px;
+  border-color: #bfc2b9;
+}
+.metric-strip > div {
+  min-height: 69px;
+  padding-top: 11px;
+  padding-bottom: 10px;
+}
+.metric-strip .metric-primary {
+  background: #f3f2eb;
+}
+.filter-panel {
+  display: none;
+}
+.list-layout {
+  grid-template-columns: minmax(0, 1fr) 252px;
+  gap: 9px;
+}
+.record-preview {
+  display: block;
+}
+.data-panel,
+.record-preview,
+.query-panel,
+.upload-panel,
+.import-summary,
+.detail-section,
+.dossier-header {
+  border-color: #bfc2b9;
+}
+.panel-heading {
+  background: #f2f2ec;
+}
+.panel-kicker {
+  color: var(--accent);
+}
+.business-table th {
+  color: #465651;
+  background: #e5e6df;
+}
+.business-table tbody tr.is-current {
+  background: #edf1eb;
+}
+.business-table tbody tr.is-current td:first-child {
+  box-shadow: inset 3px 0 var(--accent);
+}
+.personnel-table {
+  min-width: 730px;
+}
+.personnel-table th:nth-child(2),
+.personnel-table td:nth-child(2) {
+  width: 82px;
+}
+.personnel-table th:nth-child(3),
+.personnel-table td:nth-child(3) {
+  width: 96px;
+}
+.personnel-table th:nth-child(4),
+.personnel-table td:nth-child(4) {
+  width: 175px;
+}
+.personnel-table th:nth-child(5),
+.personnel-table td:nth-child(5) {
+  width: 115px;
+}
+.personnel-table th:nth-child(6),
+.personnel-table td:nth-child(6) {
+  width: 130px;
+}
+.personnel-table th:nth-child(7),
+.personnel-table td:nth-child(7) {
+  width: 128px;
+}
+.personnel-table th:nth-child(8),
+.personnel-table td:nth-child(8),
+.personnel-table th:nth-child(9),
+.personnel-table td:nth-child(9) {
+  display: none;
+}
+.pagination {
+  min-height: 43px;
+  background: #f7f7f2;
+}
+.portrait-placeholder,
+.portrait-large {
+  color: #3e5854;
+  background: #e5e6df;
+}
+.record-preview > header {
+  background: #e5e6df;
+}
+.dossier-spine {
+  background: #344744;
+}
+.formal-mark {
+  opacity: 0.9;
+}
+
+.family-view .query-panel,
+.import-view .process-strip,
+.settings-view .settings-panel {
+  border-top: 3px solid var(--accent);
+}
+
+@media (max-width: 1320px) {
+  .enterprise-app {
+    grid-template-columns: 70px 224px minmax(0, 1fr);
+  }
+  .brand-area {
+    width: 294px;
+  }
+  .record-preview {
+    display: none;
+  }
+  .list-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

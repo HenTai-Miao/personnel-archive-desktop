@@ -1,0 +1,193 @@
+/* 方案一：总部稳健门户。深蓝承载组织可信度，红色只作为档案脊线和当前态。 */
+:root {
+  --ink: #1b2a39;
+  --muted: #607181;
+  --faint: #8996a1;
+  --primary: #21577f;
+  --primary-dark: #173a58;
+  --accent: #9b2730;
+  --accent-soft: #f5e9ea;
+  --canvas: #eef1f4;
+  --surface-muted: #f5f7f8;
+  --surface-strong: #e7edf2;
+  --line: #d1d8de;
+  --line-strong: #aeb9c2;
+  --shadow: 0 2px 9px rgb(22 43 62 / 7%);
+}
+
+.enterprise-app {
+  grid-template: 70px minmax(0, 1fr) / 226px minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "nav workspace";
+}
+
+.global-header {
+  padding: 4px 20px 0;
+  color: #fff;
+  background: #173451;
+  border-top: 4px solid var(--accent);
+  border-bottom: 1px solid #0e263b;
+}
+
+.brand-area {
+  width: 360px;
+  padding-right: 24px;
+  border-right: 1px solid rgb(255 255 255 / 15%);
+}
+
+.brand-mark {
+  color: #fff;
+  background: rgb(255 255 255 / 7%);
+  border-color: #92a8ba;
+}
+
+.brand-mark::after {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 6px;
+  height: 12px;
+  background: #c34a51;
+  content: "";
+}
+
+.brand-copy small {
+  color: #aebfcd;
+}
+.header-context {
+  margin-left: 24px;
+  color: #c1cfda;
+}
+.header-context-label {
+  color: #829aae;
+}
+.header-tools {
+  color: #e7edf2;
+}
+.security-state {
+  color: #a9bac7;
+}
+.user-avatar {
+  color: #173451;
+  background: #f5f7f9;
+  border-color: #8096a8;
+}
+
+.primary-nav {
+  color: #314557;
+  background: #fff;
+  border-right: 1px solid var(--line-strong);
+  box-shadow: 2px 0 8px rgb(23 52 81 / 5%);
+}
+
+.nav-heading {
+  border-bottom: 1px solid var(--line);
+}
+
+.nav-heading span {
+  color: #263a4d;
+}
+.nav-items {
+  padding: 14px 11px;
+}
+.nav-item {
+  min-height: 56px;
+}
+.nav-item:hover {
+  color: var(--primary);
+  background: #f3f6f8;
+  border-color: #d8e0e6;
+}
+.nav-item.active {
+  color: #173a58;
+  background: #edf3f7;
+  border-color: #b9c8d3;
+  box-shadow: inset 4px 0 var(--accent);
+}
+.nav-icon {
+  color: #4c687d;
+  background: #f1f4f6;
+  border: 1px solid #c7d1d8;
+}
+.nav-item.active .nav-icon {
+  color: #fff;
+  background: var(--primary);
+  border-color: var(--primary);
+}
+.nav-footer {
+  background: #f7f8f9;
+}
+
+.workspace-topbar {
+  padding-right: 24px;
+  padding-left: 24px;
+}
+.page-view {
+  padding: 22px 26px 30px;
+}
+
+.page-heading {
+  position: relative;
+  padding-left: 16px;
+}
+
+.page-heading::before {
+  position: absolute;
+  top: 4px;
+  bottom: 5px;
+  left: 0;
+  width: 4px;
+  background: var(--accent);
+  content: "";
+}
+
+.page-heading h1 {
+  color: #173451;
+}
+.metric-strip,
+.data-panel,
+.query-panel,
+.upload-panel,
+.import-summary,
+.settings-panel,
+.detail-section,
+.dossier-header {
+  border-color: #c8d0d7;
+}
+
+.metric-strip .metric-primary {
+  background: #f4f7f9;
+}
+.panel-heading {
+  background: #fafbfc;
+}
+.business-table th {
+  background: #eef2f5;
+}
+.business-table tbody tr:nth-child(even) {
+  background: #fbfcfd;
+}
+.business-table tbody tr:nth-child(even):hover {
+  background: #f1f6f9;
+}
+
+.primary-button {
+  box-shadow: inset 0 1px rgb(255 255 255 / 14%);
+}
+.dossier-spine {
+  background: #173451;
+  border-top: 5px solid var(--accent);
+}
+
+@media (max-width: 1220px) {
+  .enterprise-app {
+    grid-template-columns: 208px minmax(0, 1fr);
+  }
+  .brand-area {
+    width: 310px;
+  }
+  .nav-copy small {
+    display: none;
+  }
+}

@@ -1,0 +1,399 @@
+/* 方案五：高密度业务台。左侧主导航、中央业务区、右侧当日任务三栏协同。 */
+:root {
+  --ink: #1d2a36;
+  --muted: #60707d;
+  --faint: #89959e;
+  --primary: #276087;
+  --primary-dark: #182b42;
+  --accent: #a33239;
+  --success: #32715d;
+  --canvas: #e9edf0;
+  --surface: #fff;
+  --surface-muted: #f3f5f6;
+  --surface-strong: #e5eaee;
+  --line: #ccd4da;
+  --line-strong: #a7b4bd;
+  --shadow: none;
+  --radius: 2px;
+}
+
+.enterprise-app {
+  grid-template: 60px minmax(0, 1fr) 26px / 188px minmax(0, 1fr) 244px;
+  grid-template-areas:
+    "header header header"
+    "nav workspace context"
+    "status status status";
+}
+
+.global-header {
+  padding: 0 16px;
+  color: #edf3f7;
+  background: var(--primary-dark);
+  border-bottom: 1px solid #0b1a2a;
+  box-shadow: inset 0 3px var(--accent);
+}
+.brand-area {
+  width: 300px;
+}
+.brand-mark {
+  color: #d9e4ec;
+  background: #203a56;
+  border-color: #71869a;
+}
+.brand-mark::after {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 6px;
+  height: 10px;
+  background: #c1474d;
+  content: "";
+}
+.brand-copy small {
+  color: #96a9b9;
+}
+.header-context {
+  color: #bccad5;
+}
+.header-context-label {
+  color: #8195a6;
+}
+.header-tools {
+  color: #e3ebf1;
+}
+.security-state {
+  color: #99acba;
+}
+.user-avatar {
+  color: #17314a;
+  background: #e9eff3;
+  border-color: #8295a4;
+}
+
+.primary-nav {
+  color: #d1dbe4;
+  background: #22364c;
+  border-right: 1px solid #13263a;
+}
+.nav-heading {
+  min-height: 47px;
+  color: #fff;
+  background: #1c3046;
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+.nav-heading small {
+  color: #7f93a5;
+}
+.nav-items {
+  gap: 2px;
+  padding: 9px 7px;
+}
+.nav-item {
+  min-height: 46px;
+  gap: 8px;
+  padding: 0 8px;
+  color: #bdcbd6;
+  border-radius: 1px;
+}
+.nav-item:hover {
+  color: #fff;
+  background: rgb(255 255 255 / 5%);
+}
+.nav-item.active {
+  color: #fff;
+  background: #2d4d69;
+  border-color: #41617c;
+  box-shadow: inset 3px 0 var(--accent);
+}
+.nav-icon {
+  width: 25px;
+  height: 25px;
+  color: #9eb3c2;
+}
+.nav-item.active .nav-icon {
+  color: #fff;
+}
+.nav-copy b {
+  font-size: 10px;
+}
+.nav-copy small {
+  display: none;
+}
+.nav-footer {
+  min-height: 60px;
+  color: #9aacba;
+  border-color: rgb(255 255 255 / 8%);
+}
+
+.task-center {
+  color: #354754;
+  background: #f4f6f7;
+  border-left-color: #aeb9c2;
+}
+.task-center > header {
+  min-height: 52px;
+  background: #e7ecef;
+}
+.task-center > header span {
+  color: #20384b;
+}
+
+.workspace {
+  grid-template-rows: 39px minmax(0, 1fr);
+}
+.workspace-topbar {
+  padding-right: 15px;
+  padding-left: 15px;
+}
+.page-view {
+  padding: 14px 15px 20px;
+}
+.page-heading {
+  min-height: 53px;
+  margin-bottom: 9px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--line-strong);
+}
+.page-heading h1 {
+  color: #203b52;
+  font-size: 19px;
+}
+.page-heading p {
+  margin-top: 3px;
+  font-size: 9px;
+}
+.page-eyebrow {
+  margin-bottom: 3px;
+  font-size: 8px;
+}
+.heading-actions .primary-button,
+.heading-actions .secondary-button {
+  height: 30px;
+  padding: 0 10px;
+  font-size: 9px;
+}
+
+.metric-strip {
+  margin-bottom: 8px;
+}
+.metric-strip > div {
+  min-height: 61px;
+  padding: 9px 12px;
+}
+.metric-strip span {
+  margin-bottom: 3px;
+  font-size: 8px;
+}
+.metric-strip strong {
+  font-size: 19px;
+}
+.metric-strip .metric-primary strong {
+  font-size: 23px;
+}
+.metric-strip small {
+  font-size: 7px;
+}
+.filter-panel {
+  grid-template-columns: repeat(3, minmax(110px, 1fr)) auto;
+  gap: 7px;
+  margin-bottom: 8px;
+  padding: 8px 10px;
+}
+.filter-title {
+  display: none;
+}
+.filter-panel label > span {
+  margin-bottom: 4px;
+  font-size: 8px;
+}
+.filter-panel input {
+  height: 30px;
+  font-size: 9px;
+}
+.filter-panel .primary-button,
+.filter-panel .secondary-button {
+  height: 30px;
+  padding: 0 9px;
+  font-size: 9px;
+}
+.list-layout {
+  gap: 8px;
+}
+.data-panel,
+.record-preview,
+.query-panel,
+.upload-panel,
+.import-summary,
+.detail-section,
+.dossier-header {
+  border-color: #b8c3cb;
+}
+.panel-heading {
+  min-height: 48px;
+  padding: 7px 10px;
+  background: #edf1f3;
+}
+.panel-heading h2 {
+  font-size: 12px;
+}
+.panel-heading p {
+  font-size: 8px;
+}
+.business-table th {
+  height: 34px;
+  padding: 0 7px;
+  color: #344b5d;
+  background: #dfe6ea;
+  border-color: #b8c3cb;
+  font-size: 8px;
+}
+.business-table td {
+  height: 38px;
+  padding: 3px 7px;
+  font-size: 9px;
+}
+.business-table tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+.personnel-table {
+  min-width: 845px;
+}
+.personnel-table th:nth-child(2),
+.personnel-table td:nth-child(2) {
+  width: 80px;
+}
+.personnel-table th:nth-child(3),
+.personnel-table td:nth-child(3) {
+  width: 90px;
+}
+.personnel-table th:nth-child(4),
+.personnel-table td:nth-child(4) {
+  width: 160px;
+}
+.personnel-table th:nth-child(5),
+.personnel-table td:nth-child(5) {
+  width: 100px;
+}
+.personnel-table th:nth-child(6),
+.personnel-table td:nth-child(6) {
+  width: 115px;
+}
+.personnel-table th:nth-child(7),
+.personnel-table td:nth-child(7) {
+  width: 120px;
+}
+.personnel-table th:nth-child(8),
+.personnel-table td:nth-child(8) {
+  width: 56px;
+}
+.personnel-table th:nth-child(9),
+.personnel-table td:nth-child(9) {
+  width: 84px;
+}
+.pagination {
+  min-height: 39px;
+}
+.pagination button {
+  min-width: 24px;
+  height: 24px;
+}
+.status-badge,
+.source-tag {
+  min-height: 19px;
+  padding: 0 5px;
+  font-size: 7px;
+}
+
+.query-panel {
+  min-height: 83px;
+  margin-bottom: 9px;
+  padding: 12px 14px;
+}
+.query-symbol {
+  width: 42px;
+  height: 42px;
+}
+.large-search input {
+  height: 34px;
+}
+.query-panel > .primary-button {
+  height: 34px;
+}
+.process-strip {
+  margin-bottom: 9px;
+}
+.process-strip li {
+  min-height: 56px;
+  padding: 0 11px;
+}
+.import-layout {
+  grid-template-columns: minmax(0, 1fr) 255px;
+  gap: 8px;
+  margin-bottom: 9px;
+}
+.upload-panel {
+  min-height: 104px;
+  padding: 13px 15px;
+}
+.upload-illustration {
+  width: 48px;
+  height: 48px;
+}
+
+.dossier-header {
+  min-height: 112px;
+  margin-bottom: 7px;
+}
+.dossier-person {
+  padding-top: 13px;
+  padding-bottom: 13px;
+}
+.portrait-large {
+  width: 53px;
+  height: 66px;
+}
+.detail-tabs {
+  min-height: 39px;
+  margin-bottom: 7px;
+}
+.detail-tabs button {
+  height: 38px;
+  padding: 0 12px;
+  font-size: 9px;
+}
+.detail-layout {
+  grid-template-columns: minmax(0, 1fr) 170px;
+  gap: 8px;
+}
+.detail-section > header {
+  min-height: 50px;
+}
+.field-grid > div {
+  min-height: 60px;
+  padding: 9px 10px;
+}
+
+.system-status {
+  display: flex;
+  color: #7c8b97;
+  background: #dde3e7;
+  border-color: #aeb9c2;
+}
+
+@media (max-width: 1300px) {
+  .enterprise-app {
+    grid-template-columns: 176px minmax(0, 1fr) 220px;
+  }
+  .header-context {
+    display: none;
+  }
+  .compact-only {
+    display: none;
+  }
+  .detail-aside {
+    display: none;
+  }
+  .detail-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

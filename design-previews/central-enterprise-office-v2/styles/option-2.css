@@ -1,0 +1,221 @@
+/* 方案二：双层综合办公。一级模块横向展开，左栏只承担当前模块目录。 */
+:root {
+  --ink: #1c2b39;
+  --muted: #61707d;
+  --faint: #8c979f;
+  --primary: #1c567e;
+  --primary-dark: #102f4d;
+  --accent: #a32b32;
+  --canvas: #f0f2f4;
+  --surface-muted: #f5f6f7;
+  --surface-strong: #e8edf1;
+  --line: #d5dade;
+  --line-strong: #b6c0c8;
+  --shadow: 0 2px 8px rgb(20 43 62 / 6%);
+}
+
+.enterprise-app {
+  grid-template: 64px 48px minmax(0, 1fr) / 218px minmax(0, 1fr);
+  grid-template-areas:
+    "header header"
+    "nav nav"
+    "context workspace";
+}
+
+.global-header {
+  padding: 0 22px;
+  color: #26394a;
+  background: #fff;
+  border-top: 4px solid var(--accent);
+  border-bottom: 1px solid #aeb8c1;
+}
+
+.brand-area {
+  width: 360px;
+}
+.brand-mark {
+  color: #fff;
+  background: var(--accent);
+  border-color: #821b23;
+}
+.brand-mark span:nth-child(2) {
+  width: 100%;
+}
+.brand-copy strong {
+  color: #173a58;
+}
+.brand-copy small {
+  color: #71808d;
+}
+.header-context {
+  margin-left: 20px;
+  padding-left: 20px;
+  border-left: 1px solid var(--line);
+}
+.header-tools {
+  color: #425363;
+}
+.icon-button:hover {
+  background: #f3f5f6;
+}
+.user-avatar {
+  color: #fff;
+  background: #214f71;
+  border-color: #173a58;
+}
+
+.primary-nav {
+  flex-direction: row;
+  color: #d7e1e9;
+  background: var(--primary-dark);
+  border-bottom: 1px solid #071d31;
+}
+
+.nav-heading {
+  width: 218px;
+  min-height: 48px;
+  flex: 0 0 auto;
+  padding: 0 22px;
+  color: #fff;
+  background: #0c2943;
+  border-right: 1px solid rgb(255 255 255 / 11%);
+}
+.nav-heading small {
+  display: none;
+}
+.nav-items {
+  min-width: 0;
+  flex: 1;
+  flex-direction: row;
+  gap: 0;
+  padding: 0;
+}
+.nav-item {
+  position: relative;
+  width: auto;
+  min-width: 164px;
+  min-height: 48px;
+  gap: 8px;
+  justify-content: center;
+  padding: 0 18px;
+  border: 0;
+  border-right: 1px solid rgb(255 255 255 / 9%);
+  border-radius: 0;
+}
+.nav-item:hover {
+  color: #fff;
+  background: rgb(255 255 255 / 6%);
+}
+.nav-item.active {
+  color: #fff;
+  background: #1b4a6d;
+}
+.nav-item.active::after {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  background: #d04a51;
+  content: "";
+}
+.nav-icon {
+  width: 23px;
+  height: 23px;
+  color: #a9becd;
+}
+.nav-icon .ui-icon {
+  width: 16px;
+  height: 16px;
+}
+.nav-copy {
+  flex: 0 0 auto;
+}
+.nav-copy b {
+  font-size: 11px;
+}
+.nav-copy small,
+.nav-chevron {
+  display: none;
+}
+.nav-footer {
+  display: none;
+}
+
+.secondary-directory {
+  color: #384b5c;
+  background: #f6f7f8;
+  border-right-color: #b9c1c8;
+}
+.secondary-directory > header {
+  background: #edf0f2;
+}
+.secondary-directory > header span {
+  color: #173a58;
+}
+.context-menu button.active {
+  box-shadow: inset 3px 0 var(--accent);
+}
+
+.workspace {
+  grid-template-rows: 42px minmax(0, 1fr);
+}
+.workspace-topbar {
+  padding-right: 26px;
+  padding-left: 26px;
+}
+.page-view {
+  padding: 20px 26px 28px;
+}
+.page-heading {
+  min-height: 60px;
+  border-bottom: 1px solid #c5cdd4;
+}
+.page-heading h1 {
+  color: #173a58;
+}
+.page-heading .page-eyebrow {
+  color: var(--accent);
+}
+
+.metric-strip {
+  border-top: 3px solid var(--primary);
+}
+.metric-strip .metric-primary::before {
+  background: var(--accent);
+}
+.filter-panel {
+  background: #fafbfb;
+}
+.panel-heading {
+  background: #f8f9fa;
+}
+.panel-heading::before {
+  width: 3px;
+  height: 27px;
+  background: var(--accent);
+  content: "";
+}
+.business-table th {
+  color: #31485b;
+  background: #e9eef2;
+}
+.pagination {
+  background: #f8f9fa;
+}
+.process-strip li.active::after {
+  background: var(--accent);
+}
+.dossier-header {
+  border-top: 3px solid var(--accent);
+}
+
+@media (max-width: 1220px) {
+  .nav-item {
+    min-width: 145px;
+    padding: 0 12px;
+  }
+  .header-context {
+    display: none;
+  }
+}
