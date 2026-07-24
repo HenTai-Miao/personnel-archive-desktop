@@ -48,7 +48,7 @@
 
 .dossier-index {
   position: sticky;
-  top: 0;
+  top: calc(-1 * var(--archive-workspace-block-start));
   z-index: 8;
   display: flex;
   min-height: 42px;

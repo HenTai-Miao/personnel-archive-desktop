@@ -23,4 +23,21 @@ describe("archive workbench layout styles", () => {
       /@media \(max-width: 1280px\)[\s\S]*person-preview-resizer[\s\S]*display:\s*none/,
     )
   })
+
+  it("offsets the sticky detail index by the workspace top padding", () => {
+    // Given
+    const stickyOffset = "top: calc(-1 * var(--archive-workspace-block-start));"
+
+    // When
+    const shell = readStyle("shell.css")
+    const detail = readStyle("detail.css")
+
+    // Then
+    expect(shell).toMatch(/\.paper-workspace[\s\S]*--archive-workspace-block-start:\s*24px/)
+    expect(shell).toMatch(
+      /@media \(max-width: 1280px\)[\s\S]*--archive-workspace-block-start:\s*20px/,
+    )
+    expect(detail).toContain(stickyOffset)
+    expect(detail).toContain("scroll-margin-top: 54px")
+  })
 })
