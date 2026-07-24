@@ -14,7 +14,10 @@ describe("archive workbench layout styles", () => {
 
     // Then
     expect(lists).toMatch(/grid-template-columns:\s*minmax\(0, 1fr\) auto/)
-    expect(lists).toMatch(/\.person-workbench\.is-preview-open[\s\S]*column-gap:\s*18px/)
+    expect(lists).toMatch(/--person-workbench-open-gap:\s*18px/)
+    expect(lists).toMatch(
+      /\.person-workbench\.is-preview-open[\s\S]*column-gap:\s*var\(--person-workbench-open-gap\)/,
+    )
     expect(preview).toContain("width: var(--person-preview-width)")
     expect(preview).toMatch(/\.dossier-preview-enter-from[\s\S]*translateX/)
     expect(preview).toMatch(/\.dossier-preview-leave-to[\s\S]*translateX/)

@@ -1,6 +1,6 @@
 <!-- 卷宗预览分栏：承载预览面板和可访问的尺寸调节边界。 -->
 <script setup lang="ts">
-import { computed, ref } from "vue"
+import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 import type { PersonDetail } from "@/features/archive-view/schemas"
 import type { PersonId } from "@/shared/api/schemas"
 import PersonArchivePreview from "./PersonArchivePreview.vue"
@@ -24,19 +24,47 @@ const emit = defineEmits<{
 const PREVIEW_WIDTH = {
   default: 320,
   min: 280,
-  max: 520,
   keyboardStep: 16,
 } as const
 
-const width = ref<number>(clampWidth(props.initialWidth ?? PREVIEW_WIDTH.default))
+const initialWidth = Math.max(PREVIEW_WIDTH.min, props.initialWidth ?? PREVIEW_WIDTH.default)
+const width = ref(initialWidth)
+const maxWidth = ref(Math.max(initialWidth, window.innerWidth))
 const resizing = ref(false)
+const dockElement = ref<HTMLElement | null>(null)
 const dockStyle = computed(() => ({ "--person-preview-width": `${width.value}px` }))
 let resizePointerId: number | null = null
 let resizeStartX = 0
 let resizeStartWidth: number = PREVIEW_WIDTH.default
+let workbenchResizeObserver: ResizeObserver | null = null
+
+onMounted(() => {
+  const workbench = dockElement.value?.closest<HTMLElement>(".person-workbench")
+  if (!workbench) return
+  syncWorkbenchWidth(workbench)
+  if (typeof ResizeObserver === "undefined") return
+  workbenchResizeObserver = new ResizeObserver(() => syncWorkbenchWidth(workbench))
+  workbenchResizeObserver.observe(workbench)
+})
+
+onBeforeUnmount(() => workbenchResizeObserver?.disconnect())
 
 function clampWidth(value: number): number {
-  return Math.min(PREVIEW_WIDTH.max, Math.max(PREVIEW_WIDTH.min, value))
+  return Math.min(maxWidth.value, Math.max(PREVIEW_WIDTH.min, value))
+}
+
+function configuredOpenGap(workbench: HTMLElement): number {
+  const value = Number.parseFloat(
+    window.getComputedStyle(workbench).getPropertyValue("--person-workbench-open-gap"),
+  )
+  return Number.isFinite(value) ? value : 0
+}
+
+function syncWorkbenchWidth(workbench: HTMLElement): void {
+  const availableWidth = Math.floor(workbench.clientWidth - configuredOpenGap(workbench))
+  if (availableWidth <= 0) return
+  maxWidth.value = Math.max(PREVIEW_WIDTH.min, availableWidth)
+  if (width.value > maxWidth.value) setWidth(maxWidth.value)
 }
 
 function beginResize(event: PointerEvent): void {
@@ -87,6 +115,7 @@ function setWidth(value: number): void {
 
 <template>
   <div
+    ref="dockElement"
     class="person-preview-dock"
     :class="{ 'is-preview-resizing': resizing }"
     :style="dockStyle"
@@ -100,7 +129,7 @@ function setWidth(value: number): void {
       aria-label="调整卷宗预览宽度"
       aria-orientation="vertical"
       :aria-valuemin="PREVIEW_WIDTH.min"
-      :aria-valuemax="PREVIEW_WIDTH.max"
+      :aria-valuemax="maxWidth"
       :aria-valuenow="width"
       @pointerdown="beginResize"
       @pointermove="resize"

@@ -71,6 +71,7 @@
 }
 
 .person-workbench {
+  --person-workbench-open-gap: 18px;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: 0;
@@ -79,7 +80,7 @@
 }
 
 .person-workbench.is-preview-open {
-  column-gap: 18px;
+  column-gap: var(--person-workbench-open-gap);
 }
 
 .table-heading {
