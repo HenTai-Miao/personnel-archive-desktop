@@ -4,7 +4,7 @@
 
 **Goal:** Remove the dossier preview's fixed `520px` ceiling so it can expand across the personnel workbench while the list smoothly contracts to zero.
 
-**Architecture:** Keep resize ownership inside `PersonPreviewDock.vue`. Measure its parent workbench with `ResizeObserver`, derive the maximum from the workbench content width minus the CSS-owned open gap, and clamp only when the container becomes smaller; `PersonListPage.vue` continues retaining the latest width snapshot for the current page lifecycle.
+**Architecture:** Keep resize ownership inside `PersonPreviewDock.vue`. Find its nearest workbench, measure it with `ResizeObserver`, derive the maximum from the workbench content width minus the CSS-owned open gap, and clamp only when the container becomes smaller; `PersonListPage.vue` continues retaining the latest width snapshot for the current page lifecycle.
 
 **Tech Stack:** Vue 3 Composition API, TypeScript strict mode, CSS Grid, Pointer Events, ResizeObserver, Vitest/Vue Test Utils, Playwright Electron.
 
@@ -84,7 +84,7 @@ import { computed, onBeforeUnmount, onMounted, ref } from "vue"
 const PREVIEW_WIDTH = { default: 320, min: 280, keyboardStep: 16 } as const
 const initialWidth = Math.max(PREVIEW_WIDTH.min, props.initialWidth ?? PREVIEW_WIDTH.default)
 const width = ref(initialWidth)
-const maxWidth = ref(initialWidth)
+const maxWidth = ref(Math.max(initialWidth, window.innerWidth))
 const dockElement = ref<HTMLElement | null>(null)
 let workbenchResizeObserver: ResizeObserver | null = null
 
@@ -103,7 +103,7 @@ function syncWorkbenchWidth(workbench: HTMLElement): void {
 }
 
 onMounted(() => {
-  const workbench = dockElement.value?.parentElement
+  const workbench = dockElement.value?.closest<HTMLElement>(".person-workbench")
   if (!workbench) return
   syncWorkbenchWidth(workbench)
   if (typeof ResizeObserver === "undefined") return
@@ -154,16 +154,20 @@ Expected: all commands PASS; width exceeds `520px`, clamps to the measured host,
 
 - [ ] **Step 1: Strengthen the existing Electron drag assertion**
 
-Drag the separator to the workbench's left edge, then assert:
+Wait for the `220ms` entry transition to settle at `320px`, perform an `80px` real pointer drag, and assert that `aria-valuenow` increases. Then use repeated `ArrowLeft` input on the same separator until its dynamic ARIA maximum is reached and assert:
 
 ```ts
-const workbenchWidth = await elementWidth(page.locator(".person-workbench"))
-await dragSeparatorLeft(page, separator, workbenchWidth)
+await expect.poll(async () => Math.round(await elementWidth(preview))).toBe(320)
+await dragLeft(page, separator, 80)
+await expect
+  .poll(async () => Number(await separator.getAttribute("aria-valuenow")))
+  .toBeGreaterThan(320)
+await expandToMaximum(separator)
 await expect.poll(() => elementWidth(preview)).toBeGreaterThan(520)
-await expect.poll(() => elementWidth(listCard)).toBeLessThan(2)
+await expect.poll(() => elementWidth(listCard)).toBeLessThanOrEqual(2)
 ```
 
-Retain the existing close, full-list restoration, reopen-width retention, masked-field, sticky-navigation, page-error, and request-failure assertions.
+The focused unit test remains responsible for proving that one pointer resize can cross `520px` and clamp directly at the measured maximum. Retain the existing close, full-list restoration, reopen-width retention, masked-field, sticky-navigation, page-error, and request-failure assertions.
 
 - [ ] **Step 2: Synchronize authoritative documentation**
 
@@ -214,4 +218,3 @@ Expected: no stale implemented-behavior ceiling remains; `design-previews/centra
 - [ ] **Step 3: Commit the row-only entry and full-width resize in separate units**
 
 Stage only the already-verified row-only source/test/docs paths for one commit, then stage the dynamic resize source/test/docs paths for a second commit. Never stage `design-previews/` or `output/`.
-

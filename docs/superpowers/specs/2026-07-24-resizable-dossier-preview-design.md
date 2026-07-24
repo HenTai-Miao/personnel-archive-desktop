@@ -40,7 +40,7 @@
 
 `PersonListPage.vue` 根据 `preview.state.kind !== "idle"` 决定分栏是否打开，并在本次页面生命周期内保留最后一次调整的宽度快照。现有 `usePersonPreview()` 继续负责详情请求、照片请求、过期响应隔离及资源释放，不新增第二套选中状态；行高亮继续由同一预览状态驱动。
 
-`PersonPreviewDock.vue` 从页面快照初始化当前宽度，隔离工作台尺寸观测、Pointer Events 拖拽、指针捕获和键盘调整，并把宽度变化、关闭、重试、查看与导出事件转发给页面。它以父级工作台的 `clientWidth` 减去实际 CSS `column-gap` 作为动态最大宽度，不维护第二套布局常量。`PersonArchivePreview.vue` 只负责卷宗内容和统一关闭入口。
+`PersonPreviewDock.vue` 从页面快照初始化当前宽度，隔离工作台尺寸观测、Pointer Events 拖拽、指针捕获和键盘调整，并把宽度变化、关闭、重试、查看与导出事件转发给页面。它查找最近的 `.person-workbench`，以其 `clientWidth` 减去 CSS 变量 `--person-workbench-open-gap` 作为动态最大宽度，不在 TypeScript 中维护第二套间距常量。`PersonArchivePreview.vue` 只负责卷宗内容和统一关闭入口。
 
 分栏使用 CSS Grid 的 `minmax(0, 1fr) auto` 两列：关闭时 Dock 不渲染且无列间距；打开时 Dock 通过 CSS 自定义属性提供宽度。Vue Transition 同时控制 Dock 的宽度、水平位移和透明度，工作台同步过渡列间距，使名册随 Dock 的 `0` 到目标宽度变化平滑收窄与恢复。
 

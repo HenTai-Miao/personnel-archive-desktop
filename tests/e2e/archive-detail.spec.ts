@@ -3,7 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { _electron as electron, expect, test } from "@playwright/test"
-import { dragSeparatorLeft, elementWidth, roundedElementTop } from "../support/layout-geometry"
+import { dragLeft, elementWidth, expandToMaximum, roundedTop } from "../support/layout-geometry"
 
 const detailResponse = {
   id: "7",
@@ -185,7 +185,6 @@ test("previews a masked dossier before opening the complete archive", async () =
       await expect(page.getByRole("button", { name: "预览", exact: true })).toHaveCount(0)
       const initialListWidth = await elementWidth(listCard)
       await page.getByText("测试甲", { exact: true }).first().click()
-
       // Then
       await expect(preview.getByRole("heading", { name: "测试甲", level: 2 })).toBeVisible()
       await expect(preview.getByText("1234***********678", { exact: true })).toBeVisible()
@@ -200,10 +199,15 @@ test("previews a masked dossier before opening the complete archive", async () =
         preview.getByRole("button", { name: "下载并打开 Excel" }).locator("span"),
       ).toHaveCSS("color", "rgb(255, 255, 255)")
       await expect.poll(() => elementWidth(listCard)).toBeLessThan(initialListWidth - 200)
+      await expect.poll(async () => Math.round(await elementWidth(preview))).toBe(320)
       const separator = page.getByRole("separator", { name: "调整卷宗预览宽度" })
-      const initialPreviewWidth = await elementWidth(preview)
-      await dragSeparatorLeft(page, separator, 80)
-      await expect.poll(() => elementWidth(preview)).toBeGreaterThan(initialPreviewWidth + 60)
+      await dragLeft(page, separator, 80)
+      await expect
+        .poll(async () => Number(await separator.getAttribute("aria-valuenow")))
+        .toBeGreaterThan(320)
+      await expandToMaximum(separator)
+      await expect.poll(() => elementWidth(preview)).toBeGreaterThan(520)
+      await expect.poll(() => elementWidth(listCard)).toBeLessThanOrEqual(2)
       await page.getByRole("button", { name: "关闭卷宗预览" }).click()
       await expect(preview).toHaveCount(0)
       await expect
@@ -211,9 +215,8 @@ test("previews a masked dossier before opening the complete archive", async () =
         .toBe(Math.round(initialListWidth))
       await page.getByText("测试甲", { exact: true }).first().click()
       await expect(preview).toBeVisible()
-      await expect.poll(() => elementWidth(preview)).toBeGreaterThan(initialPreviewWidth + 60)
+      await expect.poll(() => elementWidth(preview)).toBeGreaterThan(520)
       expect(sensitiveValueRequests).toEqual([])
-
       await preview.getByRole("button", { name: "查看完整档案" }).click()
       await expect(page.getByRole("heading", { name: "测试甲", level: 1 })).toBeVisible()
       await expect(page.getByRole("heading", { name: "基本情况与任职信息" })).toBeVisible()
@@ -231,9 +234,9 @@ test("previews a masked dossier before opening the complete archive", async () =
       await expect(page.getByText("13800138000", { exact: true })).toBeVisible()
       await expect(page.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
       const detailUrl = page.url()
-      const workspaceTop = await roundedElementTop(page.locator(".paper-workspace"))
+      const workspaceTop = await roundedTop(page.locator(".paper-workspace"))
       await page.getByRole("button", { name: "学历教育", exact: true }).click()
-      await expect.poll(() => roundedElementTop(page.locator(".dossier-index"))).toBe(workspaceTop)
+      await expect.poll(() => roundedTop(page.locator(".dossier-index"))).toBe(workspaceTop)
       expect(page.url()).toBe(detailUrl)
       expect(pageErrors).toEqual([])
       expect(requestFailures).toEqual([])
