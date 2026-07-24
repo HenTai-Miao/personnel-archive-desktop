@@ -43,7 +43,7 @@ export const PERSON_LIST_CRUD_OPTION = {
   page: false,
   menu: true,
   menuTitle: "档案操作",
-  menuWidth: 150,
+  menuWidth: 190,
   menuFixed: "right",
   menuAlign: "left",
   selection: true,

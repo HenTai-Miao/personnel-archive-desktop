@@ -9,6 +9,7 @@ import { errorMessage } from "@/shared/api/error"
 import type { PersonId } from "@/shared/api/schemas"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import BatchExportControl from "./BatchExportControl.vue"
+import PersonDeleteAction from "./PersonDeleteAction.vue"
 import PersonPreviewDock from "./PersonPreviewDock.vue"
 import { PERSON_LIST_CRUD_OPTION } from "./person-list-crud"
 import type { PersonListItem } from "./schemas"
@@ -86,6 +87,13 @@ function previewPerson(person: PersonListItem): void {
 function previewRowClassName({ row }: PreviewRowClassContext): string {
   const current = preview.state.value
   return "personId" in current && current.personId === row.id ? "is-preview-active" : ""
+}
+
+async function refreshAfterDeletion(wasDeleted: boolean): Promise<void> {
+  const targetPage = store.results.length === 1 && store.page > 0 ? store.page - 1 : store.page
+  actionMessage.value = wasDeleted ? "档案已删除" : "档案已被其他操作删除，列表已刷新"
+  actionFailed.value = !wasDeleted
+  await loadPage(targetPage)
 }
 </script>
 
@@ -206,6 +214,13 @@ function previewRowClassName({ row }: PreviewRowClassContext): string {
             >
               导出
             </el-button>
+            <PersonDeleteAction
+              v-if="canImport"
+              :person-id="row.id"
+              :person-name="row.name"
+              @deleted="refreshAfterDeletion(true)"
+              @missing="refreshAfterDeletion(false)"
+            />
           </template>
         </avue-crud>
         <FixedListPagination :page="store.page" :total="store.total" @change="loadPage" />
