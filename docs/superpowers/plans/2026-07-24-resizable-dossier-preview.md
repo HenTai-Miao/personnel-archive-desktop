@@ -4,9 +4,11 @@
 
 **Goal:** Make the personnel dossier preview default-hidden, animated, closable, and horizontally resizable while making the complete-detail index sit flush against the workspace scroll edge.
 
-**Architecture:** Keep data loading and resource cleanup in the existing `usePersonPreview()` composable. Derive drawer visibility from its existing `idle`/non-`idle` state in `PersonListPage.vue`, keep resize state local to that page, and expose a single `close` event from `PersonArchivePreview.vue`. Use CSS Grid plus Vue Transition for coordinated list/drawer motion, and fix sticky positioning with an inherited workspace-padding custom property instead of scroll listeners.
+**Architecture:** Keep data loading and resource cleanup in the existing `usePersonPreview()` composable. Derive drawer visibility from its existing `idle`/non-`idle` state in `PersonListPage.vue`, retain only the latest width snapshot for that page lifecycle, and isolate active resize state plus accessible separator behavior in `PersonPreviewDock.vue`. Expose a single `close` event from `PersonArchivePreview.vue`, use CSS Grid plus Vue Transition for coordinated list/drawer motion, and fix sticky positioning with an inherited workspace-padding custom property instead of scroll listeners.
 
 **Tech Stack:** Vue 3 Composition API, TypeScript strict mode, Element Plus, CSS Grid/Pointer Events, Vitest/Vue Test Utils, Playwright Electron.
+
+**Execution adjustment:** The resize state described later in the original task steps was extracted from `PersonListPage.vue` into `PersonPreviewDock.vue` to keep each production component below the project's 250-line hard ceiling. The behavior, bounds, event contract, and test coverage are unchanged.
 
 ## Global Constraints
 

@@ -22,6 +22,7 @@ const preview = usePersonPreview()
 const openingPersonId = ref<PersonId | null>(null)
 const actionMessage = ref("")
 const actionFailed = ref(false)
+const previewWidth = ref<number>()
 const crudRows = computed(() => store.results.map((person) => ({ ...person })))
 const isPreviewOpen = computed(() => preview.state.value.kind !== "idle")
 const canImport = computed(() => {
@@ -222,11 +223,13 @@ function previewRowClassName({ row }: PreviewRowClassContext): string {
           v-if="isPreviewOpen"
           :state="preview.state.value"
           :opening-person-id="openingPersonId"
+          :initial-width="previewWidth"
           @close="preview.clear"
           @retry="preview.select"
           @retry-photo="preview.retryPhoto"
           @view="viewDetail"
           @export-person="openArchive"
+          @width-change="previewWidth = $event"
         />
       </Transition>
     </div>

@@ -37,11 +37,11 @@
 
 ## 组件与状态边界
 
-`PersonListPage.vue` 负责分栏是否打开、预览宽度、拖拽过程和键盘调整。现有 `usePersonPreview()` 继续负责详情请求、照片请求、过期响应隔离及资源释放，不新增第二套选中状态。
+`PersonListPage.vue` 根据 `preview.state.kind !== "idle"` 决定分栏是否打开，并在本次页面生命周期内保留最后一次调整的宽度快照。现有 `usePersonPreview()` 继续负责详情请求、照片请求、过期响应隔离及资源释放，不新增第二套选中状态；行高亮继续由同一预览状态驱动。
 
-`PersonArchivePreview.vue` 负责卷宗内容和统一关闭入口，并新增 `close` 事件。页面以 `preview.state.kind !== "idle"` 作为唯一打开条件；行高亮继续由同一预览状态驱动。
+`PersonPreviewDock.vue` 从页面快照初始化当前宽度，隔离 Pointer Events 拖拽、指针捕获和键盘调整，并把宽度变化、关闭、重试、查看与导出事件转发给页面。`PersonArchivePreview.vue` 只负责卷宗内容和统一关闭入口。
 
-分栏使用现有 CSS Grid：关闭时第二列为零且无列间距，打开时第二列使用 CSS 自定义属性指定的宽度。Vue Transition 只控制卷宗的水平位移和透明度，Grid transition 控制名册收窄与恢复，两者使用同一时长和缓动曲线。
+分栏使用 CSS Grid 的 `minmax(0, 1fr) auto` 两列：关闭时 Dock 不渲染且无列间距；打开时 Dock 通过 CSS 自定义属性提供宽度。Vue Transition 同时控制 Dock 的宽度、水平位移和透明度，工作台同步过渡列间距，使名册随 Dock 的 `0` 到目标宽度变化平滑收窄与恢复。
 
 `ArchiveDetailPage.vue` 不增加滚动监听。贴顶修复只调整共享工作区内边距变量和 `.dossier-index` 的 sticky 偏移，避免引入易失配的 JavaScript 布局测量。
 
@@ -63,6 +63,7 @@
 - 拖拽分隔线能够增减宽度，并在 `280px`/`520px` 边界钳制。
 - 分隔线方向键调整宽度，ARIA 当前值同步更新。
 - 失败状态仍提供重试和关闭操作。
+- 样式契约覆盖两列网格、`220ms` 进出动画、窄屏隐藏分隔线，以及详情导航抵消工作区内边距。
 
 ### Electron 端到端测试
 

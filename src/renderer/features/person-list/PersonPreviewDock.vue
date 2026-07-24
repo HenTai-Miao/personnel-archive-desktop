@@ -6,9 +6,10 @@ import type { PersonId } from "@/shared/api/schemas"
 import PersonArchivePreview from "./PersonArchivePreview.vue"
 import type { PersonPreviewState } from "./use-person-preview"
 
-defineProps<{
+const props = defineProps<{
   readonly state: PersonPreviewState
   readonly openingPersonId: PersonId | null
+  readonly initialWidth?: number | undefined
 }>()
 
 const emit = defineEmits<{
@@ -17,6 +18,7 @@ const emit = defineEmits<{
   retryPhoto: []
   view: [personId: PersonId]
   exportPerson: [person: PersonDetail]
+  widthChange: [width: number]
 }>()
 
 const PREVIEW_WIDTH = {
@@ -26,7 +28,7 @@ const PREVIEW_WIDTH = {
   keyboardStep: 16,
 } as const
 
-const width = ref<number>(PREVIEW_WIDTH.default)
+const width = ref<number>(clampWidth(props.initialWidth ?? PREVIEW_WIDTH.default))
 const resizing = ref(false)
 const dockStyle = computed(() => ({ "--person-preview-width": `${width.value}px` }))
 let resizePointerId: number | null = null
@@ -50,7 +52,7 @@ function beginResize(event: PointerEvent): void {
 
 function resize(event: PointerEvent): void {
   if (event.pointerId !== resizePointerId) return
-  width.value = clampWidth(resizeStartWidth + resizeStartX - event.clientX)
+  setWidth(resizeStartWidth + resizeStartX - event.clientX)
 }
 
 function endResize(event: PointerEvent): void {
@@ -74,7 +76,12 @@ function resizeFromKeyboard(event: KeyboardEvent): void {
   if (event.key === "ArrowRight") delta = -PREVIEW_WIDTH.keyboardStep
   if (delta === 0) return
   event.preventDefault()
-  width.value = clampWidth(width.value + delta)
+  setWidth(width.value + delta)
+}
+
+function setWidth(value: number): void {
+  width.value = clampWidth(value)
+  emit("widthChange", width.value)
 }
 </script>
 

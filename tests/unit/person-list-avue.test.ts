@@ -229,6 +229,31 @@ describe("PersonListPage Avue directory", () => {
     wrapper.unmount()
   })
 
+  it("keeps the adjusted preview width after closing and reopening on the same page", async () => {
+    // Given
+    vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
+    apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
+    const wrapper = await mountPage()
+    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    await flushPromises()
+    const separator = wrapper.get('[data-test="person-preview-resizer"]')
+    await separator.trigger("pointerdown", { pointerId: 1, clientX: 500 })
+    await separator.trigger("pointermove", { pointerId: 1, clientX: 420 })
+    expect(separator.attributes("aria-valuenow")).toBe("400")
+
+    // When
+    await wrapper.get('[aria-label="关闭卷宗预览"]').trigger("click")
+    await flushPromises()
+    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    await flushPromises()
+
+    // Then
+    expect(wrapper.get('[data-test="person-preview-resizer"]').attributes("aria-valuenow")).toBe(
+      "400",
+    )
+    wrapper.unmount()
+  })
+
   it("returns the preview to idle before a filter request", async () => {
     // Given
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
