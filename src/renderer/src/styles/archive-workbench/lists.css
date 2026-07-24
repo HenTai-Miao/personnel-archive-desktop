@@ -72,9 +72,14 @@
 
 .person-workbench {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 320px;
-  gap: 18px;
+  grid-template-columns: minmax(0, 1fr) auto;
+  column-gap: 0;
   align-items: start;
+  transition: column-gap 220ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.person-workbench.is-preview-open {
+  column-gap: 18px;
 }
 
 .table-heading {
@@ -217,7 +222,12 @@
     grid-column: 1 / -1;
     justify-content: flex-end;
   }
-  .person-workbench {
+  .person-workbench,
+  .person-workbench.is-preview-open {
     grid-template-columns: minmax(0, 1fr);
+    column-gap: 0;
+  }
+  .person-workbench.is-preview-open {
+    row-gap: 18px;
   }
 }

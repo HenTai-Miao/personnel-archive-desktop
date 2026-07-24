@@ -9,7 +9,7 @@ import { errorMessage } from "@/shared/api/error"
 import type { PersonId } from "@/shared/api/schemas"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import BatchExportControl from "./BatchExportControl.vue"
-import PersonArchivePreview from "./PersonArchivePreview.vue"
+import PersonPreviewDock from "./PersonPreviewDock.vue"
 import { PERSON_LIST_CRUD_OPTION } from "./person-list-crud"
 import type { PersonListItem } from "./schemas"
 import { usePersonListStore } from "./store"
@@ -23,6 +23,7 @@ const openingPersonId = ref<PersonId | null>(null)
 const actionMessage = ref("")
 const actionFailed = ref(false)
 const crudRows = computed(() => store.results.map((person) => ({ ...person })))
+const isPreviewOpen = computed(() => preview.state.value.kind !== "idle")
 const canImport = computed(() => {
   const roles = auth.user?.roles ?? []
   return roles.includes("ADMIN") || roles.includes("ARCHIVE_EDITOR")
@@ -154,7 +155,11 @@ function previewRowClassName({ row }: PreviewRowClassContext): string {
     <div v-if="store.loading && store.results.length === 0" class="paper-card list-loading">
       <el-skeleton :rows="7" animated />
     </div>
-    <div v-else-if="store.results.length" class="person-workbench">
+    <div
+      v-else-if="store.results.length"
+      class="person-workbench"
+      :class="{ 'is-preview-open': isPreviewOpen }"
+    >
       <div class="paper-card person-list-card">
         <div class="table-heading">
           <div>
@@ -212,16 +217,18 @@ function previewRowClassName({ row }: PreviewRowClassContext): string {
         </avue-crud>
         <FixedListPagination :page="store.page" :total="store.total" @change="loadPage" />
       </div>
-      <PersonArchivePreview
-        v-if="preview.state.value.kind !== 'idle'"
-        :state="preview.state.value"
-        :opening-person-id="openingPersonId"
-        @close="preview.clear"
-        @retry="preview.select"
-        @retry-photo="preview.retryPhoto"
-        @view="viewDetail"
-        @export-person="openArchive"
-      />
+      <Transition name="dossier-preview">
+        <PersonPreviewDock
+          v-if="isPreviewOpen"
+          :state="preview.state.value"
+          :opening-person-id="openingPersonId"
+          @close="preview.clear"
+          @retry="preview.select"
+          @retry-photo="preview.retryPhoto"
+          @view="viewDetail"
+          @export-person="openArchive"
+        />
+      </Transition>
     </div>
     <div v-else-if="store.message" class="empty-sheet person-list-empty">
       <span>档案目录暂时无法加载</span>

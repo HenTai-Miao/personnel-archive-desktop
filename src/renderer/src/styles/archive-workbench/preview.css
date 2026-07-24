@@ -1,7 +1,46 @@
 /* 人员卷宗预览：右栏独立滚动，在 1280px 以下移到目录下方。 */
+.person-preview-dock {
+  position: relative;
+  width: var(--person-preview-width);
+  min-width: 0;
+}
+
+.person-preview-dock.is-preview-resizing {
+  user-select: none;
+}
+
+.person-preview-resizer {
+  position: absolute;
+  z-index: 6;
+  top: 0;
+  bottom: 0;
+  left: -9px;
+  width: 18px;
+  cursor: col-resize;
+  touch-action: none;
+}
+
+.person-preview-resizer::before {
+  position: absolute;
+  top: 12px;
+  bottom: 12px;
+  left: 8px;
+  width: 2px;
+  background: var(--archive-line-strong);
+  border-radius: 2px;
+  content: "";
+  transition: background 120ms ease;
+}
+
+.person-preview-resizer:hover::before,
+.person-preview-resizer:focus-visible::before {
+  background: var(--archive-blue);
+}
+
 .person-preview {
   position: sticky;
   top: 0;
+  width: 100%;
   min-width: 0;
   max-height: calc(100vh - 108px);
   overflow: hidden;
@@ -11,9 +50,20 @@
   box-shadow: var(--archive-shadow-panel);
 }
 
+.preview-close {
+  position: absolute;
+  z-index: 7;
+  top: 10px;
+  right: 10px;
+  width: 28px;
+  height: 28px;
+  background: rgb(255 255 255 / 92%);
+  backdrop-filter: blur(8px);
+}
+
 .preview-state {
   min-height: 320px;
-  padding: 24px;
+  padding: 24px 52px 24px 24px;
   color: var(--archive-muted);
 }
 
@@ -35,7 +85,7 @@
   z-index: 2;
   display: grid;
   gap: 12px;
-  padding: 16px;
+  padding: 16px 52px 16px 16px;
   background: rgb(255 255 255 / 96%);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid var(--archive-line);
@@ -155,7 +205,36 @@
   min-width: 620px;
 }
 
+.dossier-preview-enter-active,
+.dossier-preview-leave-active {
+  overflow: clip;
+  transition:
+    width 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 180ms ease;
+}
+
+.person-preview-dock.dossier-preview-enter-from,
+.person-preview-dock.dossier-preview-leave-to {
+  width: 0;
+  opacity: 0;
+  transform: translateX(calc(100% + 18px));
+}
+
 @media (max-width: 1280px) {
+  .person-preview-dock {
+    width: 100%;
+  }
+
+  .person-preview-resizer {
+    display: none;
+  }
+
+  .person-preview-dock.dossier-preview-enter-from,
+  .person-preview-dock.dossier-preview-leave-to {
+    width: 0;
+  }
+
   .person-preview {
     position: static;
     max-height: none;

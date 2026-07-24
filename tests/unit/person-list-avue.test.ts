@@ -213,6 +213,22 @@ describe("PersonListPage Avue directory", () => {
     wrapper.unmount()
   })
 
+  it("shows the preview resize separator only after a dossier is selected", async () => {
+    // Given
+    vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
+    apiMocks.getPerson.mockResolvedValue({ ...PERSON_DETAIL_FIXTURE, id: PERSON.id })
+    const wrapper = await mountPage()
+    expect(wrapper.find('[data-test="person-preview-resizer"]').exists()).toBe(false)
+
+    // When
+    await wrapper.get('[data-test="preview-person"]').trigger("click")
+    await flushPromises()
+
+    // Then
+    expect(wrapper.get('[data-test="person-preview-resizer"]').attributes("role")).toBe("separator")
+    wrapper.unmount()
+  })
+
   it("returns the preview to idle before a filter request", async () => {
     // Given
     vi.mocked(fetchPersons).mockResolvedValue(PERSON_PAGE)
