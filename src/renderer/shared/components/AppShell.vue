@@ -83,10 +83,6 @@ async function signOut(): Promise<void> {
           <el-icon><DocumentAdd /></el-icon><span>批量导入档案</span>
         </RouterLink>
       </nav>
-      <div class="sidebar-security-note">
-        <strong><i aria-hidden="true"></i>卷宗已安全载入</strong>
-        <p>敏感字段默认遮罩</p>
-      </div>
     </aside>
     <main class="reading-desk-workspace"><RouterView /></main>
   </div>

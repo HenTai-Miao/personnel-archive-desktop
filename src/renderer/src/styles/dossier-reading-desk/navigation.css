@@ -114,8 +114,7 @@
   font: 11.5px var(--dossier-mono);
 }
 
-.session-chip i,
-.sidebar-security-note strong i {
+.session-chip i {
   width: 7px;
   height: 7px;
   background: var(--dossier-success);
@@ -220,30 +219,6 @@
   height: 15px;
 }
 
-.sidebar-security-note {
-  position: absolute;
-  right: 18px;
-  bottom: 22px;
-  left: 18px;
-  padding: 13px 14px;
-  background: #fff;
-  border: 1px solid var(--dossier-line);
-  border-radius: var(--dossier-panel-radius);
-}
-
-.sidebar-security-note strong {
-  display: flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 12.5px;
-}
-
-.sidebar-security-note p {
-  margin: 5px 0 0;
-  color: var(--dossier-faint);
-  font-size: 11.5px;
-}
-
 @media (max-width: 1320px) {
   .system-identity {
     min-width: 220px;
@@ -251,10 +226,5 @@
 
   .reading-desk-sidebar {
     padding-inline: 14px;
-  }
-
-  .sidebar-security-note {
-    right: 14px;
-    left: 14px;
   }
 }
