@@ -2,6 +2,7 @@ import { flushPromises, mount } from "@vue/test-utils"
 import ElementPlus from "element-plus"
 import { createPinia } from "pinia"
 import { afterEach, describe, expect, it, vi } from "vitest"
+import { defineComponent, h } from "vue"
 import { createMemoryHistory, createRouter } from "vue-router"
 import { searchFamilyMembers } from "@/features/family-search/api"
 import FamilySearchPage from "@/features/family-search/FamilySearchPage.vue"
@@ -12,6 +13,41 @@ const archiveApiMocks = vi.hoisted(() => ({
   downloadPersonPhoto: vi.fn(),
   revealSensitiveValue: vi.fn(),
 }))
+
+const tableStub = defineComponent({
+  name: "ElTable",
+  props: { data: { type: Array, required: true } },
+  setup(props, { attrs, slots }) {
+    return () => {
+      const columns = slots["default"]?.() ?? []
+      return h(
+        "div",
+        attrs,
+        props.data.map((row) =>
+          h(
+            "div",
+            columns.map((column) => {
+              const children = column.children
+              const defaultSlot =
+                typeof children === "object" && children !== null && !Array.isArray(children)
+                  ? children["default"]
+                  : undefined
+              if (typeof defaultSlot === "function") return h("div", defaultSlot({ row }))
+
+              const prop = column.props?.["prop"]
+              return h(
+                "div",
+                typeof prop === "string"
+                  ? String((row as Record<string, unknown>)[prop] ?? "")
+                  : "",
+              )
+            }),
+          ),
+        ),
+      )
+    }
+  },
+})
 
 vi.mock("@/features/family-search/api", () => ({
   searchFamilyMembers: vi.fn(),
@@ -45,7 +81,7 @@ const SECOND_MATCH = familySearchItemSchema.parse({
   relationship: "配偶",
 })
 
-describe("FamilySearchPage B-series match desk", () => {
+describe("FamilySearchPage B-series results ledger", () => {
   it("keeps every match and opens full detail only through the explicit action", async () => {
     vi.mocked(searchFamilyMembers).mockResolvedValue({
       content: [FIRST_MATCH, SECOND_MATCH],
@@ -64,22 +100,32 @@ describe("FamilySearchPage B-series match desk", () => {
     await router.push("/search")
     await router.isReady()
     const wrapper = mount(FamilySearchPage, {
-      global: { plugins: [createPinia(), router, ElementPlus] },
+      global: {
+        plugins: [createPinia(), router, ElementPlus],
+        stubs: { ElTable: tableStub, ElTableColumn: true },
+      },
     })
 
     await wrapper.get('[data-test="family-search-query"]').setValue("晓华")
-    await wrapper.get('[data-test="family-search-submit"]').trigger("click")
+    await wrapper.find(".family-search-paper").trigger("submit")
     await flushPromises()
 
-    expect(wrapper.find(".family-search-layout").exists()).toBe(true)
-    expect(wrapper.find(".family-match-index").text()).toContain("2 条匹配")
-    expect(wrapper.find(".family-match-index").text()).toContain("人员甲")
-    expect(wrapper.find(".family-match-index").text()).toContain("人员乙")
-    expect(wrapper.find(".family-match-sheet").text()).toContain("匹配成员")
+    expect(wrapper.find(".family-search-paper").exists()).toBe(true)
+    expect(wrapper.find(".family-result-sheet").exists()).toBe(true)
+    expect(wrapper.find(".family-search-layout").exists()).toBe(false)
+    expect(wrapper.find(".family-match-index").exists()).toBe(false)
+    expect(wrapper.find(".family-match-sheet").exists()).toBe(false)
+    expect(wrapper.get('[data-test="family-search-results"]').text()).toContain("王晓华")
+    expect(wrapper.get('[data-test="family-search-results"]').text()).toContain("人员甲")
+    expect(wrapper.get('[data-test="family-search-results"]').text()).toContain("人员乙")
+    expect(wrapper.get('[data-test="family-search-results"]').text()).toContain("测试单位一")
+    expect(wrapper.get('[data-test="family-search-results"]').text()).toContain("财务部")
+    expect(wrapper.text()).toContain("2 条匹配记录")
+    expect(wrapper.text()).toContain("同名匹配不合并")
     expect(wrapper.text()).toContain("每页 20 条")
     expect(archiveApiMocks.getPerson).not.toHaveBeenCalled()
 
-    await wrapper.get('[data-test="view-matched-archive"]').trigger("click")
+    await wrapper.findAll('[data-test="view-matched-archive"]')[0]?.trigger("click")
     await flushPromises()
 
     expect(router.currentRoute.value).toMatchObject({
