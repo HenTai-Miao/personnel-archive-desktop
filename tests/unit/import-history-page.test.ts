@@ -116,6 +116,7 @@ describe("ImportPage history", () => {
 
     // Then
     expect(fetchImportHistory).toHaveBeenCalledWith({ page: 0, size: 20 })
+    expect(wrapper.find(".import-history-sheet").exists()).toBe(true)
     expect(wrapper.find("#import-history").exists()).toBe(true)
     expect(wrapper.text()).toContain("导入记录")
     expect(wrapper.text()).toContain("永久历史")

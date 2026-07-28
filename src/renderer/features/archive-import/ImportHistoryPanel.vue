@@ -60,7 +60,7 @@ function formatTimestamp(value: string): string {
 
 <template>
   <section class="import-history-sheet" data-test="import-history">
-    <header class="workflow-sheet-heading history-heading">
+    <header class="import-section-heading import-history-heading">
       <div>
         <span>PERMANENT HISTORY</span>
         <h2>永久历史 · 导入记录</h2>
