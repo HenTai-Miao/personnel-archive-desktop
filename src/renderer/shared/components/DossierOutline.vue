@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, onMounted, ref } from "vue"
+import { onBeforeUnmount, onMounted, onUpdated, ref } from "vue"
 
 export type DossierSection = {
   readonly id: string
@@ -14,6 +14,7 @@ const props = defineProps<{
 
 const activeSection = ref(props.sections[0]?.id ?? "")
 let observer: IntersectionObserver | null = null
+const observedElements = new Set<HTMLElement>()
 
 onMounted(() => {
   if (typeof IntersectionObserver === "undefined") return
@@ -26,13 +27,33 @@ onMounted(() => {
     },
     { rootMargin: "-88px 0px -62% 0px", threshold: [0, 0.15, 1] },
   )
-  for (const section of props.sections) {
-    const element = document.getElementById(section.id)
-    if (element !== null) observer.observe(element)
-  }
+  syncObservedSections()
 })
 
-onBeforeUnmount(() => observer?.disconnect())
+onUpdated(syncObservedSections)
+onBeforeUnmount(() => {
+  observer?.disconnect()
+  observedElements.clear()
+})
+
+function syncObservedSections(): void {
+  if (observer === null) return
+  const currentElements = new Set(
+    props.sections
+      .map((section) => document.getElementById(section.id))
+      .filter((element): element is HTMLElement => element !== null),
+  )
+  for (const element of observedElements) {
+    if (currentElements.has(element)) continue
+    observer.unobserve(element)
+    observedElements.delete(element)
+  }
+  for (const element of currentElements) {
+    if (observedElements.has(element)) continue
+    observer.observe(element)
+    observedElements.add(element)
+  }
+}
 
 function navigate(sectionId: string): void {
   activeSection.value = sectionId

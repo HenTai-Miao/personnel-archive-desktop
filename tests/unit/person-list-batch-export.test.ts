@@ -3,18 +3,20 @@ import type { PersonnelArchiveBridge } from "@shared/ipc-contract"
 import { flushPromises, mount } from "@vue/test-utils"
 import ElementPlus from "element-plus"
 import { createPinia, setActivePinia } from "pinia"
-import { describe, expect, it, vi } from "vitest"
-import { defineComponent } from "vue"
+import { afterEach, describe, expect, it, vi } from "vitest"
 import { createMemoryHistory, createRouter } from "vue-router"
 import { useAuthStore } from "@/features/auth/store"
 import { downloadPersonArchives, fetchPersons } from "@/features/person-list/api"
 import PersonListPage from "@/features/person-list/PersonListPage.vue"
 import { personListItemSchema } from "@/features/person-list/schemas"
+import { usePersonListStore } from "@/features/person-list/store"
 import { userSchema } from "@/shared/api/schemas"
+import { PERSON_DETAIL_FIXTURE } from "../support/person-detail-fixture"
 
 const apiMocks = vi.hoisted(() => ({
   getPerson: vi.fn(),
   downloadPersonPhoto: vi.fn(),
+  revealSensitiveValue: vi.fn(),
 }))
 
 vi.mock("@/features/person-list/api", () => ({
@@ -27,6 +29,10 @@ vi.mock("@/features/archive-view/open-archive", () => ({
 }))
 
 vi.mock("@/features/archive-view/api", () => apiMocks)
+
+afterEach(() => {
+  vi.clearAllMocks()
+})
 
 describe("PersonListPage batch export", () => {
   it("does not load a dossier when rows are selected for batch export", async () => {
@@ -57,22 +63,27 @@ describe("PersonListPage batch export", () => {
     })
     await router.push("/persons")
     await router.isReady()
-    const avueCrudStub = defineComponent({
-      name: "AvueCrud",
-      emits: ["selection-change"],
-      template: "<div><slot /></div>",
-    })
+    const pinia = createPinia()
+    setActivePinia(pinia)
     const wrapper = mount(PersonListPage, {
-      global: { plugins: [createPinia(), router, ElementPlus], stubs: { AvueCrud: avueCrudStub } },
+      global: { plugins: [pinia, router, ElementPlus] },
     })
     await flushPromises()
 
     // When
-    wrapper.getComponent(avueCrudStub).vm.$emit("selection-change", [person])
-    await wrapper.vm.$nextTick()
+    await wrapper.get(`[data-test="select-person-${person.id}"]`).setValue(true)
 
     // Then
     expect(apiMocks.getPerson).not.toHaveBeenCalled()
+    apiMocks.getPerson.mockResolvedValue({
+      ...PERSON_DETAIL_FIXTURE,
+      id: person.id,
+      photo: null,
+    })
+    await wrapper.get(`[data-test="activate-person-${person.id}"]`).trigger("click")
+    await flushPromises()
+    expect(apiMocks.getPerson).toHaveBeenCalledWith(person.id)
+    expect(usePersonListStore().selectedPersonIds).toEqual([person.id])
     wrapper.unmount()
   })
 
@@ -130,22 +141,14 @@ describe("PersonListPage batch export", () => {
     })
     await router.push("/persons")
     await router.isReady()
-    const avueCrudStub = defineComponent({
-      name: "AvueCrud",
-      emits: ["selection-change"],
-      template: "<div><slot /></div>",
-    })
     const wrapper = mount(PersonListPage, {
-      global: {
-        plugins: [pinia, router, ElementPlus],
-        stubs: { AvueCrud: avueCrudStub },
-      },
+      global: { plugins: [pinia, router, ElementPlus] },
     })
     await flushPromises()
 
     // When
-    wrapper.getComponent(avueCrudStub).vm.$emit("selection-change", [person, secondPerson])
-    await wrapper.vm.$nextTick()
+    await wrapper.get(`[data-test="select-person-${person.id}"]`).setValue(true)
+    await wrapper.get(`[data-test="select-person-${secondPerson.id}"]`).setValue(true)
     await wrapper.get('[data-test="batch-export"]').trigger("click")
     await flushPromises()
 

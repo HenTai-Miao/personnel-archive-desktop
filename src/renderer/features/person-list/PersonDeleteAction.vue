@@ -124,16 +124,16 @@ async function confirmDeletion(): Promise<void> {
 
 <style scoped>
 .delete-confirmation {
-  color: var(--ink-strong);
+  color: var(--dossier-ink);
 }
 
 .delete-confirmation p {
   margin: 0;
 }
 
-.delete-preservation-note {
-  margin-top: 8px !important;
-  color: var(--ink-muted);
+.delete-confirmation .delete-preservation-note {
+  margin-top: 8px;
+  color: var(--dossier-subtle);
   line-height: 1.65;
 }
 

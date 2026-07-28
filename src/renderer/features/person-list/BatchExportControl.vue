@@ -7,10 +7,13 @@ const store = usePersonListStore()
 </script>
 
 <template>
-  <div class="batch-export-strip">
-    <span>
-      {{ store.selectedPersonIds.length ? `已选 ${store.selectedPersonIds.length} 份` : '勾选档案后可打包导出' }}
-    </span>
+  <div class="batch-export-strip" :class="{ active: store.selectedPersonIds.length > 0 }">
+    <div class="batch-export-copy">
+      <span class="batch-export-kicker">BATCH EXPORT</span>
+      <strong class="batch-export-title">
+        {{ store.selectedPersonIds.length ? `已选 ${store.selectedPersonIds.length} 份卷宗` : '批量档案包' }}
+      </strong>
+    </div>
     <el-button
       data-test="batch-export"
       type="primary"
@@ -19,7 +22,7 @@ const store = usePersonListStore()
       :loading="store.batchExporting"
       @click="store.exportSelected"
     >
-      导出档案包
+      {{ store.selectedPersonIds.length ? '导出档案包' : '请先勾选' }}
     </el-button>
   </div>
 </template>

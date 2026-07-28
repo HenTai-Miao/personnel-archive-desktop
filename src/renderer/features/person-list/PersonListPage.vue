@@ -1,51 +1,51 @@
-<!-- 档案列表页面：筛选和分页查看已导入的有效档案，并进入详情或导出。 -->
+<!-- B 人员检阅桌：左侧卷宗索引、中间完整纸页、右侧章节目录。 -->
 <script setup lang="ts">
-import { Download, Search } from "@element-plus/icons-vue"
+import { Download } from "@element-plus/icons-vue"
 import { computed, onMounted, ref } from "vue"
 import { useRouter } from "vue-router"
+import ArchiveDossierContent from "@/features/archive-view/ArchiveDossierContent.vue"
 import { downloadAndOpenArchive } from "@/features/archive-view/open-archive"
+import { useArchiveDossier } from "@/features/archive-view/use-archive-dossier"
 import { useAuthStore } from "@/features/auth/store"
 import { errorMessage } from "@/shared/api/error"
 import type { PersonId } from "@/shared/api/schemas"
-import FixedListPagination from "@/shared/components/FixedListPagination.vue"
+import DossierOutline from "@/shared/components/DossierOutline.vue"
 import BatchExportControl from "./BatchExportControl.vue"
 import PersonDeleteAction from "./PersonDeleteAction.vue"
-import PersonPreviewDock from "./PersonPreviewDock.vue"
-import { PERSON_LIST_CRUD_OPTION } from "./person-list-crud"
+import PersonRecordIndex from "./PersonRecordIndex.vue"
 import type { PersonListItem } from "./schemas"
 import { usePersonListStore } from "./store"
-import { usePersonPreview } from "./use-person-preview"
+
+const DOSSIER_SECTIONS = [
+  { id: "identity", label: "基本情况与任职", code: "01" },
+  { id: "education", label: "学历与教育", code: "02" },
+  { id: "career", label: "经历与奖惩", code: "03" },
+  { id: "family", label: "家庭成员与申报", code: "04" },
+] as const
+
+type PersonFilters = {
+  readonly name: string
+  readonly employeeNo: string
+  readonly department: string
+}
 
 const store = usePersonListStore()
 const auth = useAuthStore()
 const router = useRouter()
-const preview = usePersonPreview()
+const dossier = useArchiveDossier()
+const readerState = dossier.state
 const openingPersonId = ref<PersonId | null>(null)
 const actionMessage = ref("")
 const actionFailed = ref(false)
-const previewWidth = ref<number>()
-const crudRows = computed(() => store.results.map((person) => ({ ...person })))
-const isPreviewOpen = computed(() => preview.state.value.kind !== "idle")
+const activePersonId = computed(() =>
+  "personId" in readerState.value ? readerState.value.personId : null,
+)
 const canImport = computed(() => {
   const roles = auth.user?.roles ?? []
   return roles.includes("ADMIN") || roles.includes("ARCHIVE_EDITOR")
 })
 
-type PreviewRowClassContext = {
-  readonly row: PersonListItem
-}
-
 onMounted(() => loadPage(store.page))
-
-function updatedAtLabel(value: string): string {
-  return new Intl.DateTimeFormat("zh-CN", {
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(new Date(value))
-}
 
 async function openArchive(person: Pick<PersonListItem, "id" | "name">): Promise<void> {
   openingPersonId.value = person.id
@@ -63,30 +63,24 @@ async function openArchive(person: Pick<PersonListItem, "id" | "name">): Promise
 }
 
 async function loadPage(page: number): Promise<void> {
-  preview.clear()
+  dossier.clear()
   await store.load(page)
 }
 
-async function applyFilters(): Promise<void> {
+async function applyFilters(filters: PersonFilters): Promise<void> {
+  store.name = filters.name
+  store.employeeNo = filters.employeeNo
+  store.department = filters.department
   await loadPage(0)
 }
 
 async function resetFilters(): Promise<void> {
-  preview.clear()
+  dossier.clear()
   await store.reset()
 }
 
 function viewDetail(personId: PersonId): void {
   router.push({ name: "person-detail", params: { personId } })
-}
-
-function previewPerson(person: PersonListItem): void {
-  preview.select(person.id)
-}
-
-function previewRowClassName({ row }: PreviewRowClassContext): string {
-  const current = preview.state.value
-  return "personId" in current && current.personId === row.id ? "is-preview-active" : ""
 }
 
 async function refreshAfterDeletion(wasDeleted: boolean): Promise<void> {
@@ -99,42 +93,14 @@ async function refreshAfterDeletion(wasDeleted: boolean): Promise<void> {
 
 <template>
   <section class="page-stack person-list-page">
-    <header class="page-header">
+    <header class="page-header person-page-header">
       <div>
-        <p class="page-eyebrow">人员目录 / 卷宗联动</p>
-        <h1>人员档案</h1>
-        <p class="page-summary">筛选当前有效档案，并在工作台中联动核对卷宗摘要。</p>
+        <p class="page-eyebrow">PERSONNEL DOSSIERS / 人员目录</p>
+        <h1>人员档案检阅</h1>
+        <p class="page-summary">从在册索引显式打开当前有效卷宗；批量勾选不会读取档案详情。</p>
       </div>
+      <BatchExportControl />
     </header>
-
-    <div class="archive-list-ledger">
-      <div class="ledger-count">
-        <span>档案总数</span>
-        <strong>{{ store.total }}</strong>
-      </div>
-      <form class="person-filter-form" @submit.prevent="applyFilters">
-        <label>
-          <span>姓名</span>
-          <el-input v-model="store.name" clearable placeholder="输入姓名片段" />
-        </label>
-        <label>
-          <span>人员编号</span>
-          <el-input v-model="store.employeeNo" clearable placeholder="输入编号片段" />
-        </label>
-        <label>
-          <span>单位 / 部门</span>
-          <el-input v-model="store.department" clearable placeholder="输入单位或部门" />
-        </label>
-        <div class="filter-actions">
-          <el-button type="primary" native-type="submit" :icon="Search" :loading="store.loading">
-            筛选档案
-          </el-button>
-          <el-button :disabled="!store.hasFilters || store.loading" @click="resetFilters">
-            重置
-          </el-button>
-        </div>
-      </form>
-    </div>
 
     <el-alert
       v-if="store.message"
@@ -161,97 +127,109 @@ async function refreshAfterDeletion(wasDeleted: boolean): Promise<void> {
       @close="store.batchMessage = ''"
     />
 
-    <div v-if="store.loading && store.results.length === 0" class="paper-card list-loading">
-      <el-skeleton :rows="7" animated />
-    </div>
-    <div
-      v-else-if="store.results.length"
-      class="person-workbench"
-      :class="{ 'is-preview-open': isPreviewOpen }"
-    >
-      <div class="paper-card person-list-card">
-        <div class="table-heading">
-          <div>
-            <strong>{{ store.hasFilters ? '筛选结果' : '在册档案目录' }}</strong>
-            <span>共 {{ store.total }} 份当前有效档案</span>
-          </div>
-          <BatchExportControl />
-        </div>
-        <avue-crud
-          class="archive-crud"
-          :data="crudRows"
-          :option="PERSON_LIST_CRUD_OPTION"
-          :row-class-name="previewRowClassName"
-          :table-loading="store.loading"
-          @row-click="previewPerson"
-          @selection-change="store.select"
+    <div class="person-reading-layout">
+      <PersonRecordIndex
+        class="person-record-index"
+        :rows="store.results"
+        :active-person-id="activePersonId"
+        :selected-person-ids="store.selectedPersonIds"
+        :total="store.total"
+        :page="store.page"
+        :loading="store.loading"
+        :name="store.name"
+        :employee-no="store.employeeNo"
+        :department="store.department"
+        @activate="dossier.select"
+        @toggle-selection="store.toggleSelected"
+        @apply-filters="applyFilters"
+        @reset-filters="resetFilters"
+        @change-page="loadPage"
+      />
+
+      <section class="person-dossier-stage" aria-live="polite">
+        <div
+          v-if="store.loading && store.results.length === 0"
+          class="dossier-selection-empty dossier-directory-loading"
         >
-          <template #employeeNo="{ row }">{{ row.employeeNo || '—' }}</template>
-          <template #name="{ row }">
-            <strong class="person-name">{{ row.name || '未填写姓名' }}</strong>
-          </template>
-          <template #organization="{ row }">
-            {{ row.organization || '—' }}
-            <small v-if="row.department" class="relationship">{{ row.department }}</small>
-          </template>
-          <template #position="{ row }">{{ row.position || '—' }}</template>
-          <template #titleOrSkill="{ row }">{{ row.titleOrSkill || '—' }}</template>
-          <template #updatedAt="{ row }">{{ updatedAtLabel(row.updatedAt) }}</template>
-          <template #menu="{ row }">
+          <el-skeleton :rows="12" animated />
+        </div>
+        <div v-else-if="store.message && store.results.length === 0" class="dossier-selection-empty">
+          <strong>档案目录暂时无法加载</strong>
+          <p>请检查人员档案数据服务连接后重试。</p>
+          <el-button type="primary" @click="loadPage(store.page)">重新加载</el-button>
+        </div>
+        <div
+          v-else-if="store.loaded && store.results.length === 0"
+          class="dossier-selection-empty"
+        >
+          <strong>当前页没有档案</strong>
+          <p>{{ store.hasFilters ? '可调整左侧筛选条件后再次查找。' : '导入标准工作簿后，档案会显示在这里。' }}</p>
+          <el-button v-if="store.hasFilters" @click="resetFilters">清除筛选条件</el-button>
+          <el-button v-else-if="canImport" type="primary" @click="router.push({ name: 'import' })">
+            前往批量导入
+          </el-button>
+        </div>
+        <div v-else-if="readerState.kind === 'idle'" class="dossier-selection-empty">
+          <span>ACTIVE READING DESK</span>
+          <strong>请选择卷宗</strong>
+          <p>从左侧在册卷宗中选择一人，完整档案将在这里打开。</p>
+        </div>
+        <ArchiveDossierContent
+          v-else-if="readerState.kind === 'ready'"
+          class="dossier-reading-sheet"
+          :person="readerState.person"
+          :photo="readerState.photo"
+          :sensitive-values="dossier.sensitiveValues"
+          :sensitive-loading="dossier.sensitiveLoading.value"
+          :sensitive-error="dossier.sensitiveError.value"
+          @retry-photo="dossier.retryPhoto"
+          @toggle-sensitive="dossier.toggleSensitive"
+        >
+          <template #actions>
+            <el-button @click="viewDetail(readerState.personId)">独立查看</el-button>
             <el-button
               type="primary"
-              link
-              @click.stop="viewDetail(row.id)"
-            >
-              查看
-            </el-button>
-            <el-button
-              type="primary"
-              link
               :icon="Download"
-              :loading="openingPersonId === row.id"
-              @click.stop="openArchive(row)"
+              :loading="openingPersonId === readerState.personId"
+              @click="openArchive(readerState.person)"
             >
-              导出
+              打开 Excel
             </el-button>
             <PersonDeleteAction
               v-if="canImport"
-              :person-id="row.id"
-              :person-name="row.name"
+              :person-id="readerState.personId"
+              :person-name="readerState.person.name"
               @deleted="refreshAfterDeletion(true)"
               @missing="refreshAfterDeletion(false)"
             />
           </template>
-        </avue-crud>
-        <FixedListPagination :page="store.page" :total="store.total" @change="loadPage" />
-      </div>
-      <Transition name="dossier-preview">
-        <PersonPreviewDock
-          v-if="isPreviewOpen"
-          :state="preview.state.value"
-          :opening-person-id="openingPersonId"
-          :initial-width="previewWidth"
-          @close="preview.clear"
-          @retry="preview.select"
-          @retry-photo="preview.retryPhoto"
-          @view="viewDetail"
-          @export-person="openArchive"
-          @width-change="previewWidth = $event"
-        />
-      </Transition>
-    </div>
-    <div v-else-if="store.message" class="empty-sheet person-list-empty">
-      <span>档案目录暂时无法加载</span>
-      <p>请检查服务连接后重试。</p>
-      <el-button type="primary" @click="loadPage(store.page)">重新加载</el-button>
-    </div>
-    <div v-else-if="store.loaded && !store.loading" class="empty-sheet person-list-empty">
-      <span>{{ store.hasFilters ? '没有符合条件的档案' : '还没有人员档案' }}</span>
-      <p>{{ store.hasFilters ? '可调整筛选条件后再次查找。' : '导入标准工作簿后，档案会显示在这里。' }}</p>
-      <el-button v-if="store.hasFilters" @click="resetFilters">清除筛选条件</el-button>
-      <el-button v-else-if="canImport" type="primary" @click="router.push({ name: 'import' })">
-        前往批量导入
-      </el-button>
+        </ArchiveDossierContent>
+        <div
+          v-else-if="readerState.kind === 'loading'"
+          class="dossier-reading-sheet dossier-loading"
+        >
+          <el-skeleton :rows="12" animated />
+        </div>
+        <el-result
+          v-else
+          class="dossier-reading-sheet"
+          icon="error"
+          title="卷宗读取失败"
+          :sub-title="readerState.message"
+        >
+          <template #extra>
+            <el-button
+              type="primary"
+              data-test="retry-active-dossier"
+              @click="dossier.select(readerState.personId)"
+            >
+              重新读取
+            </el-button>
+          </template>
+        </el-result>
+      </section>
+
+      <DossierOutline title="卷宗目录" :sections="DOSSIER_SECTIONS" />
     </div>
   </section>
 </template>

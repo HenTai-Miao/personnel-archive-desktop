@@ -63,8 +63,14 @@ export const usePersonListStore = defineStore("person-list", () => {
     await load(0)
   }
 
-  function select(rows: readonly PersonListItem[]): void {
-    selectedPersonIds.value = rows.map((row) => row.id)
+  function toggleSelected(personId: PersonId): void {
+    selectedPersonIds.value = selectedPersonIds.value.includes(personId)
+      ? selectedPersonIds.value.filter((candidate) => candidate !== personId)
+      : [...selectedPersonIds.value, personId]
+  }
+
+  function clearSelection(): void {
+    selectedPersonIds.value = []
   }
 
   async function exportSelected(): Promise<void> {
@@ -111,7 +117,8 @@ export const usePersonListStore = defineStore("person-list", () => {
     hasFilters,
     load,
     reset,
-    select,
+    toggleSelected,
+    clearSelection,
     exportSelected,
   }
 })
