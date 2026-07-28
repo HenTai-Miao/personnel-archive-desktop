@@ -192,16 +192,23 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
       await capture(page, "family-search-1440.png")
 
       await page.setViewportSize({ width: 1080, height: 800 })
-      const familyLeftEdges = await page
-        .locator(".family-search-paper, .family-result-sheet")
-        .evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().left)))
+      const familyPapers = page.locator(".family-search-paper, .family-result-sheet")
+      await expect(familyPapers).toHaveCount(2)
+      await expect(familyPapers.nth(0)).toBeVisible()
+      await expect(familyPapers.nth(1)).toBeVisible()
+      const familyLeftEdges = await familyPapers.evaluateAll((elements) =>
+        elements.map((element) => Math.round(element.getBoundingClientRect().left)),
+      )
       expect(new Set(familyLeftEdges).size).toBe(1)
       expect(
         await page.evaluate(() => {
           const browser = globalThis as unknown as {
             document: { documentElement: { clientWidth: number; scrollWidth: number } }
           }
-          return browser.document.documentElement.scrollWidth <= browser.document.documentElement.clientWidth
+          return (
+            browser.document.documentElement.scrollWidth <=
+            browser.document.documentElement.clientWidth
+          )
         }),
       ).toBe(true)
       await capture(page, "family-search-1080.png")
@@ -216,16 +223,26 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
       await capture(page, "import-1440.png")
 
       await page.setViewportSize({ width: 1080, height: 800 })
-      const importLeftEdges = await page
-        .locator(".import-picker-sheet, .import-current-sheet, .import-history-sheet")
-        .evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().left)))
+      const importPapers = page.locator(
+        ".import-picker-sheet, .import-current-sheet, .import-history-sheet",
+      )
+      await expect(importPapers).toHaveCount(3)
+      await expect(importPapers.nth(0)).toBeVisible()
+      await expect(importPapers.nth(1)).toBeVisible()
+      await expect(importPapers.nth(2)).toBeVisible()
+      const importLeftEdges = await importPapers.evaluateAll((elements) =>
+        elements.map((element) => Math.round(element.getBoundingClientRect().left)),
+      )
       expect(new Set(importLeftEdges).size).toBe(1)
       expect(
         await page.evaluate(() => {
           const browser = globalThis as unknown as {
             document: { documentElement: { clientWidth: number; scrollWidth: number } }
           }
-          return browser.document.documentElement.scrollWidth <= browser.document.documentElement.clientWidth
+          return (
+            browser.document.documentElement.scrollWidth <=
+            browser.document.documentElement.clientWidth
+          )
         }),
       ).toBe(true)
       await capture(page, "import-1080.png")
