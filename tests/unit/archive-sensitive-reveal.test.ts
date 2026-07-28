@@ -46,6 +46,7 @@ describe("ArchiveDetailPage sensitive reveal", () => {
 
     // Then
     expect(apiMocks.revealSensitiveValue).toHaveBeenCalledWith("7", "IDENTITY_CARD")
+    expect(wrapper.find(".dossier-reading-sheet").exists()).toBe(true)
     expect(wrapper.text()).toContain("123456789012345678")
     expect(wrapper.get('button[aria-label="隐藏完整身份证号码"]')).toBeTruthy()
     wrapper.unmount()

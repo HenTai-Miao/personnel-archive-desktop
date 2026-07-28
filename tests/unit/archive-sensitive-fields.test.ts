@@ -47,9 +47,6 @@ function mountIdentity(sensitiveValues: Readonly<Record<SensitiveField, string>>
   return mount(ArchiveIdentitySheet, {
     props: {
       person: PERSON_DETAIL_FIXTURE,
-      photoUrl: "",
-      photoLoading: false,
-      photoError: "",
       sensitiveValues,
       sensitiveLoading: null,
       sensitiveError: "",

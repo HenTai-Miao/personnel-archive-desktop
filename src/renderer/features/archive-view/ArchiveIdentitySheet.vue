@@ -1,19 +1,15 @@
-<!-- 档案首卷：展示照片、个人基本情况和当前任职字段。 -->
+<!-- 档案首卷：展示个人基本情况和当前任职字段；照片统一位于卷宗抬头。 -->
 <script setup lang="ts">
 import type { PersonDetail, SensitiveField } from "./schemas"
 
 defineProps<{
   readonly person: PersonDetail
-  readonly photoUrl: string
-  readonly photoLoading: boolean
-  readonly photoError: string
   readonly sensitiveValues: Readonly<Record<SensitiveField, string>>
   readonly sensitiveLoading: SensitiveField | null
   readonly sensitiveError: string
 }>()
 
 const emit = defineEmits<{
-  retryPhoto: []
   toggleSensitive: [field: SensitiveField]
 }>()
 </script>
@@ -22,24 +18,7 @@ const emit = defineEmits<{
   <article id="identity" class="paper-card dossier-section identity-sheet">
     <header class="dossier-section-heading"><h2>基本情况与任职信息</h2></header>
 
-    <div class="identity-layout">
-      <figure class="archive-photo">
-        <div class="photo-stage">
-          <img v-if="photoUrl" :src="photoUrl" :alt="`${person.name}的档案照片`" />
-          <div v-else-if="photoLoading" class="photo-placeholder photo-loading">正在读取照片</div>
-          <div v-else-if="photoError" class="photo-placeholder photo-error">
-            <span>照片读取失败</span>
-            <button type="button" @click="emit('retryPhoto')">重新读取</button>
-          </div>
-          <div v-else class="photo-placeholder">原表未附照片</div>
-        </div>
-        <figcaption v-if="person.photo">
-          原始照片 · {{ person.photo.widthPixels }} × {{ person.photo.heightPixels }} px ·
-          {{ (person.photo.byteSize / 1024).toFixed(1) }} KiB
-        </figcaption>
-      </figure>
-
-      <div class="identity-records">
+    <div class="identity-records">
         <section class="dossier-subsection">
           <header class="subsection-heading"><h3>个人基本信息</h3><span>敏感信息默认脱敏，查看操作将被记录</span></header>
           <dl class="dossier-field-grid">
@@ -100,7 +79,6 @@ const emit = defineEmits<{
             <div><dt>取得时间</dt><dd>{{ person.employment.titleOrSkillAcquiredDate || '—' }}</dd></div>
           </dl>
         </section>
-      </div>
     </div>
   </article>
 </template>
