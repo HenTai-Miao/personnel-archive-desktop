@@ -2,6 +2,8 @@
 
 Inherits all product, data, security, and API rules from `../AGENTS.md`. This directory owns the Windows desktop client; its technical project and package name is `personnel-archive-desktop`.
 
+This checkout is the isolated B-series redesign copy. It keeps the fixed product name and all client security and business contracts, while its authenticated shell, login, and business pages are being migrated to the `B 卷宗检阅桌` visual system. The sibling `../personnel-archive-desktop` remains the current packaged-client source until this copy is explicitly promoted.
+
 ## CURRENT CLIENT STATUS
 
 - Implemented routes are login, active archive list with selected batch ZIP export, family-member search, optional-field manual/automatic-folder batch import with the same duplicate-decision flow and persistent import-history panel, folder settings, and complete archive detail/single-export-open.
