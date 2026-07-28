@@ -3,6 +3,7 @@ import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { _electron as electron, expect, test } from "@playwright/test"
+import { E2E_PERSON_DETAIL } from "../support/e2e-person-fixture"
 
 test("deletes an imported archive with the recommended reason", async () => {
   const userDataDirectory = await mkdtemp(join(tmpdir(), "personnel-archive-deletion-e2e-"))
@@ -64,6 +65,19 @@ test("deletes an imported archive with the recommended reason", async () => {
           })
           return
         }
+        if (url.pathname === "/api/v1/persons/7" && request.method() === "GET") {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            json: {
+              ...E2E_PERSON_DETAIL,
+              employeeNo: "E-007",
+              name: "误导入测试档案",
+              photo: null,
+            },
+          })
+          return
+        }
         if (url.pathname === "/api/v1/persons/7/deletion" && request.method() === "POST") {
           submittedReasons.push(request.postDataJSON())
           active = false
@@ -77,6 +91,8 @@ test("deletes an imported archive with the recommended reason", async () => {
       await page.getByPlaceholder("请输入密码").fill("test-password")
       await page.getByRole("button", { name: "登录" }).click()
       await expect(page.getByText("误导入测试档案", { exact: true })).toBeVisible()
+      await page.locator('[data-test="activate-person-7"]').click()
+      await expect(page.locator(".dossier-reading-sheet")).toBeVisible()
 
       await page.getByRole("button", { name: "删除", exact: true }).click()
       const dialog = page.getByRole("dialog", { name: "删除档案" })
@@ -86,7 +102,7 @@ test("deletes an imported archive with the recommended reason", async () => {
 
       await expect(page.getByText("档案已删除", { exact: true })).toBeVisible()
       await expect(page.getByText("误导入测试档案", { exact: true })).toHaveCount(0)
-      await expect(page.getByText("还没有人员档案", { exact: true })).toBeVisible()
+      await expect(page.getByText("当前页没有档案", { exact: true }).first()).toBeVisible()
       expect(submittedReasons).toEqual([{ reason: "误导入" }])
       expect(pageErrors).toEqual([])
     } finally {

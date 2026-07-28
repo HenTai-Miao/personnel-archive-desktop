@@ -541,13 +541,6 @@
   padding-top: 150px;
 }
 
-@media (max-width: 1480px) {
-  .person-reading-layout {
-    grid-template-columns: 260px minmax(0, 1fr) 218px;
-    gap: 12px;
-  }
-}
-
 @media (max-width: 1320px) {
   .person-reading-layout {
     grid-template-areas: "index navigation" "index content";

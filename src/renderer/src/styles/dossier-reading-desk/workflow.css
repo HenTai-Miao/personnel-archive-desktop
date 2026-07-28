@@ -313,13 +313,6 @@
   color: var(--dossier-danger);
 }
 
-@media (max-width: 1480px) {
-  .import-reading-layout {
-    grid-template-columns: 260px minmax(0, 1fr) 218px;
-    gap: 12px;
-  }
-}
-
 @media (max-width: 1320px) {
   .import-reading-layout {
     grid-template-areas: "queue outline" "queue paper";

@@ -1,78 +1,15 @@
-/** 完整档案 Electron 端到端测试：登录、点击查看并读取所有分区与照片。 */
+/** 完整档案 Electron 端到端测试：显式激活卷宗、敏感字段读取和独立详情路由。 */
 import { mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { _electron as electron, expect, test } from "@playwright/test"
-import { dragLeft, elementWidth, expandToMaximum, roundedTop } from "../support/layout-geometry"
+import {
+  E2E_PERSON_DETAIL,
+  E2E_PERSON_LIST_ITEM,
+  ONE_PIXEL_PNG,
+} from "../support/e2e-person-fixture"
 
-const detailResponse = {
-  id: "7",
-  employeeNo: "E-001",
-  name: "测试甲",
-  identityCardMasked: "1234***********678",
-  personal: {
-    gender: "女",
-    birthDate: "2000-01-01",
-    nation: "汉族",
-    nativePlace: "湖南长沙",
-    birthPlace: "湖南长沙",
-    politicalStatus: "中共党员",
-    politicalJoinDate: "2021-07-01",
-    maritalStatus: "已婚",
-    healthStatus: "健康",
-    mailingAddress: "测试地址",
-    postalCode: "410000",
-    phoneNumberMasked: "1380****000",
-  },
-  employment: {
-    organization: "测试单位",
-    department: "测试部门",
-    workStartDate: "2020-01-01",
-    dispatchedToBiddingCompanyDate: "2021-01-01",
-    position: "测试职务",
-    titleOrSkill: "测试技能",
-    titleOrSkillAcquiredDate: "2022-01-01",
-  },
-  education: {
-    fullTime: {
-      institutionName: "全日制大学",
-      departmentAndMajor: "档案学",
-      educationLevel: "本科",
-      degreeName: "学士",
-    },
-    inService: {
-      institutionName: "在职大学",
-      departmentAndMajor: "管理学",
-      educationLevel: "研究生",
-      degreeName: "硕士",
-    },
-  },
-  mainEducation: [{ sortOrder: 1, leftText: "2020.09-2024.06", rightText: "示例大学" }],
-  workExperiences: [{ sortOrder: 1, leftText: "2024.07-至今", rightText: "覆盖版本" }],
-  rewardsPunishments: [{ sortOrder: 1, leftText: "2025.01", rightText: "测试奖励" }],
-  familyMembers: [
-    {
-      name: "测试乙",
-      relationship: "子女",
-      birthDate: "2000-07-23",
-      age: 25,
-      politicalStatus: "群众",
-      organizationAndPosition: "测试单位及职务",
-    },
-  ],
-  declaration: { signer: "测试甲", date: "2026-07-22" },
-  photo: {
-    mimeType: "image/png",
-    originalFilename: "fixture.png",
-    byteSize: 68,
-    widthPixels: 1,
-    heightPixels: 1,
-  },
-  archive: { templateVersion: "V1", snapshotVersion: 2, updatedAt: "2026-07-22T03:00:00Z" },
-} as const
-
-test("previews a masked dossier before opening the complete archive", async () => {
-  // Given
+test("reads a masked dossier at the B-series desk before opening its detail route", async () => {
   const userDataDirectory = await mkdtemp(join(tmpdir(), "personnel-archive-detail-e2e-"))
   try {
     const application = await electron.launch({
@@ -80,9 +17,11 @@ test("previews a masked dossier before opening the complete archive", async () =
     })
     try {
       const page = await application.firstWindow()
+      await page.setViewportSize({ width: 1440, height: 960 })
       const pageErrors: string[] = []
       const requestFailures: string[] = []
       const sensitiveValueRequests: string[] = []
+      let detailRequests = 0
       page.on("pageerror", (error) => pageErrors.push(error.message))
       page.on("requestfailed", (request) =>
         requestFailures.push(
@@ -111,18 +50,7 @@ test("previews a masked dossier before opening the complete archive", async () =
             status: 200,
             contentType: "application/json",
             json: {
-              content: [
-                {
-                  id: "7",
-                  employeeNo: "E-001",
-                  name: "测试甲",
-                  organization: "测试单位",
-                  department: "测试部门",
-                  position: "测试职务",
-                  titleOrSkill: "测试技能",
-                  updatedAt: "2026-07-22T03:00:00Z",
-                },
-              ],
+              content: [E2E_PERSON_LIST_ITEM],
               page: 0,
               size: 20,
               totalElements: 1,
@@ -131,113 +59,81 @@ test("previews a masked dossier before opening the complete archive", async () =
           })
           return
         }
-        if (path === "/api/v1/persons/7") {
+        if (path === "/api/v1/persons/7" && request.method() === "GET") {
+          detailRequests += 1
           await route.fulfill({
             status: 200,
             contentType: "application/json",
-            json: detailResponse,
+            json: E2E_PERSON_DETAIL,
           })
           return
         }
         if (path === "/api/v1/persons/7/sensitive-value") {
           const field = url.searchParams.get("field")
           sensitiveValueRequests.push(field ?? "missing-field")
-          switch (field) {
-            case "IDENTITY_CARD":
-              await route.fulfill({
-                status: 200,
-                contentType: "application/json",
-                headers: { "Cache-Control": "no-store" },
-                json: { value: "123456789012345678" },
-              })
-              return
-            case "PHONE_NUMBER":
-              await route.fulfill({
-                status: 200,
-                contentType: "application/json",
-                headers: { "Cache-Control": "no-store" },
-                json: { value: "13800138000" },
-              })
-              return
-            default:
-              await route.fulfill({ status: 400, contentType: "application/json", body: "{}" })
-              return
-          }
+          const value = field === "IDENTITY_CARD" ? "123456789012345678" : "13800138000"
+          await route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            headers: { "Cache-Control": "no-store" },
+            json: { value },
+          })
+          return
         }
         if (path === "/api/v1/persons/7/photo") {
-          const png = Buffer.from(
-            "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
-            "base64",
-          )
-          await route.fulfill({ status: 200, contentType: "image/png", body: png })
+          await route.fulfill({ status: 200, contentType: "image/png", body: ONE_PIXEL_PNG })
           return
         }
         await route.fulfill({ status: 404, contentType: "application/json", body: "{}" })
       })
 
-      // When
       await page.getByPlaceholder("请输入用户名").fill("admin")
       await page.getByPlaceholder("请输入密码").fill("test-password")
       await page.getByRole("button", { name: "登录" }).click()
-      const preview = page.locator('[data-test="person-preview"]')
-      const listCard = page.locator(".person-list-card")
-      await expect(preview).toHaveCount(0)
-      await expect(page.getByRole("button", { name: "预览", exact: true })).toHaveCount(0)
-      const initialListWidth = await elementWidth(listCard)
-      await page.getByText("测试甲", { exact: true }).first().click()
-      // Then
-      await expect(preview.getByRole("heading", { name: "测试甲", level: 2 })).toBeVisible()
-      await expect(preview.getByText("1234***********678", { exact: true })).toBeVisible()
-      await expect(preview.getByText("1380****000", { exact: true })).toBeVisible()
-      await expect(preview.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
-      await expect(preview.getByRole("button", { name: /显示完整/ })).toHaveCount(0)
-      await expect(page.getByRole("button", { name: "导出档案包" }).locator("span")).toHaveCSS(
-        "color",
-        "rgb(255, 255, 255)",
-      )
-      await expect(
-        preview.getByRole("button", { name: "下载并打开 Excel" }).locator("span"),
-      ).toHaveCSS("color", "rgb(255, 255, 255)")
-      await expect.poll(() => elementWidth(listCard)).toBeLessThan(initialListWidth - 200)
-      await expect.poll(async () => Math.round(await elementWidth(preview))).toBe(320)
-      const separator = page.getByRole("separator", { name: "调整卷宗预览宽度" })
-      await dragLeft(page, separator, 80)
-      await expect
-        .poll(async () => Number(await separator.getAttribute("aria-valuenow")))
-        .toBeGreaterThan(320)
-      await expandToMaximum(separator)
-      await expect.poll(() => elementWidth(preview)).toBeGreaterThan(520)
-      await expect.poll(() => elementWidth(listCard)).toBeLessThanOrEqual(2)
-      await page.getByRole("button", { name: "关闭卷宗预览" }).click()
-      await expect(preview).toHaveCount(0)
-      await expect
-        .poll(async () => Math.round(await elementWidth(listCard)))
-        .toBe(Math.round(initialListWidth))
-      await page.getByText("测试甲", { exact: true }).first().click()
-      await expect(preview).toBeVisible()
-      await expect.poll(() => elementWidth(preview)).toBeGreaterThan(520)
+
+      const readingLayout = page.locator(".person-reading-layout")
+      const dossierSheet = page.locator(".person-dossier-stage .dossier-reading-sheet")
+      await expect(readingLayout).toBeVisible()
+      await expect(page.locator(".dossier-selection-empty")).toContainText("请选择卷宗")
+      expect(detailRequests).toBe(0)
       expect(sensitiveValueRequests).toEqual([])
-      await preview.getByRole("button", { name: "查看完整档案" }).click()
-      await expect(page.getByRole("heading", { name: "测试甲", level: 1 })).toBeVisible()
+
+      await page.locator('[data-test="activate-person-7"]').click()
+
+      await expect(dossierSheet.getByRole("heading", { name: "测试甲", level: 1 })).toBeVisible()
+      await expect(dossierSheet.getByText("1234***********678", { exact: true })).toBeVisible()
+      await expect(dossierSheet.getByText("1380****000", { exact: true })).toBeVisible()
+      await expect(dossierSheet.getByText("全日制大学", { exact: true })).toBeVisible()
+      await expect(dossierSheet.getByText("覆盖版本", { exact: true })).toBeVisible()
+      await expect(dossierSheet.getByText("测试奖励", { exact: true })).toBeVisible()
+      await expect(dossierSheet.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
+      await expect(page.locator(".person-reading-layout .dossier-outline")).toBeVisible()
+      expect(detailRequests).toBe(1)
+      expect(sensitiveValueRequests).toEqual([])
+
+      await dossierSheet.getByRole("button", { name: "显示完整身份证号码" }).click()
+      await expect(dossierSheet.getByText("123456789012345678", { exact: true })).toBeVisible()
+      await dossierSheet.getByRole("button", { name: "隐藏完整身份证号码" }).click()
+      await expect(dossierSheet.getByText("123456789012345678", { exact: true })).toHaveCount(0)
+      await dossierSheet.getByRole("button", { name: "显示完整手机号码" }).click()
+      await expect(dossierSheet.getByText("13800138000", { exact: true })).toBeVisible()
+      expect(sensitiveValueRequests).toEqual(["IDENTITY_CARD", "PHONE_NUMBER"])
+
+      const listUrl = page.url()
+      await page
+        .locator(".person-reading-layout .dossier-outline")
+        .getByRole("button", { name: /学历与教育/ })
+        .click()
+      await expect(page.locator("#education")).toBeInViewport()
+      expect(page.url()).toBe(listUrl)
+
+      await dossierSheet.getByRole("button", { name: "独立查看" }).click()
+      await expect(page).toHaveURL(/#\/persons\/7$/)
+      await expect(page.locator(".detail-reading-layout .dossier-reading-sheet")).toBeVisible()
       await expect(page.getByRole("heading", { name: "基本情况与任职信息" })).toBeVisible()
-      await expect(page.getByText("全日制大学", { exact: true })).toBeVisible()
-      await expect(page.getByText("覆盖版本", { exact: true })).toBeVisible()
-      await expect(page.getByText("测试奖励", { exact: true })).toBeVisible()
-      await expect(page.getByText("群众", { exact: true })).toBeVisible()
       await expect(page.getByText("1234***********678", { exact: true })).toBeVisible()
-      await expect(page.getByText("1380****000", { exact: true })).toBeVisible()
-      await page.getByRole("button", { name: "显示完整身份证号码" }).click()
-      await expect(page.getByText("123456789012345678", { exact: true })).toBeVisible()
-      await page.getByRole("button", { name: "隐藏完整身份证号码" }).click()
-      await expect(page.getByText("123456789012345678", { exact: true })).toHaveCount(0)
-      await page.getByRole("button", { name: "显示完整手机号码" }).click()
-      await expect(page.getByText("13800138000", { exact: true })).toBeVisible()
-      await expect(page.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
-      const detailUrl = page.url()
-      const workspaceTop = await roundedTop(page.locator(".paper-workspace"))
-      await page.getByRole("button", { name: "学历教育", exact: true }).click()
-      await expect.poll(() => roundedTop(page.locator(".dossier-index"))).toBe(workspaceTop)
-      expect(page.url()).toBe(detailUrl)
+      await expect(page.getByText("13800138000", { exact: true })).toHaveCount(0)
+      expect(detailRequests).toBe(2)
       expect(pageErrors).toEqual([])
       expect(requestFailures).toEqual([])
     } finally {

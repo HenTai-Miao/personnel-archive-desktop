@@ -9,12 +9,14 @@
 
 .folder-reading-layout {
   display: grid;
+  grid-template-areas: "paper navigation";
   grid-template-columns: minmax(0, 1fr) 238px;
   gap: 16px;
   align-items: start;
 }
 
 .folder-settings-sheet {
+  grid-area: paper;
   min-width: 0;
   overflow: hidden;
   background: #fff;
@@ -254,6 +256,7 @@
 
 @media (max-width: 1320px) {
   .folder-reading-layout {
+    grid-template-areas: "navigation" "paper";
     grid-template-columns: minmax(0, 1fr);
   }
 

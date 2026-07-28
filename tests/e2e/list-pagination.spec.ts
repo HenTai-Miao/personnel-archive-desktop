@@ -76,7 +76,7 @@ test("shows 20 personnel rows per page and loads the next server page", async ()
       await expect(page.getByText("分页人员21", { exact: true })).toHaveCount(0)
 
       // When
-      await page.locator(".person-list-card .el-pagination .btn-next").click()
+      await page.locator(".person-record-index .el-pagination .btn-next").click()
 
       // Then
       await expect(page.getByText("分页人员21", { exact: true })).toBeVisible()
