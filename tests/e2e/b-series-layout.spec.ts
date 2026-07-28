@@ -190,6 +190,17 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
       await expect(page.locator(".dossier-reading-sheet")).toBeVisible()
       await expect(page.locator(".person-reading-layout .dossier-outline")).toHaveCount(0)
       await expect(page.locator(".person-reading-layout .dossier-mobile-index")).toHaveCount(0)
+      const narrowColumns = await page.locator(".person-reading-layout").evaluate((element) => {
+        const view = element.ownerDocument.defaultView
+        if (view === null) throw new TypeError("reading desk has no browser view")
+        return view
+          .getComputedStyle(element)
+          .gridTemplateColumns.split(" ")
+          .map((value: string) => Number.parseFloat(value))
+      })
+      expect(narrowColumns).toHaveLength(2)
+      expect(Math.round(narrowColumns[0] ?? 0)).toBe(240)
+      expect((narrowColumns[1] ?? 0) > 0).toBe(true)
       await expectWorkspaceHasNoHorizontalOverflow(page)
       await capture(page, "personnel-1080.png")
 
