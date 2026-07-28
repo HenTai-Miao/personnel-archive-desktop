@@ -9,3 +9,4 @@ test-results/
 *.iml
 .DS_Store
 *.log
+output/
