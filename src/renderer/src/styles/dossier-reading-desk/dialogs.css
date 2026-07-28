@@ -1,0 +1,108 @@
+/* 弹窗遵循同一白纸/钴蓝层级，不改变确认、禁用与失败处理行为。 */
+.el-dialog {
+  overflow: hidden;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+  box-shadow: 0 24px 70px rgb(20 25 40 / 18%);
+}
+
+.el-dialog__header {
+  margin: 0;
+  padding: 20px 24px 17px;
+  background: linear-gradient(110deg, var(--dossier-primary-wash), #fff 58%);
+  border-top: 3px solid var(--dossier-primary);
+  border-bottom: 1px solid var(--dossier-line-soft);
+}
+
+.el-dialog__title {
+  color: var(--dossier-ink);
+  font-size: 17px;
+  font-weight: 680;
+}
+
+.el-dialog__body {
+  padding: 22px 24px;
+}
+
+.el-dialog__footer {
+  padding: 14px 24px 18px;
+  background: #fafbfc;
+  border-top: 1px solid var(--dossier-line-soft);
+}
+
+.duplicate-sheet dl {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  margin: 0 0 18px;
+  overflow: hidden;
+  border: 1px solid var(--dossier-line);
+  border-radius: 9px;
+}
+
+.duplicate-sheet dl > div {
+  min-height: 70px;
+  padding: 11px 13px;
+  border-right: 1px solid var(--dossier-line-soft);
+  border-bottom: 1px solid var(--dossier-line-soft);
+}
+
+.duplicate-sheet dl > div:nth-child(2n) {
+  border-right: 0;
+}
+
+.duplicate-sheet dt {
+  color: var(--dossier-faint);
+  font-size: 10.5px;
+}
+
+.duplicate-sheet dd {
+  margin: 4px 0 0;
+  color: var(--dossier-ink);
+  font-size: 13px;
+  font-weight: 550;
+}
+
+.duplicate-sheet > .el-alert {
+  margin-bottom: 16px;
+}
+
+.decision-options {
+  display: grid;
+  gap: 9px;
+}
+
+.decision-options .el-radio.is-bordered {
+  width: 100%;
+  height: auto;
+  min-height: 48px;
+  margin: 0;
+  padding: 10px 13px;
+  border-radius: 8px;
+}
+
+.decision-options .el-radio.is-checked {
+  background: var(--dossier-primary-wash);
+  border-color: var(--dossier-primary-line);
+}
+
+.el-message-box {
+  overflow: hidden;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+  box-shadow: 0 24px 70px rgb(20 25 40 / 18%);
+}
+
+.el-message-box__header {
+  padding: 20px 22px 16px;
+  background: var(--dossier-primary-wash);
+  border-top: 3px solid var(--dossier-primary);
+  border-bottom: 1px solid var(--dossier-line-soft);
+}
+
+.el-message-box__content {
+  padding: 20px 22px;
+}
+
+.el-message-box__btns {
+  padding: 12px 22px 18px;
+}

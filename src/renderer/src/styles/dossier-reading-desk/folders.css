@@ -1,0 +1,273 @@
+/* 文件夹设置：本地路径授权、工作簿流向和安全规则。 */
+.folder-settings-page {
+  max-width: 1320px;
+}
+
+.folder-settings-alert {
+  margin-bottom: 12px;
+}
+
+.folder-reading-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 238px;
+  gap: 16px;
+  align-items: start;
+}
+
+.folder-settings-sheet {
+  min-width: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+  box-shadow: 0 14px 38px rgb(20 25 40 / 5%);
+}
+
+.folder-route-hero {
+  display: grid;
+  min-height: 230px;
+  grid-template-columns: minmax(0, 1fr) minmax(330px, 0.9fr);
+  gap: 32px;
+  align-items: center;
+  padding: 32px 38px;
+  background:
+    linear-gradient(112deg, var(--dossier-primary-wash), rgb(255 255 255 / 98%) 55%),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgb(3 78 214 / 2.5%) 48px);
+  border-top: 3px solid var(--dossier-primary);
+  border-bottom: 1px solid var(--dossier-line);
+}
+
+.folder-route-kicker {
+  color: var(--dossier-primary);
+  font: 650 10px var(--dossier-mono);
+  letter-spacing: 0.12em;
+}
+
+.folder-route-hero h2 {
+  margin: 7px 0 0;
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.folder-route-hero p {
+  max-width: 520px;
+  margin: 8px 0 0;
+  color: var(--dossier-subtle);
+  font-size: 12px;
+}
+
+.folder-route {
+  display: grid;
+  grid-template-columns: 1fr 92px 1fr;
+  align-items: center;
+}
+
+.route-node {
+  display: grid;
+  min-height: 94px;
+  place-content: center;
+  padding: 12px;
+  color: var(--dossier-primary);
+  background: #fff;
+  border: 1px solid var(--dossier-primary-line);
+  border-radius: 11px;
+  box-shadow: 0 8px 20px rgb(20 25 40 / 5%);
+  text-align: center;
+}
+
+.route-node-label {
+  font: 9.5px var(--dossier-mono);
+  letter-spacing: 0.07em;
+}
+
+.route-node > strong {
+  margin-top: 4px;
+  color: var(--dossier-ink);
+  font-size: 13px;
+}
+
+.route-node.is-archive {
+  color: var(--dossier-success);
+  border-color: rgb(21 128 61 / 23%);
+}
+
+.route-line {
+  position: relative;
+  height: 1px;
+  background: var(--dossier-primary-line);
+}
+
+.route-line::after {
+  position: absolute;
+  top: -4px;
+  right: 0;
+  border-top: 4px solid transparent;
+  border-bottom: 4px solid transparent;
+  border-left: 6px solid var(--dossier-primary);
+  content: "";
+}
+
+.route-line-label {
+  position: absolute;
+  top: -23px;
+  left: 50%;
+  width: 90px;
+  color: var(--dossier-faint);
+  font-size: 9px;
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.folder-setting-section {
+  display: grid;
+  min-height: 214px;
+  grid-template-columns: 54px minmax(0, 1fr) auto;
+  gap: 19px;
+  align-items: center;
+  padding: 28px 38px;
+  border-bottom: 1px solid var(--dossier-line);
+  scroll-margin-top: 12px;
+}
+
+.folder-setting-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  color: var(--dossier-primary);
+  background: var(--dossier-primary-wash);
+  border: 1px solid var(--dossier-primary-line);
+  border-radius: 12px;
+  font-size: 23px;
+}
+
+.folder-setting-icon.archive {
+  color: var(--dossier-success);
+  background: rgb(21 128 61 / 6%);
+  border-color: rgb(21 128 61 / 18%);
+}
+
+.folder-setting-copy {
+  min-width: 0;
+}
+
+.folder-section-kicker {
+  color: var(--dossier-primary);
+  font: 600 9.5px var(--dossier-mono);
+  letter-spacing: 0.1em;
+}
+
+.folder-setting-copy h2,
+.folder-security-section h2 {
+  margin: 4px 0 0;
+  font-size: 17px;
+  font-weight: 680;
+}
+
+.folder-setting-copy > p {
+  margin: 6px 0 14px;
+  color: var(--dossier-subtle);
+  font-size: 11.5px;
+}
+
+.folder-setting-copy label {
+  display: grid;
+  gap: 5px;
+}
+
+.folder-setting-copy label small {
+  color: var(--dossier-faint);
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.folder-setting-copy .el-input__inner {
+  color: var(--dossier-subtle);
+  font: 11px var(--dossier-mono);
+}
+
+.folder-setting-section > .el-button {
+  align-self: end;
+  margin-bottom: 1px;
+}
+
+.folder-security-section {
+  display: grid;
+  min-height: 185px;
+  grid-template-columns: minmax(180px, 0.8fr) minmax(0, 1.2fr);
+  gap: 20px 34px;
+  align-items: start;
+  padding: 28px 38px 32px;
+  background: #fafbfc;
+  scroll-margin-top: 12px;
+}
+
+.folder-security-section > strong {
+  justify-self: end;
+  padding: 5px 10px;
+  color: var(--dossier-warning);
+  background: rgb(168 92 0 / 6%);
+  border: 1px solid rgb(168 92 0 / 16%);
+  border-radius: 999px;
+  font-size: 10.5px;
+  font-weight: 650;
+}
+
+.folder-security-section.ready > strong {
+  color: var(--dossier-success);
+  background: rgb(21 128 61 / 6%);
+  border-color: rgb(21 128 61 / 16%);
+}
+
+.folder-security-section ul {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.folder-security-section li {
+  position: relative;
+  min-height: 54px;
+  padding: 10px 11px 10px 28px;
+  color: var(--dossier-subtle);
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: 8px;
+  font-size: 10.5px;
+}
+
+.folder-security-section li::before {
+  position: absolute;
+  top: 13px;
+  left: 11px;
+  width: 8px;
+  height: 4px;
+  border-bottom: 2px solid var(--dossier-success);
+  border-left: 2px solid var(--dossier-success);
+  content: "";
+  transform: rotate(-45deg);
+}
+
+@media (max-width: 1320px) {
+  .folder-reading-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .folder-reading-layout .dossier-outline {
+    display: none;
+  }
+
+  .folder-reading-layout .dossier-mobile-index {
+    display: flex;
+  }
+}
+
+@media (max-width: 1160px) {
+  .folder-route-hero {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

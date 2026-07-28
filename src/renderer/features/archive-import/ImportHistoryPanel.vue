@@ -59,11 +59,15 @@ function formatTimestamp(value: string): string {
 </script>
 
 <template>
-  <section class="paper-card result-card import-history-card" data-test="import-history">
-    <div class="table-heading">
-      <div><small class="section-eyebrow">处理轨迹</small><strong>导入记录</strong><span>记录保存在数据服务中，刷新或重新打开软件仍可查询</span></div>
+  <section class="import-history-sheet" data-test="import-history">
+    <header class="workflow-sheet-heading history-heading">
+      <div>
+        <span>PERMANENT HISTORY</span>
+        <h2>永久历史 · 导入记录</h2>
+        <small>记录保存在数据服务中，刷新或重新打开软件仍可查询</small>
+      </div>
       <el-button :loading="loading" @click="load(page)">刷新记录</el-button>
-    </div>
+    </header>
 
     <div v-if="loading" class="list-loading" role="status">
       <span>正在加载导入记录…</span>
@@ -88,7 +92,7 @@ function formatTimestamp(value: string): string {
       </el-table-column>
       <el-table-column prop="message" label="处理说明" min-width="240" show-overflow-tooltip />
     </el-table>
-    <div v-else-if="loaded" class="empty-sheet">
+    <div v-else-if="loaded" class="workflow-empty">
       <span>暂无导入记录</span><p>完成一次批量导入后，逐文件处理结果会保存在这里。</p>
     </div>
 

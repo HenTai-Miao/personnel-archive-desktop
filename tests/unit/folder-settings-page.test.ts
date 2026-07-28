@@ -44,6 +44,11 @@ describe("FolderSettingsPage", () => {
     const wrapper = mount(FolderSettingsPage, { global: { plugins: [ElementPlus] } })
     await flushPromises()
 
+    expect(wrapper.find(".folder-reading-layout").exists()).toBe(true)
+    expect(wrapper.find("#folder-pending").text()).toContain("待上传文件夹")
+    expect(wrapper.find("#folder-archive").text()).toContain("上传完成归档文件夹")
+    expect(wrapper.find(".folder-outline").text()).toContain("安全规则")
+
     // When
     await wrapper.get('[data-test="choose-archive-folder"]').trigger("click")
     await flushPromises()

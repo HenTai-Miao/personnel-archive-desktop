@@ -116,7 +116,9 @@ describe("ImportPage history", () => {
 
     // Then
     expect(fetchImportHistory).toHaveBeenCalledWith({ page: 0, size: 20 })
+    expect(wrapper.find("#import-history").exists()).toBe(true)
     expect(wrapper.text()).toContain("导入记录")
+    expect(wrapper.text()).toContain("永久历史")
     expect(wrapper.text()).toContain("重新打开软件仍可查询")
     expect(wrapper.get('[data-test="history-records"]').text()).toContain(
       "档案甲.xlsx|测试管理员|档案模板结构不正确",

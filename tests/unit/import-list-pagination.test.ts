@@ -106,6 +106,10 @@ describe("ImportPage list pagination", () => {
     const wrapper = mountImportPage()
 
     // Then
+    expect(wrapper.find(".import-reading-layout").exists()).toBe(true)
+    expect(wrapper.find("#import-queue").text()).toContain("待处理文件")
+    expect(wrapper.find("#import-current").text()).toContain("当前批次")
+    expect(wrapper.find(".import-outline").text()).toContain("永久历史")
     const results = wrapper.get('[data-test="visible-results"]')
     expect(results.attributes("data-count")).toBe("20")
     expect(results.text()).toContain("结果-20.xlsx")

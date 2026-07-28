@@ -1,7 +1,8 @@
-<!-- 批量导入页面：呈现手动队列、逐文件结果及需要用户明确确认的重复档案决定。 -->
+<!-- B 批量导入页：左侧待处理索引、中间批次纸页、右侧永久历史目录。 -->
 <script setup lang="ts">
 import { ElMessageBox } from "element-plus"
 import { computed, ref } from "vue"
+import DossierOutline from "@/shared/components/DossierOutline.vue"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import { useLocalListPagination } from "@/shared/components/list-pagination"
 import type { WorkbookSource } from "./archive-policy"
@@ -10,6 +11,12 @@ import type { ImportRow, LocalFileState } from "./queue-model"
 import type { ImportDecision } from "./schemas"
 import { importBatchSummary, importStatusMeta } from "./status-presentation"
 import { useImportStore } from "./store"
+
+const IMPORT_SECTIONS = [
+  { id: "import-queue", label: "待处理文件", code: "01" },
+  { id: "import-current", label: "当前批次", code: "02" },
+  { id: "import-history", label: "永久历史", code: "03" },
+] as const
 
 const store = useImportStore()
 const queuedPagination = useLocalListPagination(computed(() => store.queuedWorkbooks))
@@ -100,90 +107,201 @@ async function submit(): Promise<void> {
 </script>
 
 <template>
-  <section class="page-stack">
-    <header class="page-header"><div><p class="page-eyebrow">工作簿接收 / 逐份处理</p><h1>批量导入</h1><p class="page-summary">统一处理手动文件与自动扫描队列，并逐份确认重复档案。</p></div></header>
-
-    <div class="paper-card import-picker">
+  <section class="page-stack import-page">
+    <header class="page-header">
       <div>
-        <strong>选择文件</strong>
-        <p>不设必填字段；仅支持 .xlsx，每批最多 100 份，单份不超过 12 MiB。</p>
+        <p class="page-eyebrow">WORKBOOK INTAKE / 工作簿接收</p>
+        <h1>批量导入</h1>
+        <p class="page-summary">统一处理手动文件与自动扫描队列，并逐份确认重复档案。</p>
       </div>
-      <div class="picker-actions">
-        <el-button :disabled="store.loading || store.scanning" @click="store.chooseFiles">选择文件</el-button>
-        <el-button type="primary" :loading="store.loading" :disabled="store.scanning || store.queuedWorkbooks.length === 0" @click="store.precheck">上传并检查重复档案</el-button>
-      </div>
-      <div v-if="store.queuedWorkbooks.length" class="file-chips">
-        <div v-for="queued in queuedPagination.visibleItems.value" :key="queued.id" class="queued-file-chip">
-          <el-tag :type="queued.source.kind === 'AUTO' ? 'warning' : 'info'" effect="plain">{{ sourceLabel(queued.source) }}</el-tag>
-          <span>{{ queued.file.name }}</span>
-        </div>
-      </div>
-      <FixedListPagination
-        :page="queuedPagination.page.value"
-        :total="store.queuedWorkbooks.length"
-        @change="queuedPagination.setPage"
-      />
-    </div>
+    </header>
 
     <el-alert
       v-if="store.scanMessage"
+      class="import-alert"
       :title="store.scanMessage"
       :type="store.scanState === 'READY' ? 'info' : 'warning'"
       :closable="false"
       show-icon
     />
-    <el-alert v-if="store.message" :title="store.message" :type="store.items.some((item) => item.status === 'FAILED') ? 'warning' : 'info'" :closable="false" show-icon />
+    <el-alert
+      v-if="store.message"
+      class="import-alert"
+      :title="store.message"
+      :type="store.items.some((item) => item.status === 'FAILED') ? 'warning' : 'info'"
+      :closable="false"
+      show-icon
+    />
 
-    <div v-if="store.items.length" class="paper-card result-card">
-      <div class="table-heading">
-        <div><strong>处理结果</strong><span>{{ completedCount }} / {{ store.items.length }} 已处理</span></div>
-        <el-tag :type="currentBatchSummary.type">
-          {{ currentBatchSummary.kind === 'PENDING' ? `${store.pendingCount} 项待确认` : currentBatchSummary.label }}
-        </el-tag>
+    <div class="import-reading-layout">
+      <aside id="import-queue" class="import-queue-index">
+        <header class="queue-heading">
+          <div>
+            <span>INTAKE QUEUE</span>
+            <h2>待处理文件</h2>
+            <small>{{ store.queuedWorkbooks.length }} FILES</small>
+          </div>
+          <p>仅支持 .xlsx；每批最多 100 份，单份不超过 12 MiB。</p>
+        </header>
+        <div class="picker-actions">
+          <el-button :disabled="store.loading || store.scanning" @click="store.chooseFiles">
+            选择文件
+          </el-button>
+          <el-button
+            type="primary"
+            :loading="store.loading"
+            :disabled="store.scanning || store.queuedWorkbooks.length === 0"
+            @click="store.precheck"
+          >
+            上传并检查
+          </el-button>
+        </div>
+        <div v-if="store.queuedWorkbooks.length" class="queue-records">
+          <div
+            v-for="queued in queuedPagination.visibleItems.value"
+            :key="queued.id"
+            class="queued-file-chip"
+          >
+            <el-tag
+              :type="queued.source.kind === 'AUTO' ? 'warning' : 'info'"
+              effect="plain"
+            >
+              {{ sourceLabel(queued.source) }}
+            </el-tag>
+            <span :title="queued.file.name">{{ queued.file.name }}</span>
+          </div>
+        </div>
+        <div v-else class="queue-empty">
+          <strong>当前没有待处理文件</strong>
+          <span>手动选择文件，或将工作簿放入待上传目录。</span>
+        </div>
+        <FixedListPagination
+          :page="queuedPagination.page.value"
+          :total="store.queuedWorkbooks.length"
+          @change="queuedPagination.setPage"
+        />
+      </aside>
+
+      <div class="import-paper-stack">
+        <section id="import-current" class="dossier-workflow-sheet">
+          <header class="workflow-sheet-heading">
+            <div>
+              <span>CURRENT BATCH</span>
+              <h2>当前批次</h2>
+              <small>{{ completedCount }} / {{ store.items.length }} 已处理</small>
+            </div>
+            <el-tag v-if="store.items.length" :type="currentBatchSummary.type">
+              {{ currentBatchSummary.kind === 'PENDING' ? `${store.pendingCount} 项待确认` : currentBatchSummary.label }}
+            </el-tag>
+          </header>
+          <el-table v-if="store.items.length" :data="resultPagination.visibleItems.value" stripe>
+            <el-table-column
+              prop="fileName"
+              label="工作簿"
+              min-width="240"
+              show-overflow-tooltip
+            />
+            <el-table-column label="来源" width="105">
+              <template #default="scope">
+                <el-tag
+                  effect="plain"
+                  :type="scope.row.source.kind === 'AUTO' ? 'warning' : 'info'"
+                >
+                  {{ sourceLabel(scope.row.source) }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column label="状态" width="110">
+              <template #default="scope">
+                <el-tag :type="importStatusMeta(scope.row.status).type">
+                  {{ importStatusMeta(scope.row.status).label }}
+                </el-tag>
+              </template>
+            </el-table-column>
+            <el-table-column prop="message" label="处理说明" min-width="220" />
+            <el-table-column label="本地文件" min-width="210">
+              <template #default="scope">
+                <span :class="{ 'archive-error': scope.row.localState.kind === 'AUTO_MOVE_FAILED' }">
+                  {{ localStateText(scope.row.localState) }}
+                </span>
+              </template>
+            </el-table-column>
+            <el-table-column label="操作" width="120" fixed="right">
+              <template #default="scope">
+                <el-button
+                  v-if="scope.row.status === 'PENDING_DECISION'"
+                  type="primary"
+                  link
+                  @click="openDecision(scope.row)"
+                >
+                  确认处理
+                </el-button>
+                <el-button
+                  v-else-if="scope.row.localState.kind === 'AUTO_MOVE_FAILED'"
+                  type="danger"
+                  link
+                  :loading="store.loading"
+                  @click="store.retryArchive(scope.row.itemId)"
+                >
+                  重试归档
+                </el-button>
+                <span v-else>—</span>
+              </template>
+            </el-table-column>
+          </el-table>
+          <div v-else class="workflow-empty">
+            <strong>当前没有处理中的批次</strong>
+            <span>提交左侧待处理文件后，逐份结果会显示在这里。</span>
+          </div>
+          <FixedListPagination
+            :page="resultPagination.page.value"
+            :total="store.items.length"
+            @change="resultPagination.setPage"
+          />
+        </section>
+
+        <ImportHistoryPanel id="import-history" :refresh-key="historyRefreshKey" />
       </div>
-      <el-table :data="resultPagination.visibleItems.value" stripe>
-        <el-table-column prop="fileName" label="工作簿" min-width="240" show-overflow-tooltip />
-        <el-table-column label="来源" width="105">
-          <template #default="scope"><el-tag effect="plain" :type="scope.row.source.kind === 'AUTO' ? 'warning' : 'info'">{{ sourceLabel(scope.row.source) }}</el-tag></template>
-        </el-table-column>
-        <el-table-column label="状态" width="110">
-          <template #default="scope"><el-tag :type="importStatusMeta(scope.row.status).type">{{ importStatusMeta(scope.row.status).label }}</el-tag></template>
-        </el-table-column>
-        <el-table-column prop="message" label="处理说明" min-width="220" />
-        <el-table-column label="本地文件" min-width="210">
-          <template #default="scope">
-            <span :class="{ 'archive-error': scope.row.localState.kind === 'AUTO_MOVE_FAILED' }">{{ localStateText(scope.row.localState) }}</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="120" fixed="right">
-          <template #default="scope">
-            <el-button v-if="scope.row.status === 'PENDING_DECISION'" type="primary" link @click="openDecision(scope.row)">确认处理</el-button>
-            <el-button v-else-if="scope.row.localState.kind === 'AUTO_MOVE_FAILED'" type="danger" link :loading="store.loading" @click="store.retryArchive(scope.row.itemId)">重试归档</el-button>
-            <span v-else>—</span>
-          </template>
-        </el-table-column>
-      </el-table>
-      <FixedListPagination
-        :page="resultPagination.page.value"
-        :total="store.items.length"
-        @change="resultPagination.setPage"
-      />
+
+      <DossierOutline class="import-outline" title="批次目录" :sections="IMPORT_SECTIONS" />
     </div>
 
-    <div v-else-if="!store.loading" class="empty-sheet"><span>当前没有处理中的批次</span><p>手动选择文件，或把工作簿放入待上传文件夹。</p></div>
-
-    <ImportHistoryPanel :refresh-key="historyRefreshKey" />
-
-    <el-dialog v-model="dialogVisible" title="发现重复档案" width="560px" :close-on-click-modal="false">
+    <el-dialog
+      v-model="dialogVisible"
+      class="duplicate-decision-dialog"
+      title="发现重复档案"
+      width="560px"
+      :close-on-click-modal="false"
+    >
       <div v-if="activeItem?.duplicate" class="duplicate-sheet">
-        <dl><div><dt>姓名</dt><dd>{{ activeItem.duplicate.personName }}</dd></div><div><dt>证件尾号</dt><dd>**** {{ activeItem.duplicate.identityCardLastFour }}</dd></div><div><dt>原人员编号</dt><dd>{{ activeItem.duplicate.existingEmployeeNo || '未填写' }}</dd></div><div><dt>新人员编号</dt><dd>{{ activeItem.duplicate.incomingEmployeeNo || '未填写' }}</dd></div><div><dt>原档案更新时间</dt><dd>{{ formatTimestamp(activeItem.duplicate.existingUpdatedAt) }}</dd></div></dl>
-        <el-alert v-if="store.staleItemId === activeItem.itemId" title="档案状态已变化。本次决定未生效，请关闭窗口后重新上传预检。" type="warning" :closable="false" />
+        <dl>
+          <div><dt>姓名</dt><dd>{{ activeItem.duplicate.personName }}</dd></div>
+          <div><dt>证件尾号</dt><dd>**** {{ activeItem.duplicate.identityCardLastFour }}</dd></div>
+          <div><dt>原人员编号</dt><dd>{{ activeItem.duplicate.existingEmployeeNo || '未填写' }}</dd></div>
+          <div><dt>新人员编号</dt><dd>{{ activeItem.duplicate.incomingEmployeeNo || '未填写' }}</dd></div>
+          <div><dt>原档案更新时间</dt><dd>{{ formatTimestamp(activeItem.duplicate.existingUpdatedAt) }}</dd></div>
+        </dl>
+        <el-alert
+          v-if="store.staleItemId === activeItem.itemId"
+          title="档案状态已变化。本次决定未生效，请关闭窗口后重新上传预检。"
+          type="warning"
+          :closable="false"
+        />
         <el-radio-group v-model="decision" class="decision-options">
           <el-radio value="SKIP" border>跳过，不变更现有档案（默认）</el-radio>
           <el-radio value="OVERWRITE" border>覆盖，设为新的有效档案</el-radio>
         </el-radio-group>
       </div>
-      <template #footer><el-button @click="dialogVisible = false">取消</el-button><el-button :type="decision === 'OVERWRITE' ? 'danger' : 'primary'" :loading="store.loading" @click="submit">{{ decision === 'SKIP' ? '确认跳过' : '继续覆盖' }}</el-button></template>
+      <template #footer>
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button
+          :type="decision === 'OVERWRITE' ? 'danger' : 'primary'"
+          :loading="store.loading"
+          @click="submit"
+        >
+          {{ decision === 'SKIP' ? '确认跳过' : '继续覆盖' }}
+        </el-button>
+      </template>
     </el-dialog>
   </section>
 </template>

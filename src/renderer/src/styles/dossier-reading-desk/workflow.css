@@ -1,0 +1,361 @@
+/* 批量导入：待处理索引、当前批次与服务端永久历史。 */
+.import-page {
+  max-width: 1640px;
+}
+
+.import-alert {
+  margin-bottom: 10px;
+}
+
+.import-reading-layout {
+  display: grid;
+  grid-template-areas: "queue paper outline";
+  grid-template-columns: 286px minmax(0, 1fr) 238px;
+  gap: 16px;
+  align-items: start;
+}
+
+.import-queue-index {
+  position: sticky;
+  top: 0;
+  grid-area: queue;
+  display: flex;
+  min-width: 0;
+  min-height: 610px;
+  max-height: calc(100vh - 112px);
+  overflow: hidden;
+  flex-direction: column;
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+  box-shadow: 0 10px 30px rgb(20 25 40 / 4%);
+  scroll-margin-top: 12px;
+}
+
+.import-paper-stack {
+  grid-area: paper;
+  display: grid;
+  min-width: 0;
+  gap: 16px;
+}
+
+.import-reading-layout > .import-outline {
+  grid-area: outline;
+}
+
+.queue-heading {
+  flex: 0 0 auto;
+  padding: 17px 17px 14px;
+  border-bottom: 1px solid var(--dossier-line-soft);
+}
+
+.queue-heading > div {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 4px 10px;
+}
+
+.queue-heading span {
+  grid-column: 1 / -1;
+  color: var(--dossier-primary);
+  font: 9.5px var(--dossier-mono);
+  letter-spacing: 0.11em;
+}
+
+.queue-heading h2 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 680;
+}
+
+.queue-heading small {
+  color: var(--dossier-faint);
+  font: 9.5px var(--dossier-mono);
+}
+
+.queue-heading p {
+  margin: 10px 0 0;
+  color: var(--dossier-faint);
+  font-size: 10.5px;
+  line-height: 1.55;
+}
+
+.import-queue-index > .picker-actions {
+  display: grid;
+  flex: 0 0 auto;
+  grid-template-columns: 1fr 1fr;
+  gap: 7px;
+  padding: 12px 14px;
+  background: #fafbfe;
+  border-bottom: 1px solid var(--dossier-line);
+}
+
+.import-queue-index > .picker-actions .el-button {
+  min-width: 0;
+  margin: 0;
+  padding-inline: 8px;
+}
+
+.queue-records {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 7px;
+  scrollbar-color: #dce1eb transparent;
+  scrollbar-width: thin;
+}
+
+.queued-file-chip {
+  display: grid;
+  min-height: 53px;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+  padding: 8px 9px;
+  background: #fff;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+
+.queued-file-chip + .queued-file-chip {
+  margin-top: 3px;
+}
+
+.queued-file-chip:hover {
+  background: #fafbfc;
+  border-color: var(--dossier-line-soft);
+}
+
+.queued-file-chip .el-tag {
+  height: 22px;
+  padding-inline: 6px;
+  font-size: 9px;
+}
+
+.queued-file-chip > span {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dossier-subtle);
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.queue-empty {
+  display: grid;
+  min-height: 0;
+  flex: 1 1 auto;
+  place-content: center;
+  padding: 24px;
+  color: var(--dossier-faint);
+  text-align: center;
+}
+
+.queue-empty strong {
+  color: var(--dossier-ink);
+  font-size: 12.5px;
+}
+
+.queue-empty span {
+  max-width: 190px;
+  margin-top: 5px;
+  font-size: 10.5px;
+}
+
+.import-queue-index .fixed-list-pagination,
+.dossier-workflow-sheet .fixed-list-pagination,
+.import-history-sheet .fixed-list-pagination {
+  display: flex;
+  min-height: 68px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 16px;
+  border-top: 1px solid var(--dossier-line-soft);
+}
+
+.import-queue-index .fixed-list-pagination {
+  min-height: 80px;
+  flex: 0 0 auto;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  padding: 8px;
+}
+
+.import-reading-layout .fixed-list-pagination > span {
+  color: var(--dossier-faint);
+  font-size: 10px;
+}
+
+.import-queue-index .el-pagination {
+  --el-pagination-button-width: 26px;
+  --el-pagination-button-height: 26px;
+  flex-wrap: nowrap;
+}
+
+.dossier-workflow-sheet,
+.import-history-sheet {
+  min-width: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+  box-shadow: 0 12px 34px rgb(20 25 40 / 4%);
+  scroll-margin-top: 12px;
+}
+
+.workflow-sheet-heading {
+  display: flex;
+  min-height: 82px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 15px 20px;
+  background:
+    linear-gradient(110deg, var(--dossier-primary-wash), #fff 48%),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgb(3 78 214 / 2.5%) 48px);
+  border-top: 3px solid var(--dossier-primary);
+  border-bottom: 1px solid var(--dossier-line);
+}
+
+.workflow-sheet-heading > div {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.workflow-sheet-heading span {
+  color: var(--dossier-primary);
+  font: 9.5px var(--dossier-mono);
+  letter-spacing: 0.11em;
+}
+
+.workflow-sheet-heading h2 {
+  margin: 3px 0 0;
+  font-size: 17px;
+  font-weight: 680;
+}
+
+.workflow-sheet-heading small {
+  margin-top: 3px;
+  overflow: hidden;
+  color: var(--dossier-faint);
+  font-size: 10.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-heading {
+  background:
+    linear-gradient(110deg, #f8f6ff, #fff 48%),
+    repeating-linear-gradient(90deg, transparent 0 47px, rgb(94 75 179 / 2.5%) 48px);
+  border-top-color: #7059c8;
+}
+
+.history-heading span {
+  color: #5e4bb3;
+}
+
+.dossier-workflow-sheet .el-table,
+.import-history-sheet .el-table {
+  --el-table-border-color: var(--dossier-line-soft);
+  --el-table-header-bg-color: #fafbfc;
+  --el-table-row-hover-bg-color: var(--dossier-primary-wash);
+  font-size: 12px;
+}
+
+.dossier-workflow-sheet .el-table th.el-table__cell,
+.import-history-sheet .el-table th.el-table__cell {
+  color: var(--dossier-faint);
+  font-size: 10.5px;
+  font-weight: 650;
+}
+
+.workflow-empty {
+  display: grid;
+  min-height: 190px;
+  place-content: center;
+  padding: 32px;
+  color: var(--dossier-faint);
+  background:
+    linear-gradient(rgb(255 255 255 / 95%), rgb(255 255 255 / 95%)),
+    repeating-linear-gradient(0deg, transparent 0 31px, var(--dossier-line-soft) 32px);
+  text-align: center;
+}
+
+.workflow-empty strong,
+.workflow-empty > span:first-child {
+  color: var(--dossier-ink);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.workflow-empty span,
+.workflow-empty p {
+  margin: 5px 0 0;
+  font-size: 10.5px;
+}
+
+.import-history-sheet > .list-loading {
+  min-height: 190px;
+  padding: 26px 22px;
+  color: var(--dossier-faint);
+  font-size: 11px;
+}
+
+.import-history-sheet > .el-alert {
+  margin: 18px;
+}
+
+.archive-error {
+  color: var(--dossier-danger);
+}
+
+@media (max-width: 1480px) {
+  .import-reading-layout {
+    grid-template-columns: 260px minmax(0, 1fr) 218px;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 1320px) {
+  .import-reading-layout {
+    grid-template-areas: "queue outline" "queue paper";
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 10px;
+  }
+
+  .import-reading-layout .dossier-outline {
+    display: none;
+  }
+
+  .import-reading-layout .dossier-mobile-index {
+    display: flex;
+  }
+}
+
+@media (max-width: 1180px) {
+  .import-reading-layout {
+    grid-template-areas: "outline" "queue" "paper";
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .import-queue-index {
+    position: relative;
+    min-height: 0;
+    max-height: none;
+  }
+
+  .queue-records {
+    display: grid;
+    max-height: 260px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3px;
+  }
+
+  .queued-file-chip + .queued-file-chip {
+    margin-top: 0;
+  }
+}
