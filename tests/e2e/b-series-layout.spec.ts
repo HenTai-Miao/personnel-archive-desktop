@@ -18,6 +18,14 @@ async function capture(page: Page, fileName: string): Promise<void> {
   })
 }
 
+async function expectWorkspaceHasNoHorizontalOverflow(page: Page): Promise<void> {
+  const workspace = page.locator(".reading-desk-workspace")
+  await expect(workspace).toBeVisible()
+  expect(await workspace.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(
+    true,
+  )
+}
+
 test("renders B-series layouts at desktop and narrow widths", async () => {
   test.setTimeout(60_000)
   await mkdir(OUTPUT_DIRECTORY, { recursive: true })
@@ -200,17 +208,7 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
         elements.map((element) => Math.round(element.getBoundingClientRect().left)),
       )
       expect(new Set(familyLeftEdges).size).toBe(1)
-      expect(
-        await page.evaluate(() => {
-          const browser = globalThis as unknown as {
-            document: { documentElement: { clientWidth: number; scrollWidth: number } }
-          }
-          return (
-            browser.document.documentElement.scrollWidth <=
-            browser.document.documentElement.clientWidth
-          )
-        }),
-      ).toBe(true)
+      await expectWorkspaceHasNoHorizontalOverflow(page)
       await capture(page, "family-search-1080.png")
 
       await page.setViewportSize({ width: 1440, height: 960 })
@@ -234,17 +232,7 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
         elements.map((element) => Math.round(element.getBoundingClientRect().left)),
       )
       expect(new Set(importLeftEdges).size).toBe(1)
-      expect(
-        await page.evaluate(() => {
-          const browser = globalThis as unknown as {
-            document: { documentElement: { clientWidth: number; scrollWidth: number } }
-          }
-          return (
-            browser.document.documentElement.scrollWidth <=
-            browser.document.documentElement.clientWidth
-          )
-        }),
-      ).toBe(true)
+      await expectWorkspaceHasNoHorizontalOverflow(page)
       await capture(page, "import-1080.png")
 
       await page.setViewportSize({ width: 1440, height: 960 })
