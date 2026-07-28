@@ -107,7 +107,6 @@ test("reads a masked dossier at the B-series desk before opening its detail rout
       await expect(dossierSheet.getByText("覆盖版本", { exact: true })).toBeVisible()
       await expect(dossierSheet.getByText("测试奖励", { exact: true })).toBeVisible()
       await expect(dossierSheet.getByAltText("测试甲的档案照片")).toHaveAttribute("src", /^blob:/)
-      await expect(page.locator(".person-reading-layout .dossier-outline")).toBeVisible()
       expect(detailRequests).toBe(1)
       expect(sensitiveValueRequests).toEqual([])
 
@@ -119,17 +118,15 @@ test("reads a masked dossier at the B-series desk before opening its detail rout
       await expect(dossierSheet.getByText("13800138000", { exact: true })).toBeVisible()
       expect(sensitiveValueRequests).toEqual(["IDENTITY_CARD", "PHONE_NUMBER"])
 
-      const listUrl = page.url()
-      await page
-        .locator(".person-reading-layout .dossier-outline")
-        .getByRole("button", { name: /学历与教育/ })
-        .click()
-      await expect(page.locator("#education")).toBeInViewport()
-      expect(page.url()).toBe(listUrl)
-
       await dossierSheet.getByRole("button", { name: "独立查看" }).click()
       await expect(page).toHaveURL(/#\/persons\/7$/)
       await expect(page.locator(".detail-reading-layout .dossier-reading-sheet")).toBeVisible()
+      const detailUrl = page.url()
+      const detailOutline = page.locator(".detail-reading-layout .dossier-outline")
+      await expect(detailOutline).toBeVisible()
+      await detailOutline.getByRole("button", { name: /学历与教育/ }).click()
+      await expect(page.locator("#education")).toBeInViewport()
+      expect(page.url()).toBe(detailUrl)
       await expect(page.getByRole("heading", { name: "基本情况与任职信息" })).toBeVisible()
       await expect(page.getByText("1234***********678", { exact: true })).toBeVisible()
       await expect(page.getByText("13800138000", { exact: true })).toHaveCount(0)

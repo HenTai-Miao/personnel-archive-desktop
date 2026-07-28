@@ -83,7 +83,9 @@ describe("PersonListPage B-series reading desk", () => {
     expect(wrapper.find(".person-reading-layout").exists()).toBe(true)
     expect(wrapper.find(".person-record-index").text()).toContain("在册卷宗")
     expect(wrapper.find(".dossier-selection-empty").text()).toContain("请选择卷宗")
-    expect(wrapper.find(".dossier-outline").text()).toContain("卷宗目录")
+    expect(wrapper.find(".person-reading-layout .dossier-navigation").exists()).toBe(false)
+    expect(wrapper.find(".person-reading-layout .dossier-outline").exists()).toBe(false)
+    expect(wrapper.find(".person-reading-layout .dossier-mobile-index").exists()).toBe(false)
 
     await wrapper.get(`[data-test="activate-person-${PERSON.id}"]`).trigger("click")
     await flushPromises()

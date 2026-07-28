@@ -1,4 +1,4 @@
-/* 人员主业务页：286px 在册索引、连续卷宗纸页和 238px 章节目录。 */
+/* 人员主业务页：在册索引与连续卷宗纸页组成两栏检阅桌。 */
 .person-list-page {
   max-width: 1640px;
 }
@@ -53,8 +53,8 @@
 
 .person-reading-layout {
   display: grid;
-  grid-template-areas: "index content navigation";
-  grid-template-columns: 286px minmax(0, 1fr) 238px;
+  grid-template-areas: "index content";
+  grid-template-columns: 286px minmax(0, 1fr);
   gap: 16px;
   align-items: start;
 }
@@ -78,10 +78,6 @@
 .person-dossier-stage {
   grid-area: content;
   min-width: 0;
-}
-
-.person-reading-layout > .dossier-navigation {
-  grid-area: navigation;
 }
 
 .record-index-heading {
@@ -543,17 +539,9 @@
 
 @media (max-width: 1320px) {
   .person-reading-layout {
-    grid-template-areas: "index navigation" "index content";
+    grid-template-areas: "index content";
     grid-template-columns: 240px minmax(0, 1fr);
     gap: 10px;
-  }
-
-  .person-reading-layout .dossier-outline {
-    display: none;
-  }
-
-  .person-reading-layout .dossier-mobile-index {
-    display: flex;
   }
 
   .person-record-index {

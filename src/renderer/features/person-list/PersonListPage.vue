@@ -1,4 +1,4 @@
-<!-- B 人员检阅桌：左侧卷宗索引、中间完整纸页、右侧章节目录。 -->
+<!-- B 人员检阅桌：左侧卷宗索引与中间完整纸页。 -->
 <script setup lang="ts">
 import { Download } from "@element-plus/icons-vue"
 import { computed, onMounted, ref } from "vue"
@@ -9,19 +9,11 @@ import { useArchiveDossier } from "@/features/archive-view/use-archive-dossier"
 import { useAuthStore } from "@/features/auth/store"
 import { errorMessage } from "@/shared/api/error"
 import type { PersonId } from "@/shared/api/schemas"
-import DossierOutline from "@/shared/components/DossierOutline.vue"
 import BatchExportControl from "./BatchExportControl.vue"
 import PersonDeleteAction from "./PersonDeleteAction.vue"
 import PersonRecordIndex from "./PersonRecordIndex.vue"
 import type { PersonListItem } from "./schemas"
 import { usePersonListStore } from "./store"
-
-const DOSSIER_SECTIONS = [
-  { id: "identity", label: "基本情况与任职", code: "01" },
-  { id: "education", label: "学历与教育", code: "02" },
-  { id: "career", label: "经历与奖惩", code: "03" },
-  { id: "family", label: "家庭成员与申报", code: "04" },
-] as const
 
 type PersonFilters = {
   readonly name: string
@@ -228,8 +220,6 @@ async function refreshAfterDeletion(wasDeleted: boolean): Promise<void> {
           </template>
         </el-result>
       </section>
-
-      <DossierOutline title="卷宗目录" :sections="DOSSIER_SECTIONS" />
     </div>
   </section>
 </template>
