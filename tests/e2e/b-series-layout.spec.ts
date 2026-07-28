@@ -185,14 +185,52 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
       await page.getByRole("link", { name: "家庭成员查询" }).click()
       await page.locator('[data-test="family-search-query"]').fill("测试乙")
       await page.locator('[data-test="family-search-submit"]').click()
-      await expect(page.locator(".family-match-sheet")).toContainText("测试乙")
+      await expect(page.locator(".family-result-sheet")).toContainText("测试乙")
+      await expect(page.locator('[data-test="family-search-results"]')).toContainText("测试丙")
+      await expect(page.locator(".family-match-index")).toHaveCount(0)
+      await expect(page.locator(".family-match-sheet")).toHaveCount(0)
       await capture(page, "family-search-1440.png")
 
+      await page.setViewportSize({ width: 1080, height: 800 })
+      const familyLeftEdges = await page
+        .locator(".family-search-paper, .family-result-sheet")
+        .evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().left)))
+      expect(new Set(familyLeftEdges).size).toBe(1)
+      expect(
+        await page.evaluate(() => {
+          const browser = globalThis as unknown as {
+            document: { documentElement: { clientWidth: number; scrollWidth: number } }
+          }
+          return browser.document.documentElement.scrollWidth <= browser.document.documentElement.clientWidth
+        }),
+      ).toBe(true)
+      await capture(page, "family-search-1080.png")
+
+      await page.setViewportSize({ width: 1440, height: 960 })
       await page.getByRole("link", { name: "批量导入档案" }).click()
-      await expect(page.locator(".import-reading-layout")).toBeVisible()
+      await expect(page.locator(".import-workflow-stack")).toBeVisible()
+      await expect(page.locator(".import-picker-sheet")).toBeVisible()
+      await expect(page.locator(".import-current-sheet")).toBeVisible()
       await expect(page.locator("#import-history")).toContainText("测试档案工作簿.xlsx")
+      await expect(page.locator(".import-outline")).toHaveCount(0)
       await capture(page, "import-1440.png")
 
+      await page.setViewportSize({ width: 1080, height: 800 })
+      const importLeftEdges = await page
+        .locator(".import-picker-sheet, .import-current-sheet, .import-history-sheet")
+        .evaluateAll((elements) => elements.map((element) => Math.round(element.getBoundingClientRect().left)))
+      expect(new Set(importLeftEdges).size).toBe(1)
+      expect(
+        await page.evaluate(() => {
+          const browser = globalThis as unknown as {
+            document: { documentElement: { clientWidth: number; scrollWidth: number } }
+          }
+          return browser.document.documentElement.scrollWidth <= browser.document.documentElement.clientWidth
+        }),
+      ).toBe(true)
+      await capture(page, "import-1080.png")
+
+      await page.setViewportSize({ width: 1440, height: 960 })
       await page.evaluate((hash) => {
         const browser = globalThis as unknown as { location: { hash: string } }
         browser.location.hash = hash
