@@ -80,7 +80,7 @@ The client may validate extension and size for immediate feedback, but template,
 
 - Chinese is the primary interface language.
 - Preserve the B visual geometry: cobalt `#034ed6`, white paper surfaces, a 60px top bar, a 252px authenticated sidebar, and on the personnel route a 286px record index plus a flexible dossier column; at 1320px and below the personnel index becomes 240px.
-- Family search and batch import deliberately use full-width vertical papers instead of the personnel dossier's three-column pattern; wide tables scroll inside their paper and must not create page-level horizontal overflow.
+- Family search and batch import deliberately use full-width vertical papers instead of the personnel route's two-column record-index-and-dossier desk; wide tables scroll inside their paper and must not create page-level horizontal overflow.
 - Only routes that retain `DossierOutline` convert its right directory to the shared sticky horizontal chapter index at narrower widths; the personnel list route has no desktop or mobile chapter directory. The supported minimum window remains 1080px wide.
 - The login route uses the same B tokens in a spacious system-identity/login-card split rather than a disconnected legacy theme.
 - Every data screen handles loading, empty, network failure, validation failure, no-permission, and expired-session states.

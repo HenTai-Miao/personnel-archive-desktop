@@ -1,4 +1,4 @@
-/** B 系列视觉验收：桌面三栏、窄窗目录切换和全部业务页共用视觉语言。 */
+/** B 系列视觉验收：人员桌面与窄窗两栏均无目录，并覆盖全宽业务页与文件夹目录布局。 */
 import { mkdir, mkdtemp, rm } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"

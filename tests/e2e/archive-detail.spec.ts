@@ -127,6 +127,20 @@ test("reads a masked dossier at the B-series desk before opening its detail rout
       await detailOutline.getByRole("button", { name: /学历与教育/ }).click()
       await expect(page.locator("#education")).toBeInViewport()
       expect(page.url()).toBe(detailUrl)
+
+      await page.setViewportSize({ width: 1080, height: 800 })
+      await expect(detailOutline).toBeHidden()
+      const detailMobileIndex = page.locator(".detail-reading-layout .dossier-mobile-index")
+      await expect(detailMobileIndex).toBeVisible()
+      await detailMobileIndex.getByRole("button", { name: /家庭成员与申报/ }).click()
+      await expect(page.locator("#family")).toBeInViewport()
+      expect(page.url()).toBe(detailUrl)
+      const workspace = page.locator(".reading-desk-workspace")
+      await expect(workspace).toBeVisible()
+      expect(
+        await workspace.evaluate((element) => element.scrollWidth <= element.clientWidth),
+      ).toBe(true)
+
       await expect(page.getByRole("heading", { name: "基本情况与任职信息" })).toBeVisible()
       await expect(page.getByText("1234***********678", { exact: true })).toBeVisible()
       await expect(page.getByText("13800138000", { exact: true })).toHaveCount(0)
