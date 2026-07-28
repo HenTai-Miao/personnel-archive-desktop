@@ -14,6 +14,11 @@ const canImport = computed(() => {
   const roles = auth.user?.roles ?? []
   return roles.includes("ADMIN") || roles.includes("ARCHIVE_EDITOR")
 })
+const primaryRole = computed(() => auth.user?.roles[0] ?? "—")
+const readingContextActive = computed(
+  () => route.path.startsWith("/persons") || route.path.startsWith("/search"),
+)
+const batchContextActive = computed(() => route.path === "/import" || route.path === "/settings")
 
 onMounted(syncAutomaticScan)
 onUnmounted(imports.stopAutoScan)
@@ -38,32 +43,35 @@ async function signOut(): Promise<void> {
 </script>
 
 <template>
-  <div class="app-shell">
-    <header class="system-bar">
+  <div class="reading-desk-shell">
+    <header class="reading-desk-topbar">
       <div class="system-identity">
-        <span class="identity-mark" aria-hidden="true"><el-icon><Files /></el-icon></span>
+        <span class="identity-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
         <span class="identity-copy">
           <strong>人员档案助手</strong>
           <small>人员信息档案管理系统</small>
         </span>
       </div>
-      <div class="nav-foot">
-        <div class="user-card">
-          <span class="user-avatar">{{ auth.user?.displayName.slice(0, 1) }}</span>
-          <div class="user-identity">
-            <div class="user-name-row">
-              <strong :title="auth.user?.displayName">{{ auth.user?.displayName }}</strong>
-              <button class="logout-button" type="button" title="退出登录" @click="signOut">
-                <el-icon><SwitchButton /></el-icon><span>退出</span>
-              </button>
-            </div>
-            <small>{{ auth.user?.username }}</small>
-          </div>
+      <nav class="reading-desk-context-nav" aria-label="任务分组">
+        <RouterLink to="/persons" :class="{ active: readingContextActive }">卷宗检阅</RouterLink>
+        <RouterLink v-if="canImport" to="/import" :class="{ active: batchContextActive }">
+          批处理
+        </RouterLink>
+      </nav>
+      <div class="reading-desk-user-area">
+        <span class="session-chip"><i aria-hidden="true"></i>安全会话已建立</span>
+        <span class="user-avatar">{{ auth.user?.displayName.slice(0, 1) || '用' }}</span>
+        <div class="user-identity">
+          <strong :title="auth.user?.displayName">{{ auth.user?.displayName }}</strong>
+          <small class="user-role">{{ primaryRole }}</small>
         </div>
+        <button class="logout-button" type="button" title="退出登录" @click="signOut">
+          <el-icon><SwitchButton /></el-icon><span>退出</span>
+        </button>
       </div>
     </header>
-    <aside class="archive-nav">
-      <div class="cabinet-label">业务目录</div>
+    <aside class="reading-desk-sidebar">
+      <div class="business-directory-label">业务目录</div>
       <nav aria-label="主导航">
         <RouterLink to="/persons" :class="{ active: route.path.startsWith('/persons') }">
           <el-icon><Files /></el-icon><span>人员档案</span>
@@ -75,7 +83,11 @@ async function signOut(): Promise<void> {
           <el-icon><DocumentAdd /></el-icon><span>批量导入档案</span>
         </RouterLink>
       </nav>
+      <div class="sidebar-security-note">
+        <strong><i aria-hidden="true"></i>卷宗已安全载入</strong>
+        <p>敏感字段默认遮罩</p>
+      </div>
     </aside>
-    <main class="paper-workspace workbench-surface"><RouterView /></main>
+    <main class="reading-desk-workspace"><RouterView /></main>
   </div>
 </template>

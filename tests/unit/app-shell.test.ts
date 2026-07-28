@@ -8,8 +8,8 @@ import { useAuthStore } from "@/features/auth/store"
 import { userSchema } from "@/shared/api/schemas"
 import AppShell from "@/shared/components/AppShell.vue"
 
-describe("AppShell 03 authenticated workbench", () => {
-  it("presents the system identity, business directory, and workbench surface", async () => {
+describe("AppShell B dossier reading desk", () => {
+  it("presents task context, secure session state, role, and business directory", async () => {
     // Given
     const pinia = createPinia()
     setActivePinia(pinia)
@@ -48,17 +48,20 @@ describe("AppShell 03 authenticated workbench", () => {
     const wrapper = mount(AppShell, { global: { plugins: [pinia, router, ElementPlus] } })
 
     // Then
-    const systemBar = wrapper.get(".system-bar")
-    const nameRow = wrapper.get(".user-name-row")
-    const displayName = nameRow.get("strong")
-    const logout = nameRow.get("button.logout-button")
-    expect(systemBar.find(".system-identity").exists()).toBe(true)
-    expect(systemBar.find(".nav-foot").exists()).toBe(true)
-    expect(wrapper.get(".archive-nav").text()).toContain("业务目录")
+    const topbar = wrapper.get(".reading-desk-topbar")
+    const userArea = wrapper.get(".reading-desk-user-area")
+    const displayName = userArea.get(".user-identity strong")
+    const logout = userArea.get("button.logout-button")
+    expect(topbar.find(".system-identity").exists()).toBe(true)
+    expect(wrapper.get(".reading-desk-context-nav").text()).toContain("卷宗检阅")
+    expect(wrapper.get(".reading-desk-context-nav").text()).toContain("批处理")
+    expect(wrapper.get(".session-chip").text()).toContain("安全会话已建立")
+    expect(wrapper.get(".user-role").text()).toBe("ADMIN")
+    expect(wrapper.get(".reading-desk-sidebar").text()).toContain("业务目录")
     expect(wrapper.get(".system-identity").text()).toContain("人员档案助手")
-    expect(wrapper.get(".paper-workspace").classes()).toContain("workbench-surface")
+    expect(wrapper.find(".reading-desk-workspace").exists()).toBe(true)
     expect(displayName.text()).toBe("本地测试管理员")
-    expect(displayName.element.nextElementSibling).toBe(logout.element)
+    expect(logout.text()).toBe("退出")
     expect(wrapper.findAll("nav a").map((link) => link.text())).not.toContain("文件夹设置")
     wrapper.unmount()
   })

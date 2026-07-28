@@ -1,12 +1,6 @@
-/* 03 卷宗联动台：登录页在 auth.css 内隔离保留原视觉，其余登录后页面共享当前主题。 */
-@import "./styles/archive-workbench/theme.css";
-@import "./styles/archive-workbench/auth.css";
-@import "./styles/archive-workbench/shell.css";
-@import "./styles/archive-workbench/navigation.css";
-@import "./styles/archive-workbench/lists.css";
-@import "./styles/archive-workbench/pagination.css";
-@import "./styles/archive-workbench/workflow.css";
-@import "./styles/archive-workbench/folders.css";
-@import "./styles/archive-workbench/detail.css";
-@import "./styles/archive-workbench/identity.css";
-@import "./styles/archive-workbench/records.css";
+/* B 卷宗检阅桌：所有路由只加载这一套业务视觉层。 */
+@import "./styles/dossier-reading-desk/theme.css";
+@import "./styles/dossier-reading-desk/auth.css";
+@import "./styles/dossier-reading-desk/shell.css";
+@import "./styles/dossier-reading-desk/navigation.css";
+@import "./styles/dossier-reading-desk/states.css";

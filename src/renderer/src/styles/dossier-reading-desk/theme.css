@@ -1,0 +1,144 @@
+/* B 卷宗检阅桌：白色档案纸、钴蓝操作和低对比结构线。 */
+:root {
+  --dossier-primary: #034ed6;
+  --dossier-primary-hover: #0342b8;
+  --dossier-primary-weak: #eaf1fe;
+  --dossier-primary-wash: #f4f8ff;
+  --dossier-primary-line: #bcd0f5;
+  --dossier-ink: #141928;
+  --dossier-subtle: #5d6579;
+  --dossier-faint: #6b7489;
+  --dossier-line: #e8eaf0;
+  --dossier-line-soft: #f0f2f7;
+  --dossier-surface: #fff;
+  --dossier-success: #15803d;
+  --dossier-warning: #a85c00;
+  --dossier-danger: #c93438;
+  --dossier-font: "PingFang SC", "Microsoft YaHei UI", "Microsoft YaHei", system-ui, sans-serif;
+  --dossier-mono: ui-monospace, "Cascadia Mono", "SFMono-Regular", Consolas, monospace;
+  --dossier-chip-radius: 7px;
+  --dossier-item-radius: 8px;
+  --dossier-button-radius: 9px;
+  --dossier-field-radius: 10px;
+  --dossier-panel-radius: 12px;
+  --dossier-card-radius: 13px;
+  --dossier-shadow-pop: 0 6px 20px rgb(20 25 40 / 12%);
+  --el-color-primary: #034ed6;
+  --el-color-primary-light-3: #4f82e3;
+  --el-color-primary-light-5: #81a7eb;
+  --el-color-primary-light-7: #b3caf4;
+  --el-color-primary-light-8: #cddcf8;
+  --el-color-primary-light-9: #eaf1fe;
+  --el-color-primary-dark-2: #0342b8;
+  --el-color-success: #15803d;
+  --el-color-warning: #a85c00;
+  --el-color-danger: #c93438;
+  --el-border-color: #e8eaf0;
+  --el-border-radius-base: 9px;
+  --el-border-radius-small: 7px;
+  --el-font-family: var(--dossier-font);
+  color: var(--dossier-ink);
+  background: #fff;
+  font-family: var(--dossier-font);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#app {
+  width: 100%;
+  min-width: 1080px;
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  color: var(--dossier-ink);
+  background: #fff;
+  font: 14px / 1.65 var(--dossier-font);
+  -webkit-font-smoothing: antialiased;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  color: var(--dossier-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--dossier-primary);
+  outline-offset: 2px;
+}
+
+.el-button {
+  border-radius: var(--dossier-button-radius);
+  box-shadow: none;
+  font-weight: 600;
+}
+
+.el-button--primary {
+  --el-button-bg-color: var(--dossier-primary);
+  --el-button-border-color: var(--dossier-primary);
+  --el-button-hover-bg-color: var(--dossier-primary-hover);
+  --el-button-hover-border-color: var(--dossier-primary-hover);
+  --el-button-active-bg-color: #02389f;
+  --el-button-active-border-color: #02389f;
+}
+
+.el-input__wrapper,
+.el-textarea__inner {
+  background: #fff;
+  border-radius: var(--dossier-field-radius);
+  box-shadow: 0 0 0 1px var(--dossier-line) inset;
+}
+
+.el-input__wrapper:hover {
+  box-shadow: 0 0 0 1px var(--dossier-primary-line) inset;
+}
+
+.el-input__wrapper.is-focus {
+  box-shadow: 0 0 0 1px var(--dossier-primary) inset;
+}
+
+.el-alert {
+  border: 1px solid rgb(93 101 121 / 18%);
+  border-radius: var(--dossier-field-radius);
+}
+
+.el-tag {
+  border-radius: var(--dossier-chip-radius);
+  font-weight: 600;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto;
+    transition: none;
+    animation-duration: 0.01ms;
+  }
+}

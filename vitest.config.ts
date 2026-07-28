@@ -9,5 +9,10 @@ export default defineConfig({
       "@shared": new URL("./src/shared", import.meta.url).pathname,
     },
   },
-  test: { environment: "happy-dom", globals: true, include: ["tests/unit/**/*.test.ts"] },
+  test: {
+    environment: "happy-dom",
+    globals: true,
+    include: ["tests/unit/**/*.test.ts"],
+    css: true,
+  },
 })

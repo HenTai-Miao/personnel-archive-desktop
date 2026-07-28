@@ -30,15 +30,29 @@ async function submit(): Promise<void> {
 </script>
 
 <template>
-  <div class="login-page">
-    <section class="login-identity">
+  <div class="login-dossier-layout">
+    <section class="login-system-identity">
+      <div class="login-brand">
+        <span class="login-brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <strong>人员档案助手</strong>
+      </div>
+      <p class="login-kicker">INTERNAL DOSSIER SERVICE · 内部卷宗服务</p>
       <h1>人员信息档案管理系统</h1>
-      <p>内部业务系统</p>
+      <p class="login-intro">面向内部授权人员的档案接收、检阅与安全导出工作台。</p>
+      <div class="login-security-list" aria-label="系统安全说明">
+        <p><i aria-hidden="true"></i>仅限内部授权账号访问</p>
+        <p><i aria-hidden="true"></i>敏感字段默认遮罩</p>
+        <p><i aria-hidden="true"></i>查看、导入与导出操作按权限留痕</p>
+      </div>
+      <footer>人员档案数据服务 · Personnel Archive Service</footer>
     </section>
-    <section class="login-panel">
-      <div class="login-form-wrap">
-        <h2>用户登录</h2>
-        <p class="muted">请输入用户名和密码</p>
+    <section class="login-access-panel">
+      <div class="login-dossier-card">
+        <header>
+          <p class="login-card-kicker">SECURE SIGN-IN</p>
+          <h2>用户登录</h2>
+          <p class="muted">使用内部账号进入卷宗检阅桌</p>
+        </header>
         <el-form label-position="top" size="large" @submit.prevent="submit">
           <el-form-item label="用户名">
             <el-input v-model="form.username" autocomplete="username" placeholder="请输入用户名" />
@@ -49,6 +63,7 @@ async function submit(): Promise<void> {
           <el-alert v-if="message" :title="message" type="error" :closable="false" show-icon />
           <el-button class="primary-action" type="primary" :loading="loading" @click="submit">登录</el-button>
         </el-form>
+        <p class="login-card-foot">登录后将根据账号角色显示可执行操作。</p>
       </div>
     </section>
   </div>

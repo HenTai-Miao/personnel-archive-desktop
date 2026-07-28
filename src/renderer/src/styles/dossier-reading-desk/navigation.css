@@ -1,0 +1,260 @@
+/* 系统身份、任务分组、用户会话和业务目录共同构成 B 稿导航层级。 */
+.system-identity {
+  display: flex;
+  min-width: 260px;
+  align-items: center;
+  gap: 10px;
+}
+
+.identity-mark,
+.login-brand-mark {
+  display: grid;
+  width: 25px;
+  height: 25px;
+  flex: 0 0 auto;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 2px;
+}
+
+.identity-mark i,
+.login-brand-mark i {
+  display: block;
+  background: var(--dossier-primary);
+  border-radius: 3px;
+}
+
+.identity-mark i:nth-child(2),
+.identity-mark i:nth-child(3),
+.login-brand-mark i:nth-child(2),
+.login-brand-mark i:nth-child(3) {
+  opacity: 0.28;
+}
+
+.identity-mark i:nth-child(4),
+.login-brand-mark i:nth-child(4) {
+  background: #1fb2de;
+  opacity: 0.85;
+}
+
+.identity-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.2;
+}
+
+.identity-copy strong {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.identity-copy small {
+  margin-top: 3px;
+  color: var(--dossier-faint);
+  font-size: 11.5px;
+}
+
+.reading-desk-context-nav {
+  display: flex;
+  height: 100%;
+  align-items: stretch;
+  gap: 4px;
+}
+
+.reading-desk-context-nav a {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0 13px;
+  color: var(--dossier-subtle);
+  font-size: 13.5px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.reading-desk-context-nav a:hover,
+.reading-desk-context-nav a.active {
+  color: var(--dossier-ink);
+}
+
+.reading-desk-context-nav a.active {
+  font-weight: 600;
+}
+
+.reading-desk-context-nav a.active::after {
+  position: absolute;
+  right: 13px;
+  bottom: -1px;
+  left: 13px;
+  height: 2px;
+  background: var(--dossier-primary);
+  border-radius: 2px;
+  content: "";
+}
+
+.reading-desk-user-area {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.session-chip {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 7px;
+  padding: 0 11px;
+  color: var(--dossier-subtle);
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: 999px;
+  font: 11.5px var(--dossier-mono);
+}
+
+.session-chip i,
+.sidebar-security-note strong i {
+  width: 7px;
+  height: 7px;
+  background: var(--dossier-success);
+  border-radius: 50%;
+}
+
+.reading-desk-user-area .user-avatar {
+  display: grid;
+  width: 31px;
+  height: 31px;
+  place-items: center;
+  margin-left: 2px;
+  color: #fff;
+  background: var(--dossier-primary);
+  border-radius: 50%;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.reading-desk-user-area .user-identity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.reading-desk-user-area .user-identity strong {
+  max-width: 160px;
+  overflow: hidden;
+  font-size: 12.5px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reading-desk-user-area .user-role {
+  color: var(--dossier-faint);
+  font: 11px var(--dossier-mono);
+}
+
+.logout-button {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  gap: 5px;
+  padding: 0 10px;
+  color: var(--dossier-subtle);
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-item-radius);
+  font-size: 11.5px;
+}
+
+.logout-button:hover {
+  color: var(--dossier-primary);
+  border-color: var(--dossier-primary-line);
+}
+
+.reading-desk-sidebar {
+  padding: 26px 18px 20px;
+}
+
+.business-directory-label {
+  margin: 0 12px 9px;
+  color: var(--dossier-faint);
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.reading-desk-sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.reading-desk-sidebar nav a {
+  display: flex;
+  width: 100%;
+  height: 38px;
+  align-items: center;
+  gap: 10px;
+  padding: 0 12px;
+  color: var(--dossier-subtle);
+  border-radius: var(--dossier-item-radius);
+  font-size: 13.5px;
+  text-decoration: none;
+}
+
+.reading-desk-sidebar nav a:hover {
+  color: var(--dossier-ink);
+  background: var(--dossier-line-soft);
+}
+
+.reading-desk-sidebar nav a.active {
+  color: var(--dossier-primary);
+  background: var(--dossier-primary-wash);
+  font-weight: 600;
+}
+
+.reading-desk-sidebar nav .el-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.sidebar-security-note {
+  position: absolute;
+  right: 18px;
+  bottom: 22px;
+  left: 18px;
+  padding: 13px 14px;
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-panel-radius);
+}
+
+.sidebar-security-note strong {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+}
+
+.sidebar-security-note p {
+  margin: 5px 0 0;
+  color: var(--dossier-faint);
+  font-size: 11.5px;
+}
+
+@media (max-width: 1320px) {
+  .system-identity {
+    min-width: 220px;
+  }
+
+  .reading-desk-sidebar {
+    padding-inline: 14px;
+  }
+
+  .sidebar-security-note {
+    right: 14px;
+    left: 14px;
+  }
+}

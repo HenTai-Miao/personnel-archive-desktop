@@ -1,0 +1,73 @@
+/* 页面共用纸页、空状态和反馈状态。 */
+.paper-card {
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+}
+
+.empty-sheet {
+  display: grid;
+  min-height: 180px;
+  place-content: center;
+  padding: 32px;
+  color: var(--dossier-subtle);
+  background: #fff;
+  border: 1px dashed var(--dossier-line);
+  border-radius: var(--dossier-card-radius);
+  text-align: center;
+}
+
+.empty-sheet span,
+.empty-sheet strong {
+  color: var(--dossier-ink);
+  font-size: 15px;
+  font-weight: 650;
+}
+
+.empty-sheet p {
+  margin: 7px 0 0;
+  font-size: 12px;
+}
+
+.table-heading {
+  display: flex;
+  min-height: 52px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 18px;
+  border-bottom: 1px solid var(--dossier-line-soft);
+}
+
+.table-heading > div {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.table-heading strong {
+  font-size: 15px;
+}
+
+.table-heading span {
+  color: var(--dossier-faint);
+  font-size: 12px;
+}
+
+.muted {
+  color: var(--dossier-subtle);
+}
+
+.back-link {
+  display: inline-flex;
+  min-height: 32px;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 12px;
+  padding: 0 10px;
+  color: var(--dossier-subtle);
+  background: #fff;
+  border: 1px solid var(--dossier-line);
+  border-radius: var(--dossier-item-radius);
+  font-size: 12px;
+}
