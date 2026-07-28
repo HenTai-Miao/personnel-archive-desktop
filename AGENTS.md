@@ -2,14 +2,15 @@
 
 Inherits all product, data, security, and API rules from `../AGENTS.md`. This directory owns the Windows desktop client; its technical project and package name is `personnel-archive-desktop`.
 
-This checkout is the isolated B-series redesign copy. It keeps the fixed product name and all client security and business contracts, while its authenticated shell, login, and business pages are being migrated to the `B 卷宗检阅桌` visual system. The sibling `../personnel-archive-desktop` remains the current packaged-client source until this copy is explicitly promoted.
+This checkout is the isolated B-series redesign copy. It keeps the fixed product name and all client security and business contracts, while its login, authenticated shell, and implemented business pages use the completed `B 卷宗检阅桌` visual system. The sibling `../personnel-archive-desktop` remains the current packaged-client source until this copy is explicitly promoted.
 
 ## CURRENT CLIENT STATUS
 
 - Implemented routes are login, active archive list with selected batch ZIP export, family-member search, optional-field manual/automatic-folder batch import with the same duplicate-decision flow and persistent import-history panel, folder settings, and complete archive detail/single-export-open.
 - The folder-settings route and IPC behavior remain implemented, but its business-directory navigation entry is temporarily hidden; do not remove the stored settings or automatic scan/archive flow.
-- All authenticated routes use the `03 卷宗联动台` cobalt/white archive-workbench theme over Element Plus and Avue: a 60px translucent light system bar, 200px business directory, restrained rounded controls, light data grids, shared panels/status/dialogs, and sticky detail navigation that compensates for workspace padding to sit flush at the scroll edge. The login route keeps its existing Windows management-console structure and visual tokens in an isolated scope. Avue renders the existing personnel directory columns/actions while feature stores remain authoritative for filtering, pagination, selection, and exports.
-- The personnel directory starts with the list at full width. Clicking a directory row loads the details and authenticated, audited photo while opening a 320px right drawer; the action column contains view/export for every role and a red delete action only for `ADMIN`/`ARCHIVE_EDITOR`. The drawer separator supports pointer and keyboard resizing from a 280px minimum up to the current workbench width, allowing the list to contract to zero; container shrink clamps an oversized drawer, and closing restores the full-width list. The preview keeps identity-card and phone values masked and never calls the sensitive-value reveal endpoint. At 1280px and below the preview moves below the list and the separator is hidden so the 1080px minimum window retains usable table actions; batch selection remains independent from preview selection.
+- Login and every implemented business route use the `B 卷宗检阅桌` cobalt/white paper system over Element Plus: a split identity/login page, 60px light system bar, 252px business directory, compact status/dialog language, continuous paper sections, and a shared chapter index. Avue and the former drawer/workbench theme are not runtime dependencies in this copy.
+- The personnel route is a stable reading desk: a 286px native record index, a central continuous dossier, and a 238px chapter outline at desktop widths. Selecting a record loads its complete details and authenticated, audited photo without changing batch-export selection; explicit view/export actions remain available to every role and deletion only to `ADMIN`/`ARCHIVE_EDITOR`. At 1320px and below, the outline becomes a sticky horizontal chapter index while the record index and dossier remain usable at the 1080px minimum window width.
+- The personnel desk, independent detail route, family-member match desk, import queue/current-results/history desk, duplicate-decision dialogs, and folder-settings paper all share the same B tokens, loading/empty/error treatments, and responsive chapter navigation. Family search does not fetch a full dossier until the user explicitly chooses to view a matched archive.
 - Every business list uses the shared fixed pagination policy of 20 visible rows: personnel, family-member, and import-history queries request server pages, while upload queues and current import results are sliced locally without discarding entries.
 - Archive detail displays every imported section in workbook order, including personal/employment fields, education, ordered history/reward rows, full family-member fields, declaration data, snapshot metadata, and the authenticated stored photo. Identity-card and phone values default to front-four/back-three masks; a user can explicitly reveal or hide one complete value, and revealed values plus photo Object URLs are cleared on replacement/unmount.
 - Batch export keeps identifiers as strings, downloads one server-generated ZIP, and exposes only a native save-dialog capability; the renderer never supplies an arbitrary target path.
@@ -23,7 +24,7 @@ This checkout is the isolated B-series redesign copy. It keeps the fixed product
 
 - Electron with a security-patched stable release; Node.js LTS for tooling.
 - Vue 3, TypeScript strict mode, Vite/electron-vite.
-- Element Plus, `@smallwei/avue`, Pinia, Vue Router, `ky`, Zod, Biome, and electron-builder.
+- Element Plus, Pinia, Vue Router, `ky`, Zod, Biome, and electron-builder. Do not reintroduce Avue for the B personnel index.
 - Use `pnpm` and commit the lockfile. Pin tool/runtime versions; never depend on `latest` tags.
 
 ## TARGET STRUCTURE
@@ -53,7 +54,7 @@ Production loads packaged local UI only. Block arbitrary navigation, new windows
 - Archive action that downloads the server-generated workbook and opens it with the associated desktop application.
 - Archive-list selection that requests a bounded server-generated ZIP and saves it through the operating-system dialog; canceling writes nothing.
 - Archive soft deletion for `ADMIN`/`ARCHIVE_EDITOR`: open a confirmation dialog with required reason defaulting to “误导入”, limit it to 10,000 characters, then close preview/clear selection and refresh the current page; if the final row empties a later page, return to the preceding page.
-- User/role and audit screens only for authorized roles.
+- User/role and audit screens are planned but not implemented; do not expose placeholder routes.
 
 The client may validate extension and size for immediate feedback, but template, field, duplicate, and permission decisions always come from the backend. It must accept blank imported employee/name/identity values in response schemas and display safe placeholders rather than rejecting the response. The client must not compare names or identity cards to decide duplicates.
 
@@ -78,6 +79,9 @@ The client may validate extension and size for immediate feedback, but template,
 ## UI CONTRACT
 
 - Chinese is the primary interface language.
+- Preserve the B visual geometry: cobalt `#034ed6`, white paper surfaces, a 60px top bar, a 252px authenticated sidebar, and at desktop width a 286px record/queue index plus 238px chapter outline where the page uses the three-column desk.
+- At viewport widths of 1320px and below, replace the right outline with the shared sticky horizontal chapter index; do not silently remove access to a section. The supported minimum window remains 1080px wide.
+- The login route uses the same B tokens in a spacious system-identity/login-card split rather than a disconnected legacy theme.
 - Every data screen handles loading, empty, network failure, validation failure, no-permission, and expired-session states.
 - Every business-data list keeps the pagination footer visible when it contains data, states “每页 20 条”, and resets/clamps local page state when its backing collection shrinks.
 - Archive deletion requires an explicit confirmation; blank/whitespace reasons disable submission, the suggested “误导入” remains editable, and successful/stale deletion refreshes server state instead of removing a row optimistically.
@@ -105,9 +109,9 @@ Establish `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, and `pnpm te
 
 `pnpm test:e2e` must never spawn Electron from Codex's macOS Seatbelt sandbox. Keep the fail-fast launch policy and its unit regression test intact; this host restriction does not justify weakening Electron's production renderer sandbox.
 
-For macOS manual testing, build/package first and use the root `../启动本地测试.command` from a normal desktop session. The helper waits for Docker, MySQL, the backend, and a successful administrator login before opening `release/mac-arm64/PersonnelArchive.app`; it is not part of the Windows production package.
+For macOS manual testing, use a normal desktop session. The root `../启动本地测试.command` still builds and opens the sibling `../personnel-archive-desktop`; it does not select this B copy until an explicit promotion changes that launcher. Test this copy directly with its own `pnpm dev`, `pnpm build`, or packaging commands against the local service.
 
-Use Vitest/Vue Test Utils for feature states and real temporary directories for folder settings, scan filtering, archive creation, collision suffixing, source retention, manual/automatic source policy, batch selection, ZIP contract, and save-result feedback. Playwright's Electron coverage includes login and the real IPC scan/archive path; also cover default skip, explicit overwrite, mixed batch results, stale decisions, multi-result search, single download/open, batch download/save, and session expiry. Windows installers must be validated on Windows CI. Product name is `人员档案助手`; installed executable is `PersonnelArchive.exe`.
+Use Vitest/Vue Test Utils for feature states and real temporary directories for folder settings, scan filtering, archive creation, collision suffixing, source retention, manual/automatic source policy, batch selection, ZIP contract, and save-result feedback. Keep component contracts for the B shell, login, shared dossier state/content, outline, personnel index, family matches, import desk, and folder settings. Playwright's Electron coverage includes login, masked/revealed detail values, photo lifecycle, deletion, 20-row pagination, the real IPC scan/archive and ZIP-save paths, plus 1440px/1080px B layout geometry and screenshots. Windows installers must be validated on Windows CI. Product name is `人员档案助手`; installed executable is `PersonnelArchive.exe`.
 
 ## CODE DOCUMENTATION
 
