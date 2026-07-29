@@ -17,6 +17,7 @@ const resultPagination = useLocalListPagination(computed(() => store.items))
 const dialogVisible = ref(false)
 const activeItem = ref<ImportRow | null>(null)
 const decision = ref<ImportDecision>("SKIP")
+const confirmingOverwrite = ref(false)
 
 const completedCount = computed(
   () => store.items.filter((item) => item.status !== "PENDING_DECISION").length,
@@ -83,15 +84,24 @@ async function submit(): Promise<void> {
   const item = activeItem.value
   if (item === null) return
   if (decision.value === "OVERWRITE") {
+    confirmingOverwrite.value = true
     try {
       await ElMessageBox.confirm(
         "原有效档案将转为历史快照，本工作簿将成为新的有效档案。此操作不会删除历史记录。",
         "确认覆盖档案",
-        { type: "warning", confirmButtonText: "确认覆盖", cancelButtonText: "返回检查" },
+        {
+          type: "warning",
+          confirmButtonText: "确认覆盖",
+          cancelButtonText: "返回检查",
+          showClose: false,
+          closeOnClickModal: false,
+        },
       )
     } catch (error) {
       if (error === "cancel" || error === "close") return
       throw error
+    } finally {
+      confirmingOverwrite.value = false
     }
   }
   await store.decide(item.itemId, decision.value)
@@ -256,6 +266,8 @@ async function submit(): Promise<void> {
       title="发现重复档案"
       width="560px"
       :close-on-click-modal="false"
+      :close-on-press-escape="!confirmingOverwrite"
+      :show-close="!confirmingOverwrite"
     >
       <div v-if="activeItem?.duplicate" class="duplicate-sheet">
         <dl>

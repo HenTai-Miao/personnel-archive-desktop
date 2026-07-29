@@ -14,6 +14,36 @@
   border-bottom: 1px solid var(--dossier-line-soft);
 }
 
+.el-dialog__header.show-close {
+  padding-right: 64px;
+}
+
+.el-dialog__headerbtn {
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  transition:
+    color 160ms ease,
+    background-color 160ms ease;
+}
+
+.el-dialog__headerbtn:hover,
+.el-dialog__headerbtn:focus-visible {
+  background: var(--dossier-primary-wash);
+}
+
+.el-dialog__headerbtn .el-dialog__close {
+  color: var(--dossier-faint);
+  font-size: 16px;
+}
+
+.el-dialog__headerbtn:hover .el-dialog__close,
+.el-dialog__headerbtn:focus-visible .el-dialog__close {
+  color: var(--dossier-primary);
+}
+
 .el-dialog__title {
   color: var(--dossier-ink);
   font-size: 17px;
