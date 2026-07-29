@@ -32,7 +32,7 @@
 - Consumes: 根启动器的 `--check` 参数。
 - Produces: 退出码 `0` 和可读的预检输出，其中桌面端目录精确指向 `personnel-archive-desktop-b`；普通运行模式启动 service 后打开 B Electron 开发客户端。
 
-- [ ] **Step 1: 确认 B 基线测试通过**
+- [x] **Step 1: 确认 B 基线测试通过**
 
 运行：
 
@@ -42,7 +42,7 @@ pnpm test
 
 预期：现有 Vitest 全部通过；若基线失败，先停止并报告，不把既有失败归因于本次晋升。
 
-- [ ] **Step 2: 写入失败的根启动器行为测试**
+- [x] **Step 2: 写入失败的根启动器行为测试**
 
 新增 `tests/unit/root-launcher-promotion.test.ts`，通过 `node:child_process.spawnSync` 真实执行：
 
@@ -59,7 +59,7 @@ zsh ../启动本地测试.command --check
 
 测试验证可观察行为，不读取或匹配脚本源码。
 
-- [ ] **Step 3: 运行聚焦测试并确认 RED**
+- [x] **Step 3: 运行聚焦测试并确认 RED**
 
 运行：
 
@@ -69,7 +69,7 @@ zsh ../启动本地测试.command --check
 
 预期：测试因正式 `启动本地测试.command` 尚不存在而失败，证明它能捕获根入口缺失/选错。
 
-- [ ] **Step 4: 写入最小安全启动器实现**
+- [x] **Step 4: 写入最小安全启动器实现**
 
 用 `apply_patch` 创建根 `启动本地测试.command`：
 
@@ -83,7 +83,7 @@ zsh ../启动本地测试.command --check
 
 随后用 `apply_patch` 删除 `Codex启动B版预览.command`，并赋予新入口可执行权限。
 
-- [ ] **Step 5: 运行聚焦测试并确认 GREEN**
+- [x] **Step 5: 运行聚焦测试并确认 GREEN**
 
 运行：
 
@@ -105,7 +105,7 @@ zsh -n ../启动本地测试.command
 **Interfaces:**
 - Produces: 所有工程说明只把 B 列为当前桌面端；启动流程与实际根入口一致；旧客户端实现不再作为当前模块或对照流程出现。
 
-- [ ] **Step 1: 更新 B 客户端说明**
+- [x] **Step 1: 更新 B 客户端说明**
 
 在 B `AGENTS.md` 中：
 
@@ -114,7 +114,7 @@ zsh -n ../启动本地测试.command
 - 将本机测试改为根启动器直接启动 B；
 - 保留固定技术包名、B 视觉契约、安全边界和现有功能状态。
 
-- [ ] **Step 2: 更新根项目状态和目录结构**
+- [x] **Step 2: 更新根项目状态和目录结构**
 
 在根 `AGENTS.md` 中：
 
@@ -123,7 +123,7 @@ zsh -n ../启动本地测试.command
 - 目录树只列正式启动器、B、service；
 - 删除“独立副本、尚未替换当前打包源”等过期描述。
 
-- [ ] **Step 3: 收敛 CODE_GUIDE 客户端源图**
+- [x] **Step 3: 收敛 CODE_GUIDE 客户端源图**
 
 在根 `CODE_GUIDE.md` 中：
 
@@ -134,11 +134,11 @@ zsh -n ../启动本地测试.command
 - 保留 B 的 `AppShell`、`PersonRecordIndex`、`use-archive-dossier`、连续卷宗、全宽家庭查询/批量导入等真实结构；
 - 自动扫描说明只保留 B 的真实状态：`UNCONFIGURED` 不提示，目录丢失和实际错误仍提示。
 
-- [ ] **Step 4: 对齐服务端本机测试说明**
+- [x] **Step 4: 对齐服务端本机测试说明**
 
 更新 service `AGENTS.md` 的根启动器说明，使其准确描述“现有 MySQL + local service + B Electron 客户端”，不声称创建容器、验证凭据或打开旧客户端。
 
-- [ ] **Step 5: 搜索残留双轨描述**
+- [x] **Step 5: 搜索残留双轨描述**
 
 运行：
 
@@ -156,7 +156,7 @@ rg -n -P 'personnel-archive-desktop(?!-b)|尚未晋升|尚未替换|独立副本
 - Verify only: `src/**`
 - Verify only: `tests/**`
 
-- [ ] **Step 1: 验证根目录和启动器状态**
+- [x] **Step 1: 验证根目录和启动器状态**
 
 运行：
 
@@ -170,7 +170,7 @@ zsh -n ../启动本地测试.command
 
 预期：只有正式根入口和 B 客户端存在，预检输出指向 B 与 service。
 
-- [ ] **Step 2: 运行 B 全套非 GUI 校验**
+- [x] **Step 2: 运行 B 全套非 GUI 校验**
 
 运行：
 
@@ -183,7 +183,7 @@ pnpm build
 
 预期：全部退出码为 `0`；不在 Seatbelt 中运行 `pnpm test:e2e`。
 
-- [ ] **Step 3: 检查差异质量和固定品牌**
+- [x] **Step 3: 检查差异质量和固定品牌**
 
 运行：
 
