@@ -77,7 +77,7 @@ zsh ../启动本地测试.command --check
 - 派生 B 和 service 目录并检查必要入口存在；
 - `--check` 只做静态预检和输出，不启动网络、容器或进程；
 - 普通模式解析 Java 21，检查 3306；必要时只识别并启动现有 `local-mysql`；
-- 后端未就绪时以 `local` profile 启动，日志写入 `/private/tmp/personnel-archive-service.log`，等待 8080 API 响应；
+- 后端未就绪时以 `local` profile 启动，日志写入 `/private/tmp/personnel-archive-service.log`，等待 18080 API 响应；
 - 后端就绪后从 B 目录 `exec electron-vite dev`；
 - 缺少 Java、MySQL、依赖或服务启动失败时显示明确中文错误。
 

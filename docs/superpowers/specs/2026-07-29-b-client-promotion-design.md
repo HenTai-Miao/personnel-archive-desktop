@@ -39,7 +39,7 @@ personnel-archive/
 
 1. 只使用已经存在的本地 MySQL 容器或 3306 服务；不得创建、重置或删除数据库卷。
 2. MySQL 未就绪时给出明确提示；在可安全识别已有 `local-mysql` 容器时允许启动该容器。
-3. 使用 Java 21 和后端 `local` profile 启动 `personnel-archive-service`，等待 8080 就绪。
+3. 使用 Java 21 和后端 `local` profile 启动 `personnel-archive-service`，等待 18080 就绪。
 4. 启动 `personnel-archive-desktop-b` 的 Electron 开发客户端。
 5. 后端启动失败时展示安全日志尾部，不输出本地配置中的密码或令牌。
 
