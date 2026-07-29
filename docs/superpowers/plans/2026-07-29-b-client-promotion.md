@@ -203,7 +203,7 @@ git -C ../personnel-archive-service status --short
 - Commit in service: `AGENTS.md` only when changed
 - Root shared files remain outside Git: `../启动本地测试.command`, `../AGENTS.md`, `../CODE_GUIDE.md`
 
-- [ ] **Step 1: 提交 B 晋升改动**
+- [x] **Step 1: 提交 B 晋升改动**
 
 只暂存本计划范围内的 B 文件，确认 diff 后提交：
 
@@ -212,7 +212,7 @@ git add AGENTS.md tests/unit/root-launcher-promotion.test.ts docs/superpowers/pl
 git commit -m "chore(desktop): promote B client as canonical"
 ```
 
-- [ ] **Step 2: 提交 service 文档对齐**
+- [x] **Step 2: 提交 service 文档对齐**
 
 只暂存 service `AGENTS.md`，绝不暂存 `config/application-local.yml`：
 
@@ -221,6 +221,6 @@ git -C ../personnel-archive-service add AGENTS.md
 git -C ../personnel-archive-service commit -m "docs(service): align canonical B launcher"
 ```
 
-- [ ] **Step 3: 最终状态复核与交付**
+- [x] **Step 3: 最终状态复核与交付**
 
 记录两个仓库提交号、完整校验结果和根目录非 Git 文件状态。向用户返回正常桌面会话中的启动方式：双击根 `启动本地测试.command`，或在终端执行其绝对路径；说明本次未在 Seatbelt 内强行启动 Electron GUI。
