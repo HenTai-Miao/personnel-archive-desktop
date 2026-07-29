@@ -157,7 +157,7 @@ async function submit(): Promise<void> {
       </section>
 
       <el-alert
-        v-if="store.scanMessage"
+        v-if="store.scanMessage && store.scanState !== 'UNCONFIGURED'"
         class="import-alert"
         :title="store.scanMessage"
         :type="store.scanState === 'READY' ? 'info' : 'warning'"
