@@ -99,6 +99,10 @@
   margin: 0;
 }
 
+.picker-actions .el-button--primary:not(.is-link):not(.is-text) > span {
+  color: #fff;
+}
+
 .import-queued-section {
   padding: 0 20px 16px;
 }
