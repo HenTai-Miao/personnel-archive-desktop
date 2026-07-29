@@ -17,7 +17,7 @@ test("deletes an imported archive with the recommended reason", async () => {
       const submittedReasons: unknown[] = []
       let active = true
       page.on("pageerror", (error) => pageErrors.push(error.message))
-      await page.route("http://127.0.0.1:8080/api/v1/**", async (route) => {
+      await page.route("http://127.0.0.1:18080/api/v1/**", async (route) => {
         const request = route.request()
         const url = new URL(request.url())
         if (url.pathname === "/api/v1/auth/login") {

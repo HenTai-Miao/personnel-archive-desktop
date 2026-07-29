@@ -16,7 +16,7 @@ cp .env.example .env.local
 pnpm dev
 ```
 
-`VITE_API_BASE_URL` 必须以 `/api/v1` 结尾。`VITE_API_ORIGIN` 只用于生成 Electron 内容安全策略，必须与 API base 的 origin（协议、主机、端口）完全一致；配置不一致时构建会失败。默认仅允许 `http://127.0.0.1:8080`。
+`VITE_API_BASE_URL` 必须以 `/api/v1` 结尾。`VITE_API_ORIGIN` 只用于生成 Electron 内容安全策略，必须与 API base 的 origin（协议、主机、端口）完全一致；配置不一致时构建会失败。本地默认使用 `http://127.0.0.1:18080`。
 
 ## 验证与构建
 

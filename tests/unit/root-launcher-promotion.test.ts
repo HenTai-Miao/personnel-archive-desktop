@@ -20,6 +20,7 @@ describe("root local-test launcher", () => {
     expect(result.stdout).toContain(
       `后端目录：${join(workspaceRoot, "personnel-archive-service")}\n`,
     )
+    expect(result.stdout).toContain("后端 API：http://127.0.0.1:18080/api/v1\n")
     expect(result.stdout).toContain("启动入口检查通过\n")
   })
 })

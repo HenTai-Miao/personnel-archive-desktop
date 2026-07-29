@@ -39,7 +39,7 @@ test("renders B-series layouts at desktop and narrow widths", async () => {
       await page.setViewportSize({ width: 1440, height: 960 })
       const pageErrors: string[] = []
       page.on("pageerror", (error) => pageErrors.push(error.message))
-      await page.route("http://127.0.0.1:8080/api/v1/**", async (route) => {
+      await page.route("http://127.0.0.1:18080/api/v1/**", async (route) => {
         const request = route.request()
         const url = new URL(request.url())
         const path = url.pathname

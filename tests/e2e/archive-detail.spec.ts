@@ -28,7 +28,7 @@ test("reads a masked dossier at the B-series desk before opening its detail rout
           `${request.method()} ${request.url()} ${request.failure()?.errorText ?? ""}`,
         ),
       )
-      await page.route("http://127.0.0.1:8080/api/v1/**", async (route) => {
+      await page.route("http://127.0.0.1:18080/api/v1/**", async (route) => {
         const request = route.request()
         const url = new URL(request.url())
         const path = url.pathname

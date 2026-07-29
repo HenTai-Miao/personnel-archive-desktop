@@ -27,7 +27,7 @@ test("shows 20 personnel rows per page and loads the next server page", async ()
     try {
       const page = await application.firstWindow()
       const requestedPages: string[] = []
-      await page.route("http://127.0.0.1:8080/api/v1/**", async (route) => {
+      await page.route("http://127.0.0.1:18080/api/v1/**", async (route) => {
         const request = route.request()
         const url = new URL(request.url())
         if (url.pathname === "/api/v1/auth/login") {

@@ -3,7 +3,7 @@ import vue from "@vitejs/plugin-vue"
 import { defineConfig, externalizeDepsPlugin } from "electron-vite"
 import { loadEnv, type Plugin } from "vite"
 
-const DEFAULT_API_BASE_URL = "http://127.0.0.1:8080/api/v1"
+const DEFAULT_API_BASE_URL = "http://127.0.0.1:18080/api/v1"
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), "")
