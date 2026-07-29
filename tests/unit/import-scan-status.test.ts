@@ -52,6 +52,19 @@ describe("ImportPage automatic scan status", () => {
     const wrapper = mountPage()
 
     expect(wrapper.text()).toContain("无法读取待上传文件夹")
+    expect(wrapper.find(".import-alert .el-alert--warning").exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it("keeps a ready automatic scan status visible as information", () => {
+    const store = useImportStore()
+    store.scanState = "READY"
+    store.scanMessage = "已扫描待上传文件夹"
+
+    const wrapper = mountPage()
+
+    expect(wrapper.text()).toContain("已扫描待上传文件夹")
+    expect(wrapper.find(".import-alert .el-alert--info").exists()).toBe(true)
     wrapper.unmount()
   })
 })
