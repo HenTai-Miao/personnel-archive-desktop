@@ -158,7 +158,7 @@ export const useImportStore = defineStore("archive-import", () => {
       const updatedRow = mergeImportItem(updated, original.source)
       items.value = replaceImportRow(items.value, itemId, updatedRow)
       await archiveCompletedRows([updatedRow])
-      message.value = decision === "SKIP" ? "已跳过该工作簿" : "已将工作簿设为新的有效档案"
+      message.value = decision === "SKIP" ? "" : "已将工作簿设为新的有效档案"
     } catch (error) {
       if (!(error instanceof Error)) throw error
       if (isStaleImportDecision(error)) staleItemId.value = itemId

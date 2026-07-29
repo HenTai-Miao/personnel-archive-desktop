@@ -152,6 +152,47 @@ describe("archive import folder flow", () => {
     expect(store.items[0]?.localState).toEqual({ kind: "MANUAL_RETAINED" })
   })
 
+  it("clears the page message after skipping a duplicate workbook", async () => {
+    const selectWorkbooks = vi.fn<PersonnelArchiveBridge["selectWorkbooks"]>()
+    selectWorkbooks.mockResolvedValue([
+      { name: "手动重复档案.xlsx", size: 4, bytes: workbookBytes },
+    ])
+    installBridge({ selectWorkbooks })
+    vi.mocked(uploadWorkbooks).mockResolvedValue(
+      importBatchSchema.parse({
+        batchId: "batch-skip-manual",
+        items: [
+          {
+            itemId: "item-skip-manual",
+            fileName: "手动重复档案.xlsx",
+            status: "PENDING_DECISION",
+            code: "DUPLICATE_REQUIRES_DECISION",
+            message: "档案已存在，请选择覆盖或跳过",
+          },
+        ],
+      }),
+    )
+    vi.mocked(submitDecision).mockResolvedValue(
+      importItemSchema.parse({
+        itemId: "item-skip-manual",
+        fileName: "手动重复档案.xlsx",
+        status: "SKIPPED",
+        code: "SKIPPED",
+        message: "已跳过，档案未变更",
+      }),
+    )
+    const store = useImportStore()
+    await store.chooseFiles()
+    await store.precheck()
+    const pending = store.items[0]
+    if (pending === undefined) throw new TypeError("测试缺少待确认条目")
+
+    await store.decide(pending.itemId, "SKIP")
+
+    expect(store.message).toBe("")
+    expect(store.items[0]?.status).toBe("SKIPPED")
+  })
+
   it("shows a retryable local state when moving an imported automatic file fails", async () => {
     // Given
     const scanPendingWorkbooks = vi.fn<PersonnelArchiveBridge["scanPendingWorkbooks"]>()
@@ -225,5 +266,6 @@ describe("archive import folder flow", () => {
       kind: "AUTO_MOVED",
       archivedName: "档案甲.xlsx",
     })
+    expect(store.message).toBe("已将工作簿设为新的有效档案")
   })
 })
