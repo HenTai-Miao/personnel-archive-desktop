@@ -74,7 +74,7 @@ describe("ArchiveDetailPage", () => {
           name: "测试乙",
           relationship: "测试称谓",
           birthDate: "2000-07-23",
-          age: 25,
+          age: "25",
           politicalStatus: "测试面貌",
           organizationAndPosition: "测试单位及职务",
         },
@@ -145,6 +145,8 @@ describe("ArchiveDetailPage", () => {
     expect(apiMocks.downloadPersonPhoto).toHaveBeenCalledWith("7")
     expect(createObjectUrl).toHaveBeenCalledOnce()
     expect(wrapper.get(".family-member-row").classes()).toContain("is-search-match")
+    expect(wrapper.get(".family-member-row").text()).toContain("25")
+    expect(wrapper.get(".family-member-row").text()).not.toContain("25 岁")
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: "smooth", block: "center" })
 
     wrapper.unmount()

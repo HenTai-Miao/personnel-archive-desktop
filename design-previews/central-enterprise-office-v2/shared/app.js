@@ -441,7 +441,7 @@
             <table class="record-table"><thead><tr><th>起止时间</th><th>工作单位及职务</th></tr></thead><tbody><tr><td>2012-07 至 2016-04</td><td>测试工程有限公司 · 项目专员</td></tr><tr><td>2016-05 至 2021-12</td><td>测试建设集团 · 项目主管</td></tr><tr><td>2022-01 至今</td><td>测试建设集团 · 综合管理部项目负责人</td></tr></tbody></table>
           </section>
 
-          <section class="detail-section" id="family-detail"><header><span>04</span><div><h2>家庭成员与申报</h2><p>家庭成员年龄按出生日期即时计算</p></div></header>
+          <section class="detail-section" id="family-detail"><header><span>04</span><div><h2>家庭成员与申报</h2><p>家庭成员年龄按导入结果原样展示</p></div></header>
             <table class="record-table"><thead><tr><th>称谓</th><th>姓名</th><th>出生日期</th><th>政治面貌</th><th>工作单位及职务</th></tr></thead><tbody><tr><td>父亲</td><td>测试家属甲</td><td>1963-02-01</td><td>群众</td><td>已退休</td></tr><tr><td>配偶</td><td>测试家属乙</td><td>1991-06-12</td><td>中共党员</td><td>测试单位 · 职员</td></tr></tbody></table>
           </section>
         </div>

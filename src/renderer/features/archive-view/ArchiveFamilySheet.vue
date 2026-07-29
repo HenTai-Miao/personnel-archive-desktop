@@ -34,7 +34,7 @@ function isHighlightedMember(member: PersonDetail["familyMembers"][number]): boo
               <td>{{ member.relationship || '—' }}</td>
               <td class="primary-cell">{{ member.name || '—' }}</td>
               <td>{{ member.birthDate || '—' }}</td>
-              <td>{{ member.age === null ? '—' : `${member.age} 岁` }}</td>
+              <td>{{ member.age || '—' }}</td>
               <td>{{ member.politicalStatus || '—' }}</td>
               <td>{{ member.organizationAndPosition || '—' }}</td>
             </tr>

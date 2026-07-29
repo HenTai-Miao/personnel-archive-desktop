@@ -60,7 +60,7 @@ export const E2E_PERSON_DETAIL = {
       name: "测试乙",
       relationship: "子女",
       birthDate: "2000-07-23",
-      age: 25,
+      age: "25",
       politicalStatus: "群众",
       organizationAndPosition: "测试单位及职务",
     },

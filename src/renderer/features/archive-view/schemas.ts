@@ -53,7 +53,7 @@ const familyMemberSchema = z
     name: z.string(),
     relationship: z.string(),
     birthDate: z.string(),
-    age: z.number().int().nonnegative().nullable(),
+    age: z.string(),
     politicalStatus: z.string(),
     organizationAndPosition: z.string(),
   })

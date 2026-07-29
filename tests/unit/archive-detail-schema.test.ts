@@ -9,12 +9,12 @@ const completeDetail = {
   identityCardMasked: "1234***********678",
   personal: {
     gender: "女",
-    birthDate: "2000-01-01",
+    birthDate: "2000.01",
     nation: "汉族",
     nativePlace: "湖南长沙",
     birthPlace: "湖南长沙",
     politicalStatus: "中共党员",
-    politicalJoinDate: "2021-07-01",
+    politicalJoinDate: "2021.07",
     maritalStatus: "已婚",
     healthStatus: "健康",
     mailingAddress: "测试地址",
@@ -24,11 +24,11 @@ const completeDetail = {
   employment: {
     organization: "测试单位",
     department: "测试部门",
-    workStartDate: "2020-01-01",
-    dispatchedToBiddingCompanyDate: "2021-01-01",
+    workStartDate: "2020.01",
+    dispatchedToBiddingCompanyDate: "2021.01",
     position: "测试职务",
     titleOrSkill: "测试技能",
-    titleOrSkillAcquiredDate: "2022-01-01",
+    titleOrSkillAcquiredDate: "2022.01",
   },
   education: {
     fullTime: {
@@ -52,7 +52,7 @@ const completeDetail = {
       name: "测试乙",
       relationship: "子女",
       birthDate: "2000-07-23",
-      age: 25,
+      age: "25",
       politicalStatus: "群众",
       organizationAndPosition: "测试单位",
     },
@@ -77,7 +77,17 @@ describe("personDetailSchema", () => {
     expect(detail.id).toBe("9007199254740993")
     expect(detail.education.fullTime.institutionName).toBe("全日制大学")
     expect(detail.familyMembers[0]?.politicalStatus).toBe("群众")
+    expect(detail.familyMembers[0]?.age).toBe("25")
     expect(detail.photo?.mimeType).toBe("image/png")
+  })
+
+  it("rejects a recalculated numeric age instead of accepting the source string", () => {
+    const changedAge = {
+      ...completeDetail,
+      familyMembers: [{ ...completeDetail.familyMembers[0], age: 26 }],
+    }
+
+    expect(() => personDetailSchema.parse(changedAge)).toThrow()
   })
 
   it("rejects a response when an imported section is missing", () => {

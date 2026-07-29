@@ -88,7 +88,7 @@ The client may validate extension and size for immediate feedback, but template,
 - Archive deletion requires an explicit confirmation; blank/whitespace reasons disable submission, the suggested “误导入” remains editable, and successful/stale deletion refreshes server state instead of removing a row optimistically.
 - Import history requests exactly 20 records per server page, sorts according to the service response, and can be refreshed without disturbing the current upload queue.
 - Batch import distinguishes pending decision, newly imported, overwritten, skipped, failed, and partially successful outcomes.
-- Dates display as `yyyy-MM-dd`; age shown in results is transient and never written back as source data.
+- Dates and family ages display the backend-provided Excel source strings unchanged; the client must not add a month/day, normalize separators, parse dates for display, recalculate age, or append “岁”.
 - The detail page follows the workbook's information hierarchy and provides a sticky in-page index; empty sections remain visible as explicit “未填写” states instead of disappearing.
 - Identity-card and phone rows place a compact “显示/隐藏” control directly after the value; blank masked values have no reveal action, loading is field-specific, and a failed reveal leaves the masked value visible.
 - Map behavior from stable backend error codes, never by parsing error-message text.
