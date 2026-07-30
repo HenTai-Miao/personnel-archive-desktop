@@ -111,7 +111,7 @@ Establish `pnpm lint`, `pnpm typecheck`, `pnpm test`, `pnpm build`, `pnpm build:
 
 `pnpm test:e2e` must never spawn Electron from Codex's macOS Seatbelt sandbox. Keep the fail-fast launch policy and its unit regression test intact; this host restriction does not justify weakening Electron's production renderer sandbox.
 
-For macOS manual testing, use a normal desktop session. The root `../启动本地测试.command` checks the existing local MySQL setup, starts the service with its `local` profile when needed, and opens this canonical B client. Direct `pnpm dev`, `pnpm build`, and packaging commands in this directory use the same client source.
+For macOS manual testing, use a normal desktop session. The root `../启动本地测试.command` checks the existing local MySQL setup, starts the service with its `dev` profile when needed, and opens this canonical B client. Direct `pnpm dev`, `pnpm build`, and packaging commands in this directory use the same client source.
 
 Use Vitest/Vue Test Utils for feature states and real temporary directories for folder settings, scan filtering, archive creation, collision suffixing, source retention, manual/automatic source policy, batch selection, ZIP contract, and save-result feedback. Keep component contracts for the B shell, login, shared dossier state/content, outline, personnel index, family matches, import desk, and folder settings. Playwright's Electron coverage includes login, masked/revealed detail values, photo lifecycle, deletion, 20-row pagination, the real IPC scan/archive and ZIP-save paths, plus 1440px/1080px B layout geometry and screenshots. Windows installers must be validated on Windows CI. Product name is `人员档案助手`; installed executable is `PersonnelArchive.exe`.
 
