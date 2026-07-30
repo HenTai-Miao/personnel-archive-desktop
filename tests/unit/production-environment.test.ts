@@ -22,8 +22,8 @@ describe("production API environment", () => {
 
     try {
       const environment = loadEnv("prod", projectRoot, "")
-      expect(environment["VITE_API_BASE_URL"]).toBe("http://10.141.29.96:18080/api/v1")
-      expect(environment["VITE_API_ORIGIN"]).toBe("http://10.141.29.96:18080")
+      expect(environment["VITE_API_BASE_URL"]).toBe("http://10.23.157.237:18080/api/v1")
+      expect(environment["VITE_API_ORIGIN"]).toBe("http://10.23.157.237:18080")
       expect(packageJson.scripts["build:prod"]).toBe(
         "pnpm typecheck && electron-vite build --mode prod",
       )

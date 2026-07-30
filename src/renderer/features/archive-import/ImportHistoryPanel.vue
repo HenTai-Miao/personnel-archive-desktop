@@ -5,6 +5,8 @@ import { errorMessage } from "@/shared/api/error"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import { LIST_PAGE_SIZE } from "@/shared/components/list-pagination"
 import { fetchImportHistory } from "./api"
+import ImportFieldIssuesDialog from "./ImportFieldIssuesDialog.vue"
+import ImportResultMessage from "./ImportResultMessage.vue"
 import type { ImportHistoryItem } from "./schemas"
 import { importStatusMeta } from "./status-presentation"
 
@@ -15,6 +17,9 @@ const total = ref(0)
 const loading = ref(false)
 const loaded = ref(false)
 const message = ref("")
+const fieldIssuesVisible = ref(false)
+const activeFieldIssuesFileName = ref("")
+const activeFieldIssuesMessage = ref("")
 let latestRequestId = 0
 
 const timestampFormatter = new Intl.DateTimeFormat("zh-CN", {
@@ -56,6 +61,12 @@ async function load(targetPage: number): Promise<void> {
 function formatTimestamp(value: string): string {
   return timestampFormatter.format(new Date(value)).replaceAll("/", "-")
 }
+
+function openFieldIssues(item: ImportHistoryItem): void {
+  activeFieldIssuesFileName.value = item.fileName
+  activeFieldIssuesMessage.value = item.message
+  fieldIssuesVisible.value = true
+}
 </script>
 
 <template>
@@ -85,17 +96,30 @@ function formatTimestamp(value: string): string {
       <el-table-column prop="operatorName" label="操作人" width="130" />
       <el-table-column label="状态" width="105">
         <template #default="scope">
-          <el-tag :type="importStatusMeta(scope.row.status).type">
-            {{ importStatusMeta(scope.row.status).label }}
+          <el-tag :type="importStatusMeta(scope.row).type">
+            {{ importStatusMeta(scope.row).label }}
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="message" label="处理说明" min-width="240" show-overflow-tooltip />
+      <el-table-column label="处理说明" min-width="240">
+        <template #default="scope">
+          <ImportResultMessage
+            :code="scope.row.code"
+            :message="scope.row.message"
+            @show-issues="openFieldIssues(scope.row)"
+          />
+        </template>
+      </el-table-column>
     </el-table>
     <div v-else-if="loaded" class="workflow-empty">
       <span>暂无导入记录</span><p>完成一次批量导入后，逐文件处理结果会保存在这里。</p>
     </div>
 
     <FixedListPagination v-if="!loading && !message" :page="page" :total="total" @change="load" />
+    <ImportFieldIssuesDialog
+      v-model="fieldIssuesVisible"
+      :file-name="activeFieldIssuesFileName"
+      :message="activeFieldIssuesMessage"
+    />
   </section>
 </template>

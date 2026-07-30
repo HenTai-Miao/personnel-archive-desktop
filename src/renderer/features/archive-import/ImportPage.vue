@@ -5,7 +5,9 @@ import { computed, ref } from "vue"
 import FixedListPagination from "@/shared/components/FixedListPagination.vue"
 import { useLocalListPagination } from "@/shared/components/list-pagination"
 import type { WorkbookSource } from "./archive-policy"
+import ImportFieldIssuesDialog from "./ImportFieldIssuesDialog.vue"
 import ImportHistoryPanel from "./ImportHistoryPanel.vue"
+import ImportResultMessage from "./ImportResultMessage.vue"
 import type { ImportRow, LocalFileState } from "./queue-model"
 import type { ImportDecision } from "./schemas"
 import { importBatchSummary, importStatusMeta } from "./status-presentation"
@@ -16,6 +18,9 @@ const queuedPagination = useLocalListPagination(computed(() => store.queuedWorkb
 const resultPagination = useLocalListPagination(computed(() => store.items))
 const dialogVisible = ref(false)
 const activeItem = ref<ImportRow | null>(null)
+const fieldIssuesVisible = ref(false)
+const activeFieldIssuesFileName = ref("")
+const activeFieldIssuesMessage = ref("")
 const decision = ref<ImportDecision>("SKIP")
 const confirmingOverwrite = ref(false)
 
@@ -25,9 +30,7 @@ const completedCount = computed(
 const historyRefreshKey = computed(() =>
   store.items.map((item) => `${item.itemId}:${item.status}`).join("|"),
 )
-const currentBatchSummary = computed(() =>
-  importBatchSummary(store.items.map((item) => item.status)),
-)
+const currentBatchSummary = computed(() => importBatchSummary(store.items))
 
 const timestampFormatter = new Intl.DateTimeFormat("zh-CN", {
   year: "numeric",
@@ -46,6 +49,12 @@ function openDecision(item: ImportRow): void {
   activeItem.value = item
   decision.value = "SKIP"
   dialogVisible.value = true
+}
+
+function openFieldIssues(item: ImportRow): void {
+  activeFieldIssuesFileName.value = item.fileName
+  activeFieldIssuesMessage.value = item.message
+  fieldIssuesVisible.value = true
 }
 
 function sourceLabel(source: WorkbookSource): string {
@@ -210,12 +219,20 @@ async function submit(): Promise<void> {
           </el-table-column>
           <el-table-column label="状态" width="110">
             <template #default="scope">
-              <el-tag :type="importStatusMeta(scope.row.status).type">
-                {{ importStatusMeta(scope.row.status).label }}
+              <el-tag :type="importStatusMeta(scope.row).type">
+                {{ importStatusMeta(scope.row).label }}
               </el-tag>
             </template>
           </el-table-column>
-          <el-table-column prop="message" label="处理说明" min-width="220" />
+          <el-table-column label="处理说明" min-width="220">
+            <template #default="scope">
+              <ImportResultMessage
+                :code="scope.row.code"
+                :message="scope.row.message"
+                @show-issues="openFieldIssues(scope.row)"
+              />
+            </template>
+          </el-table-column>
           <el-table-column label="本地文件" min-width="210">
             <template #default="scope">
               <span :class="{ 'archive-error': scope.row.localState.kind === 'AUTO_MOVE_FAILED' }">
@@ -259,6 +276,12 @@ async function submit(): Promise<void> {
 
       <ImportHistoryPanel id="import-history" :refresh-key="historyRefreshKey" />
     </div>
+
+    <ImportFieldIssuesDialog
+      v-model="fieldIssuesVisible"
+      :file-name="activeFieldIssuesFileName"
+      :message="activeFieldIssuesMessage"
+    />
 
     <el-dialog
       v-model="dialogVisible"

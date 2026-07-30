@@ -260,6 +260,161 @@
   color: var(--dossier-danger);
 }
 
+.import-result-message {
+  display: grid;
+  min-width: 0;
+  justify-items: start;
+  gap: 3px;
+}
+
+.import-result-message__summary {
+  display: -webkit-box;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--dossier-subtle);
+  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.45;
+}
+
+.import-result-message > .el-button {
+  min-height: 24px;
+  padding: 0;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.import-field-issues-overlay {
+  background-color: rgb(18 31 58 / 58%);
+}
+
+.import-field-issues-dialog {
+  --el-dialog-margin-top: max(24px, 7vh);
+  overflow: hidden;
+  border: 1px solid rgb(3 78 214 / 22%);
+  border-top: 4px solid var(--dossier-primary);
+  border-radius: var(--dossier-card-radius);
+  box-shadow: 0 24px 64px rgb(8 24 48 / 28%);
+}
+
+.import-field-issues-dialog .el-dialog__header {
+  margin-right: 0;
+  padding: 18px 22px 16px;
+  border-bottom: 1px solid rgb(3 78 214 / 14%);
+}
+
+.import-field-issues-dialog .el-dialog__title {
+  color: var(--dossier-ink);
+  font-size: 19px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+}
+
+.import-field-issues-dialog .el-dialog__headerbtn {
+  top: 8px;
+  right: 8px;
+}
+
+.import-field-issues-dialog .el-dialog__body {
+  padding: 18px 22px 20px;
+}
+
+.import-field-issues-content {
+  display: grid;
+  gap: 14px;
+}
+
+.import-field-issues-guidance {
+  margin: 0;
+  color: var(--dossier-subtle);
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.import-field-issues-file {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  padding: 11px 14px;
+  border: 1px solid rgb(3 78 214 / 16%);
+  background: var(--dossier-primary-wash);
+}
+
+.import-field-issues-file span {
+  color: var(--dossier-faint);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.import-field-issues-file strong {
+  min-width: 0;
+  overflow: hidden;
+  color: var(--dossier-ink);
+  font-size: 13px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.import-field-issues-list {
+  max-height: min(44vh, 420px);
+  margin: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 0 0 38px;
+  border: 1px solid var(--dossier-line);
+  background: #f8faff;
+  color: var(--dossier-ink);
+  font: 13px / 1.7 var(--dossier-font);
+}
+
+.import-field-issues-list li {
+  padding: 13px 16px 13px 4px;
+  overflow-wrap: anywhere;
+  line-break: strict;
+}
+
+.import-field-issues-list li + li {
+  border-top: 1px solid var(--dossier-line);
+}
+
+.import-field-issues-list li::marker {
+  color: var(--dossier-primary);
+  font-family: var(--dossier-mono);
+  font-weight: 800;
+}
+
+.import-field-issues-dialog .el-dialog__footer {
+  padding: 14px 22px 16px;
+  border-top: 1px solid rgb(3 78 214 / 14%);
+  background: #f8faff;
+}
+
+.import-field-issues-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.import-field-issues-copy-feedback {
+  color: var(--dossier-subtle);
+  font-size: 12px;
+  text-align: left;
+}
+
+.import-field-issues-actions {
+  display: flex;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
 @media (max-width: 1160px) {
   .import-picker-heading,
   .import-section-heading {
@@ -270,5 +425,18 @@
   .picker-actions {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .import-field-issues-dialog .el-dialog__header,
+  .import-field-issues-dialog .el-dialog__body,
+  .import-field-issues-dialog .el-dialog__footer {
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .import-field-issues-list {
+    max-height: 48vh;
   }
 }

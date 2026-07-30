@@ -12,6 +12,7 @@ import {
   importHistoryPageSchema,
   importItemSchema,
 } from "@/features/archive-import/schemas"
+import { importStatusMeta } from "@/features/archive-import/status-presentation"
 import { useImportStore } from "@/features/archive-import/store"
 
 vi.mock("@/features/archive-import/api", () => ({
@@ -97,6 +98,17 @@ describe("ImportPage list pagination", () => {
     )
   })
 
+  it("presentsFieldValidationFailuresAsNeedingCorrection", () => {
+    expect(importStatusMeta({ status: "FAILED", code: "IMPORT_FIELD_VALIDATION_FAILED" })).toEqual({
+      label: "需修正",
+      type: "warning",
+    })
+    expect(importStatusMeta({ status: "FAILED", code: "IMPORT_FAILED" })).toEqual({
+      label: "失败",
+      type: "danger",
+    })
+  })
+
   it("shows only the first 20 import results on the first page", () => {
     // Given
     setActivePinia(createPinia())
@@ -135,6 +147,23 @@ describe("ImportPage list pagination", () => {
     // Then
     expect(wrapper.text()).toContain("全部失败")
     expect(wrapper.text()).not.toContain("部分成功")
+    wrapper.unmount()
+  })
+
+  it("labelsAValidationOnlyBatchAsNeedingCorrection", () => {
+    // Given
+    setActivePinia(createPinia())
+    useImportStore().items = importRowsWithStatuses(["FAILED", "FAILED"]).map((item) => ({
+      ...item,
+      code: "IMPORT_FIELD_VALIDATION_FAILED",
+    }))
+
+    // When
+    const wrapper = mountImportPage()
+
+    // Then
+    expect(wrapper.text()).toContain("2 份待修正")
+    expect(wrapper.text()).not.toContain("全部失败")
     wrapper.unmount()
   })
 

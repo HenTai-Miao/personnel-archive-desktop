@@ -1,4 +1,4 @@
-<!-- 学历卷：并列展示全日制、在职学历摘要，并保留主要学历原文行。 -->
+<!-- 学历卷：并列展示全日制、在职学历摘要，并按标准日期与自由文本展示主要学历行。 -->
 <script setup lang="ts">
 import ArchiveRowTable from "./ArchiveRowTable.vue"
 import type { EducationSummary, OrderedText } from "./schemas"

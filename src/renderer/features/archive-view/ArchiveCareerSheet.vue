@@ -1,4 +1,4 @@
-<!-- 经历卷：按原工作簿顺序展示工作经历和奖惩原文。 -->
+<!-- 经历卷：按工作簿顺序展示标准日期片段和工作经历、奖惩自由文本。 -->
 <script setup lang="ts">
 import ArchiveRowTable from "./ArchiveRowTable.vue"
 import type { OrderedText } from "./schemas"

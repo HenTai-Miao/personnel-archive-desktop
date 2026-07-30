@@ -117,13 +117,16 @@ export const useImportStore = defineStore("archive-import", () => {
         queuedWorkbooks.value = queued.slice(processedCount)
         await archiveCompletedRows(paired)
       }
-      const summary = importBatchSummary(items.value.map((item) => item.status))
+      const summary = importBatchSummary(items.value)
       switch (summary.kind) {
         case "PENDING":
           message.value = "批次已检查，存在需要确认的重复档案"
           break
         case "FAILED":
           message.value = "批次处理失败，请检查每份工作簿的处理说明"
+          break
+        case "NEEDS_CORRECTION":
+          message.value = "批次检查完成，请修正工作簿中的字段问题后重新上传"
           break
         case "PARTIAL_SUCCESS":
           message.value = "批次部分成功，失败文件需要检查"
