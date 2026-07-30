@@ -8,7 +8,7 @@
 
 **Tech Stack:** Vue 3, TypeScript, Element Plus 2.11, Pinia, Vitest, Vue Test Utils, Playwright Electron, B-series CSS.
 
-**Repository note:** This workspace is not a Git repository, so this plan intentionally contains no commit steps.
+**Repository note:** Run these commands from the `personnel-archive-desktop-b` Git repository. Commit and push steps remain outside this implementation plan.
 
 ---
 
@@ -139,13 +139,20 @@ Expected: all tests pass, including ordinary-failure regression coverage.
 
 ## Task 4: Add real Electron layering coverage
 
-- [ ] **Step 1: Create a routed import-history fixture**
+**Files:**
 
-Intercept login, personnel list, and import-history HTTP calls. Return at least four history rows with `IMPORT_FIELD_VALIDATION_FAILED`, so the real table renders striped rows and the fixed operation column.
+- Modify: `playwright.config.ts`
+- Modify: `tests/e2e/import-field-issues-dialog.spec.ts`
+- Create: `tests/support/e2e-api-route-policy.ts`
+- Create: `tests/unit/e2e-api-route-policy.test.ts`
+
+- [ ] **Step 1: Create routed current-batch and import-history fixtures**
+
+Before Electron starts, inspect the compiled renderer assets and require exactly one `/api/v1` base URL equal to the local E2E API. In the focused spec, intercept every-origin `/api/v1/**` traffic, reject any non-loopback origin before network I/O, and route login, personnel list, import upload, and import-history calls. Select four temporary ZIP-signature `.xlsx` files through the real main-process dialog/IPC boundary, then return four current-batch `IMPORT_FIELD_VALIDATION_FAILED` rows so the real table renders striped rows and its `fixed="right"` operation column. Keep history rows as a separate regression fixture.
 
 - [ ] **Step 2: Assert modal hit-testing**
 
-Navigate to “批量导入档案”, click the first “查看全部问题”, assert `body > .el-overlay` exists, then check `document.elementFromPoint()` at coordinates over the topbar, sidebar, a later striped row, and the right fixed column. Each point outside the dialog must resolve inside `.el-overlay`, not an underlying control.
+Navigate to “批量导入档案”, select and upload the temporary files, click the current batch's first “查看全部问题”, assert the dialog's active overlay is a body child, then check `document.elementFromPoint()` at coordinates over the topbar, sidebar, a later current-batch striped row, and the current table's right fixed column. Each point outside the dialog must resolve inside that same active overlay, not an underlying control.
 
 - [ ] **Step 3: Assert modal interaction and responsive bounds**
 
@@ -156,10 +163,12 @@ Verify clicking the overlay does not close the dialog, the footer close button d
 Run:
 
 ```bash
-pnpm playwright test tests/e2e/import-field-issues-dialog.spec.ts
+pnpm exec vitest run tests/unit/e2e-api-route-policy.test.ts && \
+  pnpm build && \
+  pnpm exec playwright test tests/e2e/import-field-issues-dialog.spec.ts
 ```
 
-Expected: one passed test in a normal macOS desktop session. If `CODEX_SANDBOX=seatbelt`, expect the project’s intentional pre-launch refusal instead of starting Electron.
+Expected: one passed test in a normal macOS desktop session. The local build is mandatory: the test also catches all API origins and aborts if a stale production bundle attempts to call its configured server. If `CODEX_SANDBOX=seatbelt`, expect the project’s intentional pre-launch refusal instead of starting Electron.
 
 ## Task 5: Synchronize documentation and run final gates
 
@@ -175,8 +184,8 @@ Run:
 pnpm lint
 pnpm typecheck
 pnpm test
-pnpm build
-pnpm exec playwright test tests/e2e/import-field-issues-dialog.spec.ts
+pnpm test:e2e
+pnpm build:prod
 ```
 
 Expected: every command exits 0.

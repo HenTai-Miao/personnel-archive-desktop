@@ -1,10 +1,11 @@
 /// <reference lib="dom" />
 
-/** 字段问题弹窗 Electron 回归：遮罩必须覆盖外壳与真实表格，正文独立滚动且背景不可操作。 */
-import { mkdtemp, rm } from "node:fs/promises"
+/** 字段问题弹窗 Electron 回归：API 必须隔离，遮罩必须覆盖外壳与真实 fixed 表格。 */
+import { mkdtemp, rm, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { join } from "node:path"
 import { _electron as electron, expect, test } from "@playwright/test"
+import { assertE2eApiRequestAllowed, E2E_API_ROUTE_GLOB } from "../support/e2e-api-route-policy"
 
 const ISSUE_MESSAGE = Array.from(
   { length: 12 },
@@ -24,8 +25,24 @@ function historyItem(index: number) {
   }
 }
 
+function currentBatchItem(index: number) {
+  return {
+    itemId: `current-issue-${index}`,
+    fileName: `字段问题-当前-${index}.xlsx`,
+    status: "FAILED",
+    code: "IMPORT_FIELD_VALIDATION_FAILED",
+    message: index === 1 ? ISSUE_MESSAGE : `字段 ${index} 导入失败（基本情况!D${index}）：请修正`,
+  }
+}
+
 test("keeps the field issues dialog above the shell and table at the minimum window size", async () => {
   const userDataDirectory = await mkdtemp(join(tmpdir(), "personnel-archive-field-issues-e2e-"))
+  const workbookPaths = Array.from({ length: 4 }, (_, index) =>
+    join(userDataDirectory, `字段问题-当前-${index + 1}.xlsx`),
+  )
+  await Promise.all(
+    workbookPaths.map((path) => writeFile(path, new Uint8Array([0x50, 0x4b, 0x03, 0x04, 0x01]))),
+  )
   try {
     const application = await electron.launch({
       args: [".", `--user-data-dir=${userDataDirectory}`],
@@ -33,11 +50,23 @@ test("keeps the field issues dialog above the shell and table at the minimum win
     try {
       const page = await application.firstWindow()
       await application.evaluate(({ BrowserWindow }) => {
-        BrowserWindow.getAllWindows()[0]?.setBounds({ width: 1080, height: 720 })
+        BrowserWindow.getAllWindows()[0]?.setBounds({ width: 1080, height: 800 })
       })
-      await page.route("http://127.0.0.1:18080/api/v1/**", async (route) => {
+      await application.evaluate(({ dialog }, selectedPaths) => {
+        Object.defineProperty(dialog, "showOpenDialog", {
+          configurable: true,
+          value: async () => ({ canceled: false, filePaths: selectedPaths }),
+        })
+      }, workbookPaths)
+      await page.route(E2E_API_ROUTE_GLOB, async (route) => {
         const request = route.request()
-        const url = new URL(request.url())
+        let url: URL
+        try {
+          url = assertE2eApiRequestAllowed(request.url())
+        } catch (error) {
+          await route.abort("blockedbyclient")
+          throw error
+        }
         if (url.pathname === "/api/v1/auth/login") {
           await route.fulfill({
             status: 200,
@@ -84,6 +113,17 @@ test("keeps the field issues dialog above the shell and table at the minimum win
           })
           return
         }
+        if (url.pathname === "/api/v1/imports" && request.method() === "POST") {
+          await route.fulfill({
+            status: 200,
+            contentType: "application/json",
+            json: {
+              batchId: "102",
+              items: Array.from({ length: 4 }, (_, index) => currentBatchItem(index + 1)),
+            },
+          })
+          return
+        }
         await route.fulfill({ status: 404, contentType: "application/json", body: "{}" })
       })
 
@@ -92,9 +132,20 @@ test("keeps the field issues dialog above the shell and table at the minimum win
       await page.getByRole("button", { name: "登录" }).click()
       await page.getByText("批量导入档案", { exact: true }).click()
       await expect(page.getByRole("heading", { name: "批量导入", exact: true })).toBeVisible()
-      await expect(page.getByText("需修正", { exact: true })).toHaveCount(4)
+      await page.getByRole("button", { name: "选择文件" }).click()
+      await expect(page.locator(".queued-file-chip")).toHaveCount(4)
+      await page.getByRole("button", { name: "上传并检查" }).click()
+      await expect(
+        page.locator(".import-current-sheet").getByText("需修正", { exact: true }),
+      ).toHaveCount(4)
+      await expect(
+        page.locator(".import-history-sheet").getByText("需修正", { exact: true }),
+      ).toHaveCount(4)
 
-      await page.locator('[data-test="show-import-field-issues"]').first().click()
+      await page
+        .locator('.import-current-sheet [data-test="show-import-field-issues"]')
+        .first()
+        .click()
 
       const dialog = page.getByRole("dialog", { name: "工作簿需要修正" })
       const overlay = dialog.locator(
@@ -107,23 +158,27 @@ test("keeps the field issues dialog above the shell and table at the minimum win
       expect(await overlay.evaluate((element) => element.parentElement === document.body)).toBe(
         true,
       )
-      await expect(dialog).toContainText("字段问题-1.xlsx")
+      await expect(dialog).toContainText("字段问题-当前-1.xlsx")
       await expect(dialog).toContainText("原文件未被修改")
 
       const coveredTargets = await page.evaluate(() => {
-        const modalOverlay = Array.from(
-          document.querySelectorAll<HTMLElement>("body > .import-field-issues-overlay"),
-        ).find((element) => element.querySelector('[role="dialog"]') !== null)
-        if (modalOverlay === undefined) throw new Error("未找到活动字段问题遮罩")
+        const activeDialog = Array.from(
+          document.querySelectorAll<HTMLElement>('[role="dialog"][aria-label="工作簿需要修正"]'),
+        ).find((element) => element.getClientRects().length > 0)
+        const modalOverlay = activeDialog?.closest<HTMLElement>(".import-field-issues-overlay")
+        if (modalOverlay === undefined || modalOverlay === null) {
+          throw new Error("未找到活动字段问题遮罩")
+        }
         const targets = [
           { selector: ".reading-desk-topbar", edge: "left" },
           { selector: ".reading-desk-sidebar", edge: "left" },
           {
-            selector: ".import-history-sheet .el-table__body tr:nth-child(2) td:first-child",
+            selector: ".import-current-sheet .el-table__body tr:nth-child(2) td:first-child",
             edge: "left",
           },
           {
-            selector: ".import-history-sheet .el-table__body-wrapper",
+            selector:
+              ".import-current-sheet .el-table__body tr:first-child td.el-table-fixed-column--right",
             edge: "right",
           },
         ] as const
@@ -144,11 +199,12 @@ test("keeps the field issues dialog above the shell and table at the minimum win
         { selector: ".reading-desk-topbar", covered: true },
         { selector: ".reading-desk-sidebar", covered: true },
         {
-          selector: ".import-history-sheet .el-table__body tr:nth-child(2) td:first-child",
+          selector: ".import-current-sheet .el-table__body tr:nth-child(2) td:first-child",
           covered: true,
         },
         {
-          selector: ".import-history-sheet .el-table__body-wrapper",
+          selector:
+            ".import-current-sheet .el-table__body tr:first-child td.el-table-fixed-column--right",
           covered: true,
         },
       ])
